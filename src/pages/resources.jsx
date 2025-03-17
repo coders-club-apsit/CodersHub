@@ -38,13 +38,10 @@ const ResourcesListing = () => {
 
   return (
     <SidebarProvider>
-      <div className="flex h-screen bg-background text-foreground overflow-hidden w-full">
+      <div className="flex bg-background text-foreground overflow-hidden w-full">
         <Sidebar />
         <div className="flex flex-col flex-1 overflow-auto">
-          <SideHeader
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-          />
+          <SideHeader searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
           <main className="flex-1 p-6">
             <h1 className="text-3xl font-bold mb-6 text-primary">Resources</h1>
             <div className="relative mb-6 flex justify-end">
@@ -58,19 +55,19 @@ const ResourcesListing = () => {
               />
             </div>
             {loadingResources && (
-                          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-4">
-                            {[...Array(4)].map((_, index) => (
-                              <div key={index} className="flex flex-col space-y-3">
-                                <Skeleton className="h-[300px] w-[290px] rounded-xl" />
-                                <div className="space-y-2">
-                                  <Skeleton className="h-4 w-[250px]" />
-                                  <Skeleton className="h-4 w-[200px]" />
-                                  <Skeleton className="h-4 w-[150px]" />
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        )}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-4">
+                {[...Array(4)].map((_, index) => (
+                  <div key={index} className="flex flex-col space-y-3">
+                    <Skeleton className="h-[300px] w-[290px] rounded-xl" />
+                    <div className="space-y-2">
+                      <Skeleton className="h-4 w-[250px]" />
+                      <Skeleton className="h-4 w-[200px]" />
+                      <Skeleton className="h-4 w-[150px]" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-4">
               {!loadingResources && resources?.length ? (
                 resources.map((resource) => (

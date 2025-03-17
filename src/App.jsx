@@ -20,8 +20,6 @@ import EditNotes from "./pages/editnotes";
 import ResourcesPage from "./pages/resource";
 import { useState } from "react";
 import EditResources from "./pages/editresources";
-// import { generateStudents } from './lib/data'; // Ensure this path is correct
-// import Certificates from './pages/certificates';
 
 const router = createBrowserRouter([
   {
@@ -115,27 +113,12 @@ const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
-      // {
-      //   path:'/certificates',
-      //   element:
-      //   <ProtectedRoute>
-      //   <Certificates/>
-      //   </ProtectedRoute>
-      // },
+      
     ],
   },
 ]);
 
 function App() {
-  // const [students, setStudents] = useState(generateStudents());
-
-  // const handleStarClick = (studentId, stars) => {
-  //   setStudents((prev) =>
-  //     prev.map((student) =>
-  //       student.id === studentId ? { ...student, stars } : student
-  //     )
-  //   );
-  // };
 
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">

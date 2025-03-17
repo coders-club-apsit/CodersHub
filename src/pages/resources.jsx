@@ -11,6 +11,7 @@ import { useUser } from "@clerk/clerk-react";
 import ResourcesCard from "@/components/ResourcesCard";
 import { Skeleton } from "@/components/ui/skeleton";
 
+
 const ResourcesListing = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const { isLoaded } = useUser();

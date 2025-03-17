@@ -41,7 +41,7 @@ const NotePage = () => {
         </div>
         <h2 className="text-2xl sm:text-3xl font-bold">About this Note</h2>
         <p className="sm:text-lg">{notes?.description}</p>
-        <div data-color-mode="dark"> // made this dark
+        <div data-color-mode="dark">
           <MDEditor.Markdown
             source={notes?.content}
             className="text-white sm:text-lg"

@@ -25,7 +25,7 @@ const AppLayout = () => {
 
   return (
     <>
-      <main className=" mx-auto min-h-screen">
+      <main className=" mx-auto min-h-screen overflow-hidden">
         <Outlet />
       </main>
       <div className="mt-12">

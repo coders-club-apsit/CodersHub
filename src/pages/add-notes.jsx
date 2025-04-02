@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
@@ -6,6 +6,15 @@ import { useNavigate } from "react-router-dom";
 import { useUser } from "@clerk/clerk-react";
 import { BarLoader } from "react-spinners";
 import MDEditor from "@uiw/react-md-editor";
+import { motion } from "framer-motion";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 // UI Components
 import { Input } from "@/components/ui/input";
@@ -37,6 +46,10 @@ const schema = z.object({
 const AddNotes = () => {
   const { isLoaded, user } = useUser();
   const navigate = useNavigate();
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [formData, setFormData] = useState(null);
+  const [isPreviewMode, setIsPreviewMode] = useState(false);
+  const isDevelopment = process.env.NODE_ENV === "development";
 
   const {
     register,
@@ -44,6 +57,7 @@ const AddNotes = () => {
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
+    watch,
   } = useForm({
     defaultValues: {
       title: "",
@@ -88,12 +102,32 @@ const AddNotes = () => {
     });
   };
 
+  const handleConfirmSubmit = (data) => {
+    setFormData(data);
+    setShowConfirmDialog(true);
+  };
+
+  const handleConfirmed = () => {
+    if (!isDevelopment) {
+      alert("Note submissions are temporarily disabled in production.");
+      return;
+    }
+    onSubmit(formData);
+    setShowConfirmDialog(false);
+  };
+
+  const NotePreview = ({ data }) => (
+    <div className="bg-black/20 backdrop-blur-sm p-6 rounded-lg border border-primary/10">
+      <h3 className="text-xl font-bold mb-2">{data.title}</h3>
+      <p className="text-muted-foreground mb-4">{data.description}</p>
+      <div className="prose prose-invert max-w-none">
+        <MDEditor.Markdown source={data.content} />
+      </div>
+    </div>
+  );
+
   if (!isLoaded || loadingTopics) {
-    return (
-
-        <BarLoader className="mb-4" width={"100%"} color="#36d7b7" />
-
-    );
+    return <BarLoader className="mb-4" width={"100%"} color="#36d7b7" />;
   }
 
   if (errorTopics) {
@@ -112,12 +146,20 @@ const AddNotes = () => {
           Post a Note
         </h1>
 
-        <form onSubmit={handleSubmit(onSubmit)} className=" mx-auto space-y-6">
+        {!isDevelopment && (
+          <div className="mb-8 bg-yellow-500/10 border border-yellow-500/20 p-4 rounded-lg">
+            <p className="text-yellow-500 text-center">
+              ⚠️ Note submissions are temporarily disabled in production. Please check back later.
+            </p>
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit(handleConfirmSubmit)} className="mx-auto space-y-6">
           {/* Title Input */}
           <div>
-            <Input 
-              placeholder="Note title" 
-              {...register("title")} 
+            <Input
+              placeholder="Note title"
+              {...register("title")}
               className={errors.title ? "border-red-500" : ""}
             />
             {errors.title && (
@@ -127,8 +169,8 @@ const AddNotes = () => {
 
           {/* Description Textarea */}
           <div>
-            <Textarea 
-              placeholder="Note Description" 
+            <Textarea
+              placeholder="Note Description"
               {...register("description")}
               className={errors.description ? "border-red-500" : ""}
             />
@@ -144,10 +186,7 @@ const AddNotes = () => {
                 name="topic_id"
                 control={control}
                 render={({ field }) => (
-                  <Select 
-                    value={field.value} 
-                    onValueChange={field.onChange}
-                  >
+                  <Select value={field.value} onValueChange={field.onChange}>
                     <SelectTrigger className={errors.topic_id ? "border-red-500" : ""}>
                       <SelectValue placeholder="Select a topic">
                         {field.value
@@ -189,8 +228,8 @@ const AddNotes = () => {
               name="content"
               control={control}
               render={({ field }) => (
-                <MDEditor 
-                  value={field.value} 
+                <MDEditor
+                  value={field.value}
                   onChange={field.onChange}
                   className={errors.content ? "border-red-500" : ""}
                 />
@@ -215,17 +254,89 @@ const AddNotes = () => {
             </div>
           )}
 
-          {/* Submit Button */}
-          <Button
-            type="submit"
-            variant="destructive"
-            size="lg"
-            className="w-full"
-            disabled={isSubmitting || loadingCreateNote}
-          >
-            {isSubmitting || loadingCreateNote ? "Posting..." : "Post Note"}
-          </Button>
+          {/* Submit and Preview Buttons */}
+          <div className="flex gap-4">
+            <motion.div
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
+              className="flex-1"
+            >
+              <Button
+                type="button"
+                size="lg"
+                variant="outline"
+                className="w-full border-primary/20 hover:border-primary/40"
+                onClick={() => setIsPreviewMode(!isPreviewMode)}
+              >
+                {isPreviewMode ? "Edit" : "Preview"}
+              </Button>
+            </motion.div>
+
+            <motion.div
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
+              className="flex-1"
+            >
+              <Button
+                type="submit"
+                size="lg"
+                className="w-full relative group bg-gradient-to-r from-primary to-blue-600 hover:opacity-90 transition-all duration-300"
+                disabled={isSubmitting || loadingCreateNote || !isDevelopment}
+              >
+                <span className="relative z-10 flex items-center justify-center gap-2">
+                  {isSubmitting || loadingCreateNote ? (
+                    <>
+                      <BarLoader width={100} height={2} color="#fff" />
+                      Posting...
+                    </>
+                  ) : (
+                    "Post Note"
+                  )}
+                </span>
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-md" />
+              </Button>
+            </motion.div>
+          </div>
         </form>
+
+        {isPreviewMode && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-8"
+          >
+            <h2 className="text-2xl font-bold mb-4">Preview</h2>
+            <NotePreview data={watch()} />
+          </motion.div>
+        )}
+
+        <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
+          <AlertDialogContent className="bg-background border border-primary/20">
+            <AlertDialogHeader>
+              <AlertDialogTitle className="text-xl font-bold">
+                Confirm Submission
+              </AlertDialogTitle>
+              <AlertDialogDescription className="text-muted-foreground">
+                Are you sure you want to post this note? Please verify that all information is correct.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter className="gap-2">
+              <Button
+                variant="outline"
+                onClick={() => setShowConfirmDialog(false)}
+                className="border-primary/20 hover:border-primary/40"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleConfirmed}
+                className="bg-primary hover:bg-primary/90"
+              >
+                Confirm & Post
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </main>
     </div>
   );

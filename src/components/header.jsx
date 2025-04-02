@@ -1,86 +1,114 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { Routes, Route, Navigate } from 'react-router-dom';
 import { Button } from './ui/button';
-import AboutUs from '@/pages/aboutus';
-import { SignedIn, SignedOut, useUser, SignIn, UserButton } from '@clerk/clerk-react';
-import { PenBox, NotebookPen, Save, SaveOff, Link2 } from 'lucide-react';
+import { SignedIn, SignedOut, UserButton, SignIn } from '@clerk/clerk-react';
+import { PenBox, NotebookPen, Save, Link2 } from 'lucide-react';
+import "@/components/ThemeToggle";
+import { motion } from 'framer-motion';
 
 const Header = () => {
-
     const [search, setSearch] = useSearchParams();
     const [showSignIn, setShowSignIn] = useState(false);
-      const handleOverlayClick = (e) => {
+
+    const handleOverlayClick = (e) => {
         if (e.target === e.currentTarget) {
-          setShowSignIn(false);
-          setSearch({});
+            setShowSignIn(false);
+            setSearch({});
         }
-      };
-
-      useEffect(() => {
-        if (search.get('sign-in')) {
-          setShowSignIn(true);
-        }
-      }, [search]);
-    
-    return (
-        <>
-        
-          <nav className="z-50 p-8 flex justify-between items-center">
-            <Link to="/">
-              <img src="/cc.png" className="h-14" alt="Logo" />
-            </Link>
-            <div className="flex gap-8">
-              {/* When the user is signed out */}
-              <SignedOut>
-                <Button variant="outline" onClick={() => setShowSignIn(true)}>
-                  Login
-                </Button>
-              </SignedOut>
-    
-              {/* When the user is signed in */}
-              <SignedIn>
-                {/* Show Post a Blog button only for admins */}
-                  <UserButton
-                    appearance={{
-                      elements: {
-                        avatarBox: 'w-10 h-10',
-                      },
-                    }}
-                  >
-                    <UserButton.MenuItems>
-                      <UserButton.Link
-                        label="Saved Notes"
-                        labelIcon={<Save size={15} />}
-                        href="/saved-notes"
-                      />
-                      <UserButton.Link
-                        label="Saved Resources"
-                        labelIcon={<Link2 size={15} />}
-                        href="/saved-resources"
-                      />
-                    </UserButton.MenuItems>
-                  </UserButton>
-              </SignedIn>
-            </div>
-          </nav>
-
-
-          {showSignIn && (
-        <div
-          className="fixed flex inset-0 items-center bg-black bg-opacity-50 justify-center z-50"
-          onClick={handleOverlayClick}
-        >
-          <SignIn
-            signUpForceRedirectUrl="/"
-            fallbackRedirectUrl="/"
-          />
-        </div>
-      )}
-
-
-        </>
-      );
     };
 
-export default Header
+    useEffect(() => {
+        if (search.get('sign-in')) {
+            setShowSignIn(true);
+        }
+    }, [search]);
+
+    return (
+        <>
+            <motion.nav 
+                className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-background/80 border-b border-blue-500/10"
+                initial={{ y: -100 }}
+                animate={{ y: 0 }}
+                transition={{ duration: 0.3 }}
+            >
+                <div className="]mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="flex justify-between items-center h-20">
+                        <motion.div
+                            whileHover={{ scale: 1.05 }}
+                            transition={{ duration: 0.2 }}
+                        >
+                            <Link to="/">
+                                <img 
+                                    src="/cc2.png" 
+                                    className="h-16 hover:brightness-110 transition-all" 
+                                    alt="Logo" 
+                                />
+                            </Link>
+                        </motion.div>
+
+
+
+                        <div className="flex items-center gap-6">
+                            {/* <ThemeToggle /> */}
+                            <SignedOut>
+                                <motion.div
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                >
+                                    <Button 
+                                        variant="outline" 
+                                        onClick={() => setShowSignIn(true)}
+                                        className="bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border-blue-500/20 hover:border-blue-500/40 hover:from-blue-500/20 hover:to-cyan-500/20 transition-all duration-300"
+                                    >
+                                        Login
+                                    </Button>
+                                </motion.div>
+                            </SignedOut>
+
+                            <SignedIn>
+                                <UserButton
+                                    appearance={{
+                                        elements: {
+                                            avatarBox: 'w-10 h-10 ring-2 ring-blue-500/20 hover:ring-blue-500/40 transition-all duration-300',
+                                            userButtonPopover: 'backdrop-blur-md bg-background/80 border border-blue-500/10',
+                                        },
+                                    }}
+                                >
+                                    <UserButton.MenuItems>
+                                        <UserButton.Link
+                                            label="Saved Notes"
+                                            labelIcon={<Save className="text-blue-500" size={15} />}
+                                            href="/saved-notes"
+                                        />
+                                        <UserButton.Link
+                                            label="Saved Resources"
+                                            labelIcon={<Link2 className="text-blue-500" size={15} />}
+                                            href="/saved-resources"
+                                        />
+                                    </UserButton.MenuItems>
+                                </UserButton>
+                            </SignedIn>
+                        </div>
+                    </div>
+                </div>
+            </motion.nav>
+
+            {showSignIn && (
+                <motion.div
+                    className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
+                    onClick={handleOverlayClick}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                >
+                    <SignIn
+                        signUpForceRedirectUrl="/"
+                        fallbackRedirectUrl="/"
+                    />
+                </motion.div>
+            )}
+        </>
+    );
+};
+
+export default Header;

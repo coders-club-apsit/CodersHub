@@ -1,63 +1,58 @@
 import React from "react";
-import ShimmerButton from "@/components/ui/shimmer-button";
-import InteractiveHoverButton from "@/components/ui/interactive-hover-button";
-import AnimatedGridPattern from "@/components/ui/animated-grid-pattern";
-import { InteractiveGridPattern } from "@/components/ui/interactive-grid-pattern";
-import DotPattern from "@/components/ui/dot-pattern";
-import { cn } from "@/lib/utils";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import faqs from "../data/faq.json";
-import { Link } from "react-router-dom";
 import Header from "@/components/header";
-import { TextAnimate } from "@/components/ui/text-animate";
-
+import "@/components/HeroSection";
+import { TextAnimate } from "@/components/ui/text-animate"; 
+import "@/index.css";
+import HeroSection from "@/components/HeroSection";
+import FaqSection from "@/components/FaqSection";
+import ResourcesSection from "@/components/ResourceSection";
+import { motion } from "framer-motion";
 
 function LandingPage() {
   return (
-    <>
-    <Header />
-    <div className="relative flex flex-col p-8 mt-40 items-center justify-center text-center h-full">
-      {/* Background Logo */}
-      {/* <img
-        src="/cc_brain.png"
-        alt="Coders Club Logo"
-        className="absolute inset-0 mx-auto w-full max-w-[400px] opacity-20 pointer-events-none"
-      /> */}
+    <div className="relative min-h-screen overflow-hidden " style={{minWidth: "100vw"}}>
+      {/* Background Graphics */}
+      <div className="fixed inset-0 -z-10">
+        {/* Gradient Orbs */}
+        <motion.div
+          className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full bg-blue-500/20 blur-[100px]"
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.2, 0.3, 0.2],
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+        <motion.div
+          className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full bg-cyan-500/20 blur-[100px]"
+          animate={{
+            scale: [1.2, 1, 1.2],
+            opacity: [0.2, 0.3, 0.2],
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 1,
+          }}
+        />
 
-      <h1 className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-purple-600 text-7xl font-bold relative">
-        Welcome To The{" "}
-        <span className="bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent">
-          Coders Club
-        </span>
-      </h1>
+        {/* Grid Pattern */}
+        <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:50px_50px]" />
+          
+        {/* Radial Gradient */}
+        <div className="absolute inset-0 bg-gradient-radial from-transparent via-background to-background" />
+      </div>
 
-      <p className="text-4xl mt-8 text-blue-400 font-medium relative">
-        Computer Engineering Department
-      </p>
-
-      <Link to="/notes">
-        <InteractiveHoverButton className="mt-12 shadow-2xl relative"></InteractiveHoverButton>
-      </Link>
+      {/* Content */}
+      <Header />
+      <HeroSection />
+      <ResourcesSection />
+      <FaqSection />
     </div>
-
-    <section className="p-8 mt-72">
-      <Accordion className="text-left" type="single" collapsible>
-        {faqs.map((faq, index) => (
-          <AccordionItem key={index} value={`item-${index + 1}`}>
-            <AccordionTrigger className="text-left">
-              {faq.question}
-            </AccordionTrigger>
-            <AccordionContent>{faq.answer}</AccordionContent>
-          </AccordionItem>
-        ))}
-      </Accordion>
-    </section>
-  </>
   );
 }
 

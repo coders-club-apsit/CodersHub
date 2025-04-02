@@ -7,6 +7,7 @@ import { SideHeader } from "@/components/sidebarhead";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXTwitter, faGithub } from "@fortawesome/free-brands-svg-icons";
 import { LucideLinkedin } from "lucide-react";
+import { motion } from "framer-motion";
 
 const teamMembers = [
   {
@@ -36,6 +37,7 @@ const teamMembers = [
     img: "abhiiii.png",
     twitter: "yadneshbamne",
     linkedin: "thormotheabhishek",
+    github: "abhi2k4",
   },
   {
     name: "Sarakshi More",
@@ -51,6 +53,28 @@ const teamMembers = [
     linkedin: "yadneshbamne21",
   },
 ];
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const cardVariants = {
+  hidden: { y: 20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      duration: 0.5,
+      ease: "easeOut",
+    },
+  },
+};
 
 export default function AboutUs() {
   const { getToken } = useAuth(); // Get Clerk session token
@@ -87,70 +111,115 @@ export default function AboutUs() {
 
   return (
     <SidebarProvider>
-      <div className="flex h-screen w-full overflow-auto flex-col md:flex-row text-white">
+      <div className="flex h-screen w-full overflow-auto flex-col md:flex-row">
         <Sidebar />
-        <div className="flex-1">
+        <div className="flex-1 bg-gradient-to-b from-background via-background/95 to-background relative">
           <SideHeader />
-          <div className="flex flex-col items-center justify-center py-16 px-6 md:px-12">
-            <h1 className="text-3xl md:text-4xl font-extrabold text-center mb-10 text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-purple-600">
-              Coders Club Team
-            </h1>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10 w-full max-w-6xl">
-              {teamMembers.map(
-                ({ name, role, img, twitter, linkedin, github }) => (
-                  <div
-                    key={name}
-                    className="relative white/10 backdrop-blur-lg p-4 rounded-xl shadow-lg flex flex-col items-center text-center border border-white/20 hover:shadow-xl transition"
-                  >
-                    <img
-                      src={imageUrls[img] ?? "/placeholder.jpg"} // ✅ Fallback image
-                      alt={name}
-                      className="w-32 h-32 rounded-full object-cover border border-white"
-                    />
-                    <h3 className="text-lg md:text-xl font-bold mt-4">
+
+          {/* Background decorative elements */}
+          <div className="absolute inset-0 overflow-hidden -z-10">
+            <div className="absolute inset-0 bg-grid-white/5 bg-[size:40px_40px]" />
+            <div className="absolute top-0 left-0 size-[500px] rounded-full bg-primary/20 -z-10 blur-[100px]" />
+            <div className="absolute bottom-0 right-0 size-[500px] rounded-full bg-blue-500/20 -z-10 blur-[100px]" />
+          </div>
+
+          <motion.div
+            className="flex flex-col items-center justify-center py-16 px-6 md:px-12"
+            initial="hidden"
+            animate="visible"
+            variants={containerVariants}
+          >
+            <motion.h1
+              className="text-4xl md:text-5xl font-extrabold text-center mb-4 text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600"
+              initial={{ y: -20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.5 }}
+            >
+              Meet Our Team
+            </motion.h1>
+            <motion.p
+              className="text-muted-foreground text-center max-w-2xl mb-16"
+              initial={{ y: -20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              The passionate individuals behind Coders Club, working together
+              to create an amazing learning community.
+            </motion.p>
+
+            <motion.div
+              className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 w-full max-w-6xl"
+              variants={containerVariants}
+            >
+              {teamMembers.map(({ name, role, img, twitter, linkedin, github }, index) => (
+                <motion.div
+                  key={name}
+                  variants={cardVariants}
+                  whileHover={{ y: -5, transition: { duration: 0.2 } }}
+                  className="group relative bg-black/20 backdrop-blur-xl p-6 rounded-xl border border-primary/10 hover:border-primary/30 transition-all duration-300"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                  <div className="relative z-10">
+                    <div className="relative">
+                      <div className="absolute inset-0 bg-gradient-to-b from-primary/20 to-blue-500/20 rounded-full blur-lg transform group-hover:scale-110 transition-transform duration-300" />
+                      <img
+                        src={imageUrls[img] ?? "/placeholder.jpg"}
+                        alt={name}
+                        className="relative w-32 h-32 mx-auto rounded-full object-cover border-2 border-primary/20 group-hover:border-primary/40 transition-all duration-300"
+                      />
+                    </div>
+
+                    <h3 className="text-xl font-bold mt-4 text-center group-hover:text-primary transition-colors duration-300">
                       {name}
                     </h3>
-                    <p className="text-sm md:text-base opacity-80">{role}</p>
-                    <div className="flex gap-4 mt-4">
+                    <p className="text-sm text-muted-foreground mt-1 text-center">
+                      {role}
+                    </p>
+
+                    <div className="flex justify-center gap-4 mt-4">
                       {twitter && (
-                        <a
+                        <motion.a
+                          whileHover={{ scale: 1.2 }}
+                          whileTap={{ scale: 0.9 }}
                           href={`https://x.com/${twitter}`}
                           target="_blank"
                           rel="noopener noreferrer"
+                          className="hover:text-primary transition-colors duration-300"
                         >
-                          <FontAwesomeIcon
-                            icon={faXTwitter}
-                            className="w-6 h-5 text-gray-400 hover:text-white transition"
-                          />
-                        </a>
+                          <FontAwesomeIcon icon={faXTwitter} className="w-5 h-5" />
+                        </motion.a>
                       )}
                       {linkedin && (
-                        <a
+                        <motion.a
+                          whileHover={{ scale: 1.2 }}
+                          whileTap={{ scale: 0.9 }}
                           href={`https://www.linkedin.com/in/${linkedin}`}
                           target="_blank"
                           rel="noopener noreferrer"
+                          className="hover:text-primary transition-colors duration-300"
                         >
-                          <LucideLinkedin className="w-6 h-5 text-gray-400 hover:text-blue-500 transition" />
-                        </a>
+                          <LucideLinkedin className="w-5 h-5" />
+                        </motion.a>
                       )}
                       {github && (
-                        <a
+                        <motion.a
+                          whileHover={{ scale: 1.2 }}
+                          whileTap={{ scale: 0.9 }}
                           href={`https://github.com/${github}`}
                           target="_blank"
                           rel="noopener noreferrer"
+                          className="hover:text-primary transition-colors duration-300"
                         >
-                          <FontAwesomeIcon
-                            icon={faGithub}
-                            className="w-6 h-5 text-gray-400 hover:text-gray-200 transition"
-                          />
-                        </a>
+                          <FontAwesomeIcon icon={faGithub} className="w-5 h-5" />
+                        </motion.a>
                       )}
                     </div>
                   </div>
-                )
-              )}
-            </div>
-          </div>
+                </motion.div>
+              ))}
+            </motion.div>
+          </motion.div>
         </div>
       </div>
     </SidebarProvider>

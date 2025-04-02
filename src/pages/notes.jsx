@@ -67,7 +67,7 @@ const NotesListing = () => {
               />
             </div>
             {loadingNotes && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-4">
+              <div className="flex flex-col sm:flex-row flex-wrap gap-6 p-4">
                 {[...Array(4)].map((_, index) => (
                   <div key={index} className="flex flex-col space-y-3">
                     <Skeleton className="h-[300px] w-[290px] rounded-xl" />
@@ -80,7 +80,7 @@ const NotesListing = () => {
                 ))}
               </div>
             )}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-4">
+            <div className="flex flex-col sm:flex-row gap-6 p-4">
               {!loadingNotes && notes?.length ? (
                 notes.map((note) => (
                   <NoteCard key={note.id} note={note} savedInit={note?.saved?.length > 0} />

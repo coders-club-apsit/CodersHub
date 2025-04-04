@@ -1,12 +1,20 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "@clerk/clerk-react";
 import { BarLoader } from "react-spinners";
+import { motion } from "framer-motion";
 import MDEditor from "@uiw/react-md-editor";
-
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 // UI Components
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -35,6 +43,9 @@ const schema = z.object({
 });
 
 const AddResources = () => {
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [formData, setFormData] = useState(null);
+  const [isPreviewMode, setIsPreviewMode] = useState(false);
   const { isLoaded, user } = useUser();
   const navigate = useNavigate();
 
@@ -44,6 +55,7 @@ const AddResources = () => {
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
+    watch,
   } = useForm({
     defaultValues: {
       title: "",
@@ -88,10 +100,29 @@ const AddResources = () => {
     });
   };
 
+  const handleConfirmSubmit = (data) => {
+    setFormData(data);
+    setShowConfirmDialog(true);
+  };
+
+  const handleConfirmed = () => {
+    onSubmit(formData);
+    setShowConfirmDialog(false);
+  };
+
+  const ResourcePreview = ({ data }) => (
+    <div className="bg-black/20 backdrop-blur-sm p-6 rounded-lg border border-primary/10">
+      <h3 className="text-xl font-bold mb-2">{data.title}</h3>
+      <p className="text-muted-foreground mb-4">{data.description}</p>
+      <div className="prose prose-invert max-w-none">
+        <MDEditor.Markdown source={data.content} />
+      </div>
+    </div>
+  );
+
   if (!isLoaded || loadingTopics) {
     return (
-        <BarLoader className="mb-4" width={"100%"} color="#36d7b7" />
-
+      <BarLoader className="mb-4" width={"100%"} color="#36d7b7" />
     );
   }
 
@@ -106,12 +137,12 @@ const AddResources = () => {
   return (
     <div className="bg-background">
       <Header />
-      <main className="px-4 py-8">
+      <main className="px-4 py-8 mt-16 max-w-5xl mx-auto">
         <h1 className="gradient-title font-extrabold text-5xl sm:text-7xl text-center pb-8">
           Post a Resource
         </h1>
 
-        <form onSubmit={handleSubmit(onSubmit)} className=" mx-auto space-y-6">
+        <form onSubmit={handleSubmit(handleConfirmSubmit)} className="mx-auto space-y-6">
           {/* Title Input */}
           <div>
             <Input 
@@ -214,17 +245,90 @@ const AddResources = () => {
             </div>
           )}
 
-          {/* Submit Button */}
-          <Button
-            type="submit"
-            variant="destructive"
-            size="lg"
-            className="w-full"
-            disabled={isSubmitting || loadingCreateResource}
-          >
-            {isSubmitting || loadingCreateResource ? "Posting..." : "Post Resource"}
-          </Button>
+          {/* Preview and Submit Buttons */}
+          <div className="flex gap-4">
+            <motion.div
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
+              className="flex-1"
+            >
+              <Button
+                type="button"
+                size="lg"
+                variant="outline"
+                className="w-full border-primary/20 hover:border-primary/40"
+                onClick={() => setIsPreviewMode(!isPreviewMode)}
+              >
+                {isPreviewMode ? 'Edit' : 'Preview'}
+              </Button>
+            </motion.div>
+
+            <motion.div
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
+              className="flex-1"
+            >
+              <Button
+                type="submit"
+                size="lg"
+                className="w-full relative group bg-gradient-to-r from-primary to-blue-600 hover:opacity-90 transition-all duration-300"
+                disabled={isSubmitting || loadingCreateResource}
+              >
+                <span className="relative z-10 flex items-center justify-center gap-2">
+                  {isSubmitting || loadingCreateResource ? (
+                    <>
+                      <BarLoader width={100} height={2} color="#fff" />
+                      Posting...
+                    </>
+                  ) : (
+                    "Post Resource"
+                  )}
+                </span>
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-md" />
+              </Button>
+            </motion.div>
+          </div>
         </form>
+
+        {/* Preview Section */}
+        {isPreviewMode && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-8"
+          >
+            <h2 className="text-2xl font-bold mb-4">Preview</h2>
+            <ResourcePreview data={watch()} />
+          </motion.div>
+        )}
+
+        <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
+          <AlertDialogContent className="bg-background border border-primary/20">
+            <AlertDialogHeader>
+              <AlertDialogTitle className="text-xl font-bold">
+                Confirm Submission
+              </AlertDialogTitle>
+              <AlertDialogDescription className="text-muted-foreground">
+                Are you sure you want to post this resource? Please verify that all information is correct.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter className="gap-2">
+              <Button
+                variant="outline"
+                onClick={() => setShowConfirmDialog(false)}
+                className="border-primary/20 hover:border-primary/40"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleConfirmed}
+                className="bg-primary hover:bg-primary/90"
+              >
+                Confirm & Post
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </main>
     </div>
   );

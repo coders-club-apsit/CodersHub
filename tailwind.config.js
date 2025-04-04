@@ -50,6 +50,10 @@ export const theme = {
 				'5': 'hsl(var(--chart-5))'
 			}
 		},
+		backgroundImage: {
+			'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+			'grid-white': 'linear-gradient(to right, rgba(255, 255, 255, 0.1) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 1px, transparent 1px)',
+		},
 		keyframes: {
 			'accordion-down': {
 				from: {
@@ -66,11 +70,16 @@ export const theme = {
 				to: {
 					height: '0'
 				}
+			},
+			'fade-in': {
+				'0%': { opacity: '0', transform: 'translateY(10px)' },
+				'100%': { opacity: '1', transform: 'translateY(0)' }
 			}
 		},
 		animation: {
 			'accordion-down': 'accordion-down 0.2s ease-out',
-			'accordion-up': 'accordion-up 0.2s ease-out'
+			'accordion-up': 'accordion-up 0.2s ease-out',
+			'fade-in': 'fade-in 0.5s ease-out forwards'
 		}
 	}
 };

@@ -44,7 +44,7 @@ const ResourcesSection = () => {
       <div className="container px-4 mx-auto">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold mb-4">
-            <span className="text-gradient">Empowering </span> you with
+            <span className="text-gradient">Empowering </span> you with 
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
             Access a wealth of learning materials and opportunities to boost your coding journey.

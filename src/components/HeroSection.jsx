@@ -179,7 +179,7 @@ const HeroSection = () => {
       <div className="container px-8 mx-auto z-10">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 animate-fade-in [animation-delay:300ms]">
-            <span className="text-gradient">Level Up</span> Your DSA Skills
+            Welcome to the <span className="text-gradient">Coder's Club</span> 
           </h1>
           <p className="text-lg md:text-xl mb-8 text-muted-foreground animate-fade-in [animation-delay:200ms]">
             Join our vibrant community of problem solvers and ace your coding interviews. 

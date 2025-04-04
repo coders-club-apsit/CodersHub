@@ -1,0 +1,17 @@
+export const ADMIN_EMAILS = [
+    "23102210@apsit.edu.in",
+    "cyption.one@gmail.com",
+    "abhishekthormothe150@apsit.edu.in",
+    "avanishvadke3@apsit.edu.in",
+    "atharvashelke2@apsit.edu.in",
+    "23107129@apsit.edu.in",
+    "parthdas79@apsit.edu.in",
+    "23102008@apsit.edu.in",
+    "23102129@apsit.edu.in",
+    "24202001@apsit.edu.in",
+    "23102043@apsit.edu.in",
+    "23102152@apsit.edu.in",
+    "oveedolkar186@apsit.edu.in",
+    "23202004@apsit.edu.in",
+    "ayushnayak141@apsit.edu.in",
+];

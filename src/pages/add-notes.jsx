@@ -232,6 +232,9 @@ const AddNotes = () => {
                   value={field.value}
                   onChange={field.onChange}
                   className={errors.content ? "border-red-500" : ""}
+                  preview="edit"
+                  hideToolbar={false}
+                  visibleDragbar={false}
                 />
               )}
             />

@@ -17,6 +17,7 @@ import { BarLoader } from "react-spinners";
 import { motion } from "framer-motion";
 import { Badge } from "./ui/badge";
 import { cn } from "@/lib/utils";
+import { ADMIN_EMAILS } from "@/config/admin";
 
 const NoteCard = ({
   note,
@@ -29,25 +30,6 @@ const NoteCard = ({
   const { user } = useUser();
   const navigate = useNavigate();
   const [isAdmin, setIsAdmin] = useState(false);
-
-  const ADMIN_EMAILS = [
-    "yadnesh2105@gmail.com",
-    "cyption.one@gmail.com",
-    "abhishekmt2004@gmail.com",
-    "avanishvadke001@gmail.com",
-    "atharvashelke2303@gmail.com",
-    "vedantshinde2066@gmail.com",
-    "dasparth1544@gmail.com",
-    "aarya.bivalkar1605@gmail.com",
-    "gaikwadnayan2004@gmail.com",
-    "abdulkhan13114@gmail.com",
-    "moresarakshi@gmail.com",
-    "nikhilbhosale7960@gmail.com",
-    "zahidhamdule12@gmail.com",
-    "durva.waghchaure1102@gmail.com",
-    "oveedolkar@gmail.com",
-    "nishilrathod2512@gmail.com",
-  ];
 
   const {
     fn: fnSavedNotes,
@@ -93,15 +75,15 @@ const NoteCard = ({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
       whileHover={{ y: -5 }}
-      className="h-full w-full"
+      className="space-y-6 lg:max-w-[33.33%] max-w-2xl w-full lg:min-h-[410px]"
     >
-      <Card className="flex flex-col h-full w-full transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/10 border border-blue-500/10 bg-gradient-to-b from-white/5 to-transparent backdrop-blur-sm">
+      <Card className="flex flex-col h-full max-w-[350px]  transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/10 border border-blue-500/10 bg-gradient-to-b from-white/5 to-transparent backdrop-blur-sm">
         {loadingDeleteNote && (
           <BarLoader className="mt-4 w-full" color="hsl(var(--primary))" />
         )}
         <CardHeader className="space-y-4 p-4 sm:p-6">
           <div className="flex flex-col gap-4">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4">
+            <div className="flex flex-row sm:flex-row sm:items-center justify-between gap-2 sm:gap-4">
               <CardTitle className="font-bold text-lg sm:text-xl lg:text-2xl">
                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-400 line-clamp-2 sm:line-clamp-1">
                   {note.title}
@@ -181,7 +163,7 @@ const NoteCard = ({
               className="relative group w-full"
               whileHover={{ scale: 1.02 }}
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 rounded-lg -z-10 blur-xl group-hover:blur-2xl transition-all duration-300" />
+              <div className="absolute inset-0  rounded-lg -z-10 blur-xl group-hover:blur-2xl transition-all duration-300" />
               <div className="flex items-center justify-center w-full">
                 <img
                   src={note.topic.topic_logo_url}

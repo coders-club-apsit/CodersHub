@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { ADMIN_EMAILS } from "@/config/admin";
 import { useUser } from "@clerk/clerk-react";
 import {
   ClapperboardIcon as ChalkboardTeacher,
@@ -33,24 +34,6 @@ import { Link } from "react-router-dom";
 import { SignOutButton } from "@clerk/clerk-react";
 import { FaAward } from "react-icons/fa";
 
-const ADMIN_EMAILS = [
-  "yadnesh2105@gmail.com",
-  "cyption.one@gmail.com",
-  "abhishekmt2004@gmail.com",
-  "avanishvadke001@gmail.com",
-  "atharvashelke2303@gmail.com",
-  "vedantshinde2066@gmail.com",
-  "dasparth1544@gmail.com ",
-  "aarya.bivalkar1605@gmail.com",
-  "gaikwadnayan2004@gmail.com", 
-  "abdulkhan13114@gmail.com", 
-  "moresarakshi@gmail.com", 
-  "nikhilbhosale7960@gmail.com", 
-  "zahidhamdule12@gmail.com", 
-  "durva.waghchaure1102@gmail.com", 
-  "oveedolkar@gmail.com ", 
-  "nishilrathod2512@gmail.com"
-]; // List of admin emails
 
 export function Sidebar() {
   const { state } = useSidebar();
@@ -91,39 +74,7 @@ export function Sidebar() {
       </SidebarHeader>
       <SidebarContent className="bg-opacity-50 bg-black ">
         <SignedIn>
-          {isAdmin && (
-            <>
-              <Link to="/add-notes">
-                <Button
-                  variant="ghost"
-                  className="w-full justify-start text-foreground hover:text-primary hover:bg-accent"
-                >
-                  <PenBox className="mr-2 h-4 w-4" />
-                  Add Notes
-                </Button>
-              </Link>
-              <Link to="/add-resources">
-                <Button
-                  variant="ghost"
-                  className="w-full justify-start text-foreground hover:text-primary hover:bg-accent"
-                >
-                  <LinkIcon className="mr-2 h-4 w-4" />
-                  Add Resources
-                </Button>
-              </Link>
-              {/* <Link to="/certificates">
-                  <Button
-                    variant="ghost"
-                    className={`w-full justify-start ${
-                      isActive("/certificates") ? "bg-accent text-primary" : "text-foreground"
-                    } hover:text-primary hover:bg-accent`}
-                  >
-                    <FaAward className="mr-2 h-4 w-4" />
-                    Certificates
-                  </Button>
-                </Link> */}
-            </>
-          )}
+         
 
           <SidebarMenu>
             <SidebarMenuItem>
@@ -188,6 +139,40 @@ export function Sidebar() {
             </SidebarMenuItem>
           </SidebarMenu>
         </SignedIn>
+
+        {isAdmin && (
+            <>
+              <Link to="/add-notes">
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start text-foreground hover:text-primary hover:bg-accent"
+                >
+                  <PenBox className="mr-2 h-4 w-4" />
+                  Add Notes
+                </Button>
+              </Link>
+              <Link to="/add-resources">
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start text-foreground hover:text-primary hover:bg-accent"
+                >
+                  <LinkIcon className="mr-2 h-4 w-4" />
+                  Add Resources
+                </Button>
+              </Link>
+              {/* <Link to="/certificates">
+                  <Button
+                    variant="ghost"
+                    className={`w-full justify-start ${
+                      isActive("/certificates") ? "bg-accent text-primary" : "text-foreground"
+                    } hover:text-primary hover:bg-accent`}
+                  >
+                    <FaAward className="mr-2 h-4 w-4" />
+                    Certificates
+                  </Button>
+                </Link> */}
+            </>
+          )}
       </SidebarContent>
       <SidebarFooter>
         <SignOutButton>

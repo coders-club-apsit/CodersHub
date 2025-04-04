@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXTwitter, faGithub } from "@fortawesome/free-brands-svg-icons";
 import { LucideLinkedin } from "lucide-react";
 import { motion } from "framer-motion";
+import TeamMemberSkeleton from "@/components/TeamMemberSkeleton";
 
 const teamMembers = [
   {
@@ -79,10 +80,12 @@ const cardVariants = {
 export default function AboutUs() {
   const { getToken } = useAuth(); // Get Clerk session token
   const [imageUrls, setImageUrls] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchImages = async () => {
       try {
+        setIsLoading(true);
         const token = await getToken(); // ✅ Get Clerk token
         const supabase = await supabaseClient(token); // ✅ Pass it to Supabase
 
@@ -103,6 +106,8 @@ export default function AboutUs() {
         setImageUrls(urls);
       } catch (error) {
         console.error("Error fetching images:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -151,73 +156,83 @@ export default function AboutUs() {
               className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 w-full max-w-6xl"
               variants={containerVariants}
             >
-              {teamMembers.map(({ name, role, img, twitter, linkedin, github }, index) => (
-                <motion.div
-                  key={name}
-                  variants={cardVariants}
-                  whileHover={{ y: -5, transition: { duration: 0.2 } }}
-                  className="group relative bg-black/20 backdrop-blur-xl p-6 rounded-xl border border-primary/10 hover:border-primary/30 transition-all duration-300"
-                >
-                  <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              {isLoading
+                ? [...Array(6)].map((_, index) => (
+                    <TeamMemberSkeleton key={`skeleton-${index}`} />
+                  ))
+                : teamMembers.map(({ name, role, img, twitter, linkedin, github }, index) => (
+                    <motion.div
+                      key={name}
+                      variants={cardVariants}
+                      whileHover={{ y: -5, transition: { duration: 0.2 } }}
+                      className="group relative bg-black/20 backdrop-blur-xl p-6 rounded-xl border border-primary/10 hover:border-primary/30 transition-all duration-300"
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-                  <div className="relative z-10">
-                    <div className="relative">
-                      <div className="absolute inset-0 bg-gradient-to-b from-primary/20 to-blue-500/20 rounded-full blur-lg transform group-hover:scale-110 transition-transform duration-300" />
-                      <img
-                        src={imageUrls[img] ?? "/placeholder.jpg"}
-                        alt={name}
-                        className="relative w-32 h-32 mx-auto rounded-full object-cover border-2 border-primary/20 group-hover:border-primary/40 transition-all duration-300"
-                      />
-                    </div>
+                      <div className="relative z-10">
+                        <div className="relative">
+                          <div className="absolute inset-0 rounded-full blur-lg transform group-hover:scale-110 transition-transform duration-300" />
+                          <img
+                            src={imageUrls[img] ?? "/placeholder.jpg"}
+                            alt={name}
+                            className="relative w-32 h-32 mx-auto rounded-full object-cover border-2 border-primary/20 group-hover:border-primary/40 transition-all duration-300"
+                            loading="lazy"
+                            onLoad={(e) => e.target.classList.remove('animate-pulse')}
+                            onError={(e) => {
+                              e.target.src = "/placeholder.jpg";
+                              e.target.classList.remove('animate-pulse');
+                            }}
+                          />
+                        </div>
 
-                    <h3 className="text-xl font-bold mt-4 text-center group-hover:text-primary transition-colors duration-300">
-                      {name}
-                    </h3>
-                    <p className="text-sm text-muted-foreground mt-1 text-center">
-                      {role}
-                    </p>
+                        <h3 className="text-xl font-bold mt-4 text-center group-hover:text-primary transition-colors duration-300">
+                          {name}
+                        </h3>
+                        <p className="text-sm text-muted-foreground mt-1 text-center">
+                          {role}
+                        </p>
 
-                    <div className="flex justify-center gap-4 mt-4">
-                      {twitter && (
-                        <motion.a
-                          whileHover={{ scale: 1.2 }}
-                          whileTap={{ scale: 0.9 }}
-                          href={`https://x.com/${twitter}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="hover:text-primary transition-colors duration-300"
-                        >
-                          <FontAwesomeIcon icon={faXTwitter} className="w-5 h-5" />
-                        </motion.a>
-                      )}
-                      {linkedin && (
-                        <motion.a
-                          whileHover={{ scale: 1.2 }}
-                          whileTap={{ scale: 0.9 }}
-                          href={`https://www.linkedin.com/in/${linkedin}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="hover:text-primary transition-colors duration-300"
-                        >
-                          <LucideLinkedin className="w-5 h-5" />
-                        </motion.a>
-                      )}
-                      {github && (
-                        <motion.a
-                          whileHover={{ scale: 1.2 }}
-                          whileTap={{ scale: 0.9 }}
-                          href={`https://github.com/${github}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="hover:text-primary transition-colors duration-300"
-                        >
-                          <FontAwesomeIcon icon={faGithub} className="w-5 h-5" />
-                        </motion.a>
-                      )}
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
+                        <div className="flex justify-center gap-4 mt-4">
+                          {twitter && (
+                            <motion.a
+                              whileHover={{ scale: 1.2 }}
+                              whileTap={{ scale: 0.9 }}
+                              href={`https://x.com/${twitter}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="hover:text-primary transition-colors duration-300"
+                            >
+                              <FontAwesomeIcon icon={faXTwitter} className="w-5 h-5" />
+                            </motion.a>
+                          )}
+                          {linkedin && (
+                            <motion.a
+                              whileHover={{ scale: 1.2 }}
+                              whileTap={{ scale: 0.9 }}
+                              href={`https://www.linkedin.com/in/${linkedin}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="hover:text-primary transition-colors duration-300"
+                            >
+                              <LucideLinkedin className="w-5 h-5" />
+                            </motion.a>
+                          )}
+                          {github && (
+                            <motion.a
+                              whileHover={{ scale: 1.2 }}
+                              whileTap={{ scale: 0.9 }}
+                              href={`https://github.com/${github}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="hover:text-primary transition-colors duration-300"
+                            >
+                              <FontAwesomeIcon icon={faGithub} className="w-5 h-5" />
+                            </motion.a>
+                          )}
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
             </motion.div>
           </motion.div>
         </div>

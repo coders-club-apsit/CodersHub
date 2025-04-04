@@ -220,9 +220,12 @@ const AddResources = () => {
               control={control}
               render={({ field }) => (
                 <MDEditor 
-                  value={field.value} 
-                  onChange={field.onChange}
-                  className={errors.content ? "border-red-500" : ""}
+                value={field.value}
+                onChange={field.onChange}
+                className={errors.content ? "border-red-500" : ""}
+                preview="edit"
+                hideToolbar={false}
+                visibleDragbar={false}
                 />
               )}
             />

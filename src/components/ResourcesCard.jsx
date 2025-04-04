@@ -75,17 +75,17 @@ const ResourcesCard = ({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      whileHover={{ y: -5 }}
-      className="h-full w-full max-w-[350px] lg:max-w-[33.33%] max-w-2xl"
-    >
-      <Card className="flex flex-col h-[330px] lg:h-[400px] w-full max-w-[350px] mx-auto transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/10 border border-blue-500/10 bg-gradient-to-b from-white/5 to-transparent backdrop-blur-sm">
-        {loadingDeleteResource && (
-          <BarLoader className="mt-4 w-full" color="hsl(var(--primary))" />
-        )}
-        <CardHeader className="space-y-4 p-4 sm:p-6 flex-shrink-0">
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.3 }}
+    whileHover={{ y: -5 }}
+    className="space-y-6 lg:max-w-[33.33%] max-w-2xl w-full lg:min-h-[410px]"
+  >
+    <Card className="flex flex-col h-full max-w-[350px]  transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/10 border border-blue-500/10 bg-gradient-to-b from-white/5 to-transparent backdrop-blur-sm">
+      {loadingDeleteResource && (
+        <BarLoader className="mt-4 w-full" color="hsl(var(--primary))" />
+      )}
+      <CardHeader className="space-y-4 p-4 sm:p-6 flex-shrink-0">
           <div className="flex flex-col gap-4">
             <div className="flex flex-row sm:flex-row sm:items-center justify-between gap-2 sm:gap-4">
               <CardTitle className="font-bold text-lg sm:text-xl lg:text-2xl">

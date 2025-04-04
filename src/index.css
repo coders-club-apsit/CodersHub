@@ -215,9 +215,9 @@
 
 /* Additional performance optimizations */
 .circle {
-  -webkit-backface-visibility: hidden; /* Prevent flicker on Android */
+  -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
-  -webkit-transform: translateZ(0); /* Force hardware acceleration */
+  -webkit-transform: translateZ(0);
   transform: translateZ(0);
 }
 

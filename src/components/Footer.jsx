@@ -35,6 +35,12 @@ const Footer = () => {
 
   const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
 
+  const handlePrivacyPolicyClick = (e) => {
+    e.preventDefault();
+    setShowPrivacyPolicy(true);
+    window.location.hash = 'privacy-policy';
+  };
+
   return (
     <footer className="relative mt-20">
       {/* Background Elements */}
@@ -157,7 +163,8 @@ const Footer = () => {
             <div className="flex items-center gap-4">
               <span className="hidden sm:inline text-muted-foreground/40">•</span>
               <Link
-                to="/privacy-policy"
+                to="#privacy-policy"
+                onClick={handlePrivacyPolicyClick}
                 className="text-muted-foreground/80 hover:text-primary transition-all duration-300"
               >
                 Privacy Policy

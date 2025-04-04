@@ -8,9 +8,17 @@ import {
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { motion } from "framer-motion";
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 
 const PrivacyPolicyModal = ({ open, onOpenChange }) => {
+  // Handle navigation when modal closes
+  const handleCloseModal = () => {
+    onOpenChange(false);
+    if (window.location.hash === '#privacy-policy') {
+      window.history.pushState('', '', '/');
+    }
+  };
+
   // Memoize the date to prevent re-renders
   const currentDate = useMemo(() => {
     return new Date().toLocaleDateString('en-US', {
@@ -21,7 +29,7 @@ const PrivacyPolicyModal = ({ open, onOpenChange }) => {
   }, []);
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleCloseModal}>
       <DialogContent 
         className="max-w-4xl h-[80vh] bg-background/95 backdrop-blur-xl border border-primary/10"
         aria-describedby="privacy-policy-content"

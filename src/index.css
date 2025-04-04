@@ -9,41 +9,24 @@
     /* Adjusted light mode colors for better contrast */
     --background: 220 33% 98%;
     --foreground: 220 40% 15%;
-
     --card: 0 0% 100%;
     --card-foreground: 220 40% 15%;
-
     --popover: 0 0% 100%;
     --popover-foreground: 220 40% 15%;
-
-    /* Enhanced primary blue */
     --primary: 220 84% 55%;
     --primary-foreground: 220 100% 98%;
-
-    /* Adjusted secondary for better contrast */
     --secondary: 220 20% 95%;
     --secondary-foreground: 220 40% 15%;
-
-    /* Muted tones with better visibility */
     --muted: 220 15% 95%;
     --muted-foreground: 220 20% 45%;
-
-    /* Accent colors aligned with theme */
     --accent: 220 20% 92%;
     --accent-foreground: 220 40% 15%;
-
-    /* Destructive tones */
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
-
-    /* System colors */
     --border: 220 15% 90%;
     --input: 220 15% 90%;
     --ring: 220 84% 55%;
-
     --radius: 0.75rem;
-
-    /* Sidebar specific colors */
     --sidebar-background: 220 30% 98%;
     --sidebar-foreground: 220 25% 25%;
     --sidebar-primary: 220 40% 15%;
@@ -57,32 +40,23 @@
   .dark {
     --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
-
     --card: 240 10% 3.9%;
     --card-foreground: 0 0% 98%;
-
     --popover: 240 10% 3.9%;
     --popover-foreground: 0 0% 98%;
-
     --primary: 220 84% 60%;
     --primary-foreground: 0 0% 98%;
-
     --secondary: 240 3.7% 15.9%;
     --secondary-foreground: 0 0% 98%;
-
     --muted: 240 3.7% 15.9%;
     --muted-foreground: 240 5% 64.9%;
-
     --accent: 240 3.7% 15.9%;
     --accent-foreground: 0 0% 98%;
-
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
     --ring: 220 84% 60%;
-
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -93,7 +67,7 @@
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
-  /* Customize scrollbar for Webkit browsers (Chrome, Safari, Edge) */
+  /* Customize scrollbar for Webkit browsers */
   ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -161,7 +135,6 @@
     @apply bg-gradient-to-r from-primary to-blue-400 bg-clip-text text-transparent;
   }
 
-  /* New utility classes for gradients */
   .bg-gradient-soft {
     @apply bg-gradient-to-r from-blue-50 to-blue-100/50 dark:from-blue-950/50 dark:to-blue-900/30;
   }
@@ -176,6 +149,24 @@
   
   .sidebar-collapsed {
     @apply w-[60px] transition-all duration-300 ease-in-out;
+  }
+
+  /* Neon circles base styles */
+  .circle {
+    @apply absolute rounded-full blur-[80px] opacity-40 animate-[float_8s_ease-in-out_infinite];
+    will-change: transform; /* Hint GPU acceleration */
+  }
+
+  .circle-1 {
+    @apply w-[400px] h-[400px] bg-pink-500/30 top-[10%] left-[15%];
+  }
+
+  .circle-2 {
+    @apply w-[500px] h-[500px] bg-blue-600/30 bottom-[5%] right-[10%] [animation-delay:-2s];
+  }
+
+  .circle-3 {
+    @apply w-[350px] h-[350px] bg-cyan-400/30 top-[50%] right-[30%] [animation-delay:-4s];
   }
 }
 
@@ -212,35 +203,53 @@
   }
 }
 
-.cl-footer,.cl-internal-1hp5nqm,.cl-internal-lk7758{
+/* Float animation */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+/* Additional performance optimizations */
+.circle {
+  -webkit-backface-visibility: hidden; /* Prevent flicker on Android */
+  backface-visibility: hidden;
+  -webkit-transform: translateZ(0); /* Force hardware acceleration */
+  transform: translateZ(0);
+}
+
+/* Hide Clerk-specific elements */
+.cl-footer, .cl-internal-1hp5nqm, .cl-internal-lk7758 {
   display: none;
 }
 
-.cl-internal-1foj88f{
+.cl-internal-1foj88f {
   background-color: rgb(15, 15, 15);
 }
 
-.wmde-markdown{
+.wmde-markdown {
   text-align: left;
   padding: 20px;
 }
+
 .wmde-markdown ul {
   list-style-type: disc;
   padding-left: 25px;
   color: white;
 }
 
-.cl-card{
+.cl-card {
   @apply bg-card text-card-foreground dark:bg-card dark:text-card-foreground;
 }
 
 @media screen and (max-width: 640px) {
- 
-  .wmde-markdown{
+  .wmde-markdown {
     padding: 10px;
-    ul{
+    ul {
       padding-left: 15px;
     }
   }
-  
 }

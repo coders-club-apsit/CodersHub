@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { FaGithub, FaLinkedin, FaWhatsapp, FaInstagram } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { isAndroid } from 'react-device-detect';
 import PrivacyPolicyModal from './PrivacyPolicyModal';
 
 const Footer = () => {
@@ -41,6 +42,21 @@ const Footer = () => {
     window.location.hash = 'privacy-policy';
   };
 
+  // Helper function to conditionally wrap with motion
+  const MotionWrapper = ({ children, ...props }) => {
+    if (isAndroid) {
+      return <div className={props.className}>{children}</div>;
+    }
+    return <motion.div {...props}>{children}</motion.div>;
+  };
+
+  const MotionLink = ({ children, ...props }) => {
+    if (isAndroid) {
+      return <a className={props.className} href={props.href}>{children}</a>;
+    }
+    return <motion.a {...props}>{children}</motion.a>;
+  };
+
   return (
     <footer className="relative mt-20">
       {/* Background Elements */}
@@ -51,15 +67,15 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {/* Brand Section */}
           <div className="space-y-4">
-            <motion.h3 
+            <MotionWrapper 
               className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-400"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
               Coders Club
-            </motion.h3>
-            <motion.p 
+            </MotionWrapper>
+            <MotionWrapper 
               className="text-muted-foreground"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -67,63 +83,48 @@ const Footer = () => {
               transition={{ delay: 0.1 }}
             >
               Coder's Club is a student-run community focused on improving problem-solving skills through Data Structures and Algorithms (DSA).
-            </motion.p>
+            </MotionWrapper>
           </div>
 
           {/* Social Links Section */}
           <div className="space-y-4">
-            <motion.h3 
+            <MotionWrapper 
               className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-400"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
               Connect with us
-            </motion.h3>
-            <motion.div 
-              className="flex space-x-4"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-            >
+            </MotionWrapper>
+            <div className="flex space-x-4">
               {socialLinks.map((link, index) => (
-                <motion.a
+                <MotionLink
                   key={link.name}
                   href={link.url}
                   target="_blank"
                   rel="noopener noreferrer"
                   className={`p-2 rounded-lg transition-all duration-300 bg-blue-500/10 backdrop-blur-sm border border-blue-500/10 ${link.hoverColor}`}
-                  whileHover={{ 
+                  whileHover={!isAndroid && { 
                     scale: 1.1,
                     backgroundColor: 'rgba(59, 130, 246, 0.2)'
                   }}
-                  whileTap={{ scale: 0.95 }}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.1 * index }}
+                  whileTap={!isAndroid && { scale: 0.95 }}
                 >
                   {link.icon}
-                </motion.a>
+                </MotionLink>
               ))}
-            </motion.div>
+            </div>
           </div>
-          <motion.div 
-            className="space-y-6"
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-          >
-            <motion.h3 
+          <div className="space-y-6">
+            <MotionWrapper 
               className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-400"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
               Quick Links
-            </motion.h3>
-            <motion.div 
+            </MotionWrapper>
+            <MotionWrapper 
               className="grid grid-cols-2 gap-4"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -131,25 +132,25 @@ const Footer = () => {
               transition={{ delay: 0.2 }}
             >
                {quickLinks.map((link, index) => (
-                <motion.a
+                <MotionLink
                   key={link.name}
                   href={link.path}
                   className="text-muted-foreground/80 hover:text-primary transition-all duration-300 hover:bg-blue-500/5 rounded-lg px-3 py-2"
-                  whileHover={{ x: 5 }}
+                  whileHover={!isAndroid && { x: 5 }}
                   initial={{ opacity: 0, y: 10 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: 0.1 * index }}
                 >
                   {link.name}
-                </motion.a>
+                </MotionLink>
               ))}
-            </motion.div>
-          </motion.div>
+            </MotionWrapper>
+          </div>
         </div>
 
         {/* Copyright Section */}
-        <motion.div 
+        <MotionWrapper 
           className="mt-12 pt-8 text-center border-t border-blue-500/10"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
@@ -171,7 +172,7 @@ const Footer = () => {
               </Link>
             </div>
           </div>
-        </motion.div>
+        </MotionWrapper>
       </div>
 
       <PrivacyPolicyModal 

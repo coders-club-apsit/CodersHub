@@ -14,7 +14,7 @@ import { Button } from "./ui/button";
 import useFetch from "@/hooks/use-fetch";
 import { deleteResource, saveResource } from "@/api/api-resources";
 import { BarLoader } from "react-spinners";
-import { motion } from "framer-motion";
+import { motion } from "framer-motion"  ;
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { ADMIN_EMAILS } from "@/config/admin";

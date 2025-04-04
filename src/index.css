@@ -240,6 +240,18 @@
   padding-left: 25px;
   color: white;
 }
+.resource-card {
+  transition: transform 0.2s ease;
+}
+
+.resource-card:hover {
+  transform: translateY(-4px);
+  transition: transform 0.2s ease;
+}
+
+.action-button button:hover .arrow-icon {
+  transform: translateX(4px);
+}
 
 .cl-card {
   @apply bg-card text-card-foreground dark:bg-card dark:text-card-foreground;

@@ -1,13 +1,14 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import Header from "@/components/header";
 import "@/components/HeroSection";
 import { TextAnimate } from "@/components/ui/text-animate"; 
 import "@/index.css";
 import HeroSection from "@/components/HeroSection";
 import FaqSection from "@/components/FaqSection";
-import ResourcesSection from "@/components/ResourceSection";
 import { motion, useReducedMotion } from "framer-motion"; // Add useReducedMotion
 import { isAndroid } from "react-device-detect";
+
+const ResourcesSection = lazy(() => import('@/components/ResourceSection'));
 
 function LandingPage() {
   const prefersReducedMotion = useReducedMotion();
@@ -73,7 +74,9 @@ function LandingPage() {
       {/* Content */}
       <Header />
       <HeroSection />
-      <ResourcesSection />
+      <Suspense fallback={<div>Loading...</div>}>
+        <ResourcesSection />
+      </Suspense>
       <FaqSection />
     </div>
   );

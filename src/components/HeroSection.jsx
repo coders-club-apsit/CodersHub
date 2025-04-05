@@ -19,7 +19,7 @@ const NeonCircles = () => (
 // Conditional wrapper for motion components
 const MotionWrapper = ({ children, ...props }) => {
   if (isAndroid) {
-    return <div className={props.className}>{children}</div>;
+    return <button className={props.className} onClick={props.onClick}>{children}</button>;
   }
   return <motion.button {...props}>{children}</motion.button>;
 };
@@ -137,4 +137,4 @@ const HeroSection = () => {
   );
 };
 
-export default HeroSection; 
+export default HeroSection;

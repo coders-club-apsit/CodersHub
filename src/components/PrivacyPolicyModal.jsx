@@ -139,4 +139,5 @@ const PrivacyPolicyModal = ({ open, onOpenChange }) => {
   );
 };
 
+
 export default PrivacyPolicyModal;

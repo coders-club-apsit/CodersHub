@@ -49,7 +49,6 @@ const AddNotes = () => {
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [formData, setFormData] = useState(null);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
-  const isDevelopment = process.env.NODE_ENV === "development";
 
   const {
     register,
@@ -108,10 +107,6 @@ const AddNotes = () => {
   };
 
   const handleConfirmed = () => {
-    if (!isDevelopment) {
-      alert("Note submissions are temporarily disabled in production.");
-      return;
-    }
     onSubmit(formData);
     setShowConfirmDialog(false);
   };
@@ -145,14 +140,6 @@ const AddNotes = () => {
         <h1 className="gradient-title font-extrabold text-5xl sm:text-7xl text-center pb-8">
           Post a Note
         </h1>
-
-        {!isDevelopment && (
-          <div className="mb-8 bg-yellow-500/10 border border-yellow-500/20 p-4 rounded-lg">
-            <p className="text-yellow-500 text-center">
-              ⚠️ Note submissions are temporarily disabled in production. Please check back later.
-            </p>
-          </div>
-        )}
 
         <form onSubmit={handleSubmit(handleConfirmSubmit)} className="mx-auto space-y-6">
           {/* Title Input */}
@@ -232,9 +219,6 @@ const AddNotes = () => {
                   value={field.value}
                   onChange={field.onChange}
                   className={errors.content ? "border-red-500" : ""}
-                  preview="edit"
-                  hideToolbar={false}
-                  visibleDragbar={false}
                 />
               )}
             />
@@ -284,7 +268,7 @@ const AddNotes = () => {
                 type="submit"
                 size="lg"
                 className="w-full relative group bg-gradient-to-r from-primary to-blue-600 hover:opacity-90 transition-all duration-300"
-                disabled={isSubmitting || loadingCreateNote || !isDevelopment}
+                disabled={isSubmitting || loadingCreateNote}
               >
                 <span className="relative z-10 flex items-center justify-center gap-2">
                   {isSubmitting || loadingCreateNote ? (

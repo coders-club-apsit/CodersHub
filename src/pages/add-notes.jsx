@@ -36,6 +36,7 @@ import { getTopics } from "@/api/api-topics";
 import { addNewNote } from "@/api/api-Notes";
 import useFetch from "@/hooks/use-fetch";
 
+
 const schema = z.object({
   title: z.string().min(1, { message: "Title is required" }),
   description: z.string().min(1, { message: "Description is required" }),

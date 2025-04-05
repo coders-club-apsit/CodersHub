@@ -18,7 +18,7 @@ import { useUser } from "@clerk/clerk-react";
 import { BarLoader } from "react-spinners";
 import MDEditor from "@uiw/react-md-editor";
 import { Button } from "@/components/ui/button";
-import { updateNote, getSingleNote } from "@/api/api-Notes";
+import { updateResource, getSingleResource } from "@/api/api-resources";
 import { useNavigate, useParams } from "react-router-dom";
 import AddTopicDrawer from "@/components/add-topic-drawer";
 
@@ -29,10 +29,10 @@ const schema = z.object({
   content: z.string().optional(),
 });
 
-const EditNotes = () => {
+const EditResources = () => {
   const { isLoaded, user } = useUser();
   const navigate = useNavigate();
-  const { noteId } = useParams();
+  const { resourceId } = useParams();
 
   const {
     control,
@@ -56,76 +56,71 @@ const EditNotes = () => {
   } = useFetch(getTopics);
 
   const {
-    fn: fnGetNote,
-    data: note,
-    loading: loadingNote,
-  } = useFetch(getSingleNote, { note_id: noteId });
+    fn: fnGetResource,
+    data: resource,
+    loading: loadingResource,
+  } = useFetch(getSingleResource, { resource_id: resourceId });
 
   const {
-    fn: fnUpdateNote,
-    loading: loadingUpdateNote,
-    error: errorUpdateNote,
-  } = useFetch(updateNote);
+    fn: fnUpdateResource,
+    loading: loadingUpdateResource,
+    error: errorUpdateResource,
+  } = useFetch(updateResource);
 
-  // Fetch topics and note data on component mount
   useEffect(() => {
     if (isLoaded) {
       fnTopics();
-      fnGetNote();
+      fnGetResource();
     }
   }, [isLoaded]);
 
-  // Populate form with existing note data
   useEffect(() => {
-    if (note) {
+    if (resource) {
       reset({
-        title: note.title || "",
-        description: note.description || "",
-        topic_id: note.topics?.id ? note.topics.id.toString() : "",
-        content: note.content || "",
+        title: resource.title || "",
+        description: resource.description || "",
+        topic_id: resource.topic_id ? resource.topic_id.toString() : "",
+        content: resource.content || "",
       });
     }
-  }, [note, reset]);
+  }, [resource, reset]);
+  useEffect(() => {
+    console.log("Resource data:", resource);
+  }, [resource]);
 
   const onSubmit = async (data) => {
     try {
       const payload = {
-        id: noteId,
+        id: resourceId,
         title: data.title,
         description: data.description,
         topic_id: data.topic_id,
-        content: data.content || "", // Ensure content is always a string
+        content: data.content || "",
         recruiter_id: user.id,
       };
 
-      await fnUpdateNote(payload);
-      navigate("/notes"); // Navigate back to notes page after successful update
+      await fnUpdateResource(payload);
+      navigate("/resources");
     } catch (error) {
-      console.error("Error updating note:", error);
+      console.error("Error updating resource:", error);
     }
   };
 
-  if (!isLoaded || loadingTopics || loadingNote) {
+  if (!isLoaded || loadingTopics || loadingResource) {
     return <BarLoader className="mb-4" width={"100%"} color="#36d7b7" />;
   }
 
   return (
     <div>
       <h1 className="gradient-title font-extrabold text-5xl sm:text-7xl text-center pb-8">
-        Edit Note
+        Edit Resource
       </h1>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col gap-4 p-4 pb-0"
-      >
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4 p-4 pb-0">
         <Controller
           name="title"
           control={control}
           render={({ field }) => (
-            <Input
-              placeholder="Note title"
-              {...field}
-            />
+            <Input placeholder="Resource title" {...field} />
           )}
         />
         {errors.title && <p className="text-red-500">{errors.title.message}</p>}
@@ -134,25 +129,17 @@ const EditNotes = () => {
           name="description"
           control={control}
           render={({ field }) => (
-            <Textarea
-              placeholder="Note Description"
-              {...field}
-            />
+            <Textarea placeholder="Resource Description" {...field} />
           )}
         />
-        {errors.description && (
-          <p className="text-red-500">{errors.description.message}</p>
-        )}
+        {errors.description && <p className="text-red-500">{errors.description.message}</p>}
 
         <div className="flex items-center gap-4">
           <Controller
             name="topic_id"
             control={control}
             render={({ field }) => (
-              <Select
-                value={field.value}
-                onValueChange={field.onChange}
-              >
+              <Select value={field.value} onValueChange={field.onChange}>
                 <SelectTrigger>
                   <SelectValue placeholder="Filter by topics">
                     {field.value && topics
@@ -174,46 +161,36 @@ const EditNotes = () => {
           />
           <AddTopicDrawer fetchTopics={fnTopics} />
         </div>
-        {errors.topic_id && (
-          <p className="text-red-500">{errors.topic_id.message}</p>
-        )}
+        {errors.topic_id && <p className="text-red-500">{errors.topic_id.message}</p>}
 
         <Controller
           name="content"
           control={control}
           render={({ field }) => (
-            <MDEditor
-              value={field.value}
-              onChange={(value) => field.onChange(value || "")} // Ensure content is always a string
-            />
+            <MDEditor value={field.value} onChange={(value) => field.onChange(value || "")} />
           )}
         />
-        {errors.content && (
-          <p className="text-red-500">{errors.content.message}</p>
-        )}
+        {errors.content && <p className="text-red-500">{errors.content.message}</p>}
 
-        {errorUpdateNote && (
-          <p className="text-red-500">{errorUpdateNote.message}</p>
-        )}
-
-        {loadingUpdateNote && <BarLoader width={"100%"} color="#36d7b7" />}
+        {errorUpdateResource && <p className="text-red-500">{errorUpdateResource.message}</p>}
+        {loadingUpdateResource && <BarLoader width={"100%"} color="#36d7b7" />}
 
         <div className="flex gap-4">
-          <Button 
-            type="submit" 
-            variant="blue" 
-            size="lg" 
+          <Button
+            type="submit"
+            variant="blue"
+            size="lg"
             className="mt-2"
-            disabled={loadingUpdateNote || !isDirty}
+            disabled={loadingUpdateResource || !isDirty}
           >
-            Update Note
+            Update Resource
           </Button>
-          <Button 
-            type="button" 
-            variant="outline" 
-            size="lg" 
+          <Button
+            type="button"
+            variant="outline"
+            size="lg"
             className="mt-2"
-            onClick={() => navigate("/notes")}
+            onClick={() => navigate("/resources")}
           >
             Cancel
           </Button>
@@ -223,4 +200,4 @@ const EditNotes = () => {
   );
 };
 
-export default EditNotes;
+export default EditResources;

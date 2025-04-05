@@ -1,26 +1,26 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import './App.css';
-import AppLayout from './layout/app-layout';
-import LandingPage from './pages/landingpage';
-import AboutUs from './pages/aboutus';
-import { ThemeProvider } from './components/theme-provider';
-import Notes from './pages/notes';
-import ProtectedRoute from './components/protected-route';
-import AddNotes from './pages/add-notes';
-import SavedNotes from './pages/saved-notes';
-import SavedResources from './pages/saved-resources';
-import AddResoures from './pages/add-resources';
-import Resources from './pages/resources';
-import Note from './pages/note';
-import NotePage from './pages/note';
-import AccessDenied from './pages/access-denied';
-import { ToastContainer } from 'react-toastify';
-import NotesListing from './pages/notes';
-import EditNotes from './pages/editnotes';
-import ResourcesPage from './pages/resource';
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import "./App.css";
+import AppLayout from "./layout/app-layout";
+import LandingPage from "./pages/landingpage";
+import AboutUs from "./pages/aboutus";
+import { ThemeProvider } from "./components/theme-provider";
+import Notes from "./pages/notes";
+import ProtectedRoute from "./components/protected-route";
+import AddNotes from "./pages/add-notes";
+import SavedNotes from "./pages/saved-notes";
+import SavedResources from "./pages/saved-resources";
+import AddResoures from "./pages/add-resources";
+import Resources from "./pages/resources";
+import Note from "./pages/note";
+import NotePage from "./pages/note";
+import AccessDenied from "./pages/access-denied";
+import { ToastContainer } from "react-toastify";
+import NotesListing from "./pages/notes";
+import EditNotes from "./pages/editnotes";
+import ResourcesPage from "./pages/resource";
 import { useState, useEffect, useCallback, useMemo } from "react";
-import EditResources from './pages/editresources';
-import PrivacyPolicyModal from './components/PrivacyPolicyModal';
+import EditResources from "./pages/editresources";
+import PrivacyPolicyModal from "./components/PrivacyPolicyModal";
 
 const App = () => {
   const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
@@ -34,26 +34,28 @@ const App = () => {
   }, []);
 
   // Memorize the router configuration to prevent re-renders
-  const router = useMemo(() => createBrowserRouter([
-    {
-      element: <AppLayout />,
-      children: [
+  const router = useMemo(
+    () =>
+      createBrowserRouter([
         {
-          path: '/',
-          element: <LandingPage />,
+          element: <AppLayout />,
+          children: [
+            {
+              path: "/",
+              element: <LandingPage />,
+            },
+          ],
         },
-      ],
-    },  
         {
-          path: '/access-denied',
+          path: "/access-denied",
           element: <AccessDenied />,
         },
         {
-          path: '/note/edit/:noteId',
+          path: "/note/edit/:noteId",
           element: <EditNotes />,
         },
         {
-          path: '/about-us',
+          path: "/about-us",
           element: (
             <ProtectedRoute>
               <AboutUs />
@@ -61,7 +63,7 @@ const App = () => {
           ),
         },
         {
-          path: '/notes',
+          path: "/notes",
           element: (
             <ProtectedRoute>
               <NotesListing />
@@ -69,7 +71,7 @@ const App = () => {
           ),
         },
         {
-          path: '/note/:id',
+          path: "/note/:id",
           element: (
             <ProtectedRoute>
               <NotePage />
@@ -77,7 +79,7 @@ const App = () => {
           ),
         },
         {
-          path: '/resources',
+          path: "/resources",
           element: (
             <ProtectedRoute>
               <Resources />
@@ -85,7 +87,7 @@ const App = () => {
           ),
         },
         {
-          path: '/resource/:id',
+          path: "/resource/:id",
           element: (
             <ProtectedRoute>
               <ResourcesPage />
@@ -93,11 +95,11 @@ const App = () => {
           ),
         },
         {
-          path: '/resource/edit/:resourceId',
+          path: "/resource/edit/:resourceId",
           element: <EditResources />,
         },
         {
-          path: '/add-notes',
+          path: "/add-notes",
           element: (
             <ProtectedRoute>
               <AddNotes />
@@ -105,7 +107,7 @@ const App = () => {
           ),
         },
         {
-          path: '/add-resources',
+          path: "/add-resources",
           element: (
             <ProtectedRoute>
               <AddResoures />
@@ -113,7 +115,7 @@ const App = () => {
           ),
         },
         {
-          path: '/saved-notes',
+          path: "/saved-notes",
           element: (
             <ProtectedRoute>
               <SavedNotes />
@@ -121,26 +123,27 @@ const App = () => {
           ),
         },
         {
-          path: '/saved-resources',
+          path: "/saved-resources",
           element: <SavedResources />,
         },
         {
-          path: '/privacy-policy',
+          path: "/privacy-policy",
           loader: () => {
             handlePrivacyPolicyOpen();
             return null;
           },
           element: null,
         },
-      
-  ]), [handlePrivacyPolicyOpen]);
+      ]),
+    [handlePrivacyPolicyOpen]
+  );
 
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <RouterProvider router={router} />
-      <PrivacyPolicyModal 
-        open={showPrivacyPolicy} 
-        onOpenChange={handlePrivacyPolicyClose} 
+      <PrivacyPolicyModal
+        open={showPrivacyPolicy}
+        onOpenChange={handlePrivacyPolicyClose}
       />
       <ToastContainer />
     </ThemeProvider>

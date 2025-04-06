@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { isAndroid } from "react-device-detect";
 
+
 const NeonCircles = () => (
   <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
     {/* Grid Pattern */}

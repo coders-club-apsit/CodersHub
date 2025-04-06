@@ -82,14 +82,14 @@ const ResourcesCard = ({
     className="space-y-6 lg:max-w-[33.33%] max-w-2xl w-full lg:min-h-[410px]"
   >
     <Card className="flex flex-col h-full max-w-[350px]  transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/10 border border-blue-500/10 bg-gradient-to-b from-white/5 to-transparent backdrop-blur-sm">
-      {loadingDeleteResource && (
-        <BarLoader className="mt-4 w-full" color="hsl(var(--primary))" />
-      )}
-      <CardHeader className="space-y-4 p-4 sm:p-6 flex-shrink-0">
-          <div className="flex flex-col gap-4">
-            <div className="flex flex-row sm:flex-row sm:items-center justify-between gap-2 sm:gap-4">
-              <CardTitle className="font-bold text-lg sm:text-xl lg:text-2xl">
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-400 line-clamp-2 sm:line-clamp-1">
+            {loadingDeleteResource && (
+              <BarLoader className="mt-4 w-full" color="hsl(var(--primary))" />
+            )}
+            <CardHeader className="space-y-4 p-4 sm:p-6">
+              <div className="flex flex-col gap-4">
+                <div className="flex flex-row sm:flex-row sm:items-center justify-between gap-2 sm:gap-4">
+                  <CardTitle className="font-bold text-lg sm:text-xl lg:text-2xl">
+                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-400 line-clamp-2 sm:line-clamp-1">
                   {resource.title}
                 </span>
               </CardTitle>

@@ -59,9 +59,22 @@ const Footer = () => {
 
   return (
     <footer className="relative mt-20">
+      {/* Top Shadow Gradient */}
+      <div className="absolute inset-x-0 -top-20 h-20 bg-gradient-to-b from-transparent to-background pointer-events-none" />
+      
       {/* Background Elements */}
-      <div className="absolute inset-0 bg-gradient-to-b from-background to-primary/20" />
-      <div className="absolute inset-0 bg-grid-white/5 bg-[size:40px_40px]" />
+      <div className="absolute inset-0 max-h-4xl overflow-hidden -z-10">
+        {/* Base gradient with darker start */}
+        <div className="absolute inset-0 bg-gradient-to-b from-background/95 via-background/80 to-primary/10" />
+
+        {/* Colored gradients with adjusted opacity */}
+        <div className="absolute top-0 left-0 w-[300px] h-[300px] rounded-full bg-pink-500/20 blur-[100px] opacity-40" />
+        <div className="absolute bottom-0 right-0 w-[400px] h-[400px] rounded-full bg-blue-600/20 blur-[120px] opacity-40" />
+        <div className="absolute top-1/2 right-1/4 w-[150px] h-[150px] rounded-full bg-cyan-400/20 blur-[100px] opacity-40" />
+        
+        {/* Enhanced Grid overlay */}
+        <div className="absolute inset-0 bg-grid-white/5 bg-[size:40px_40px] [mask-image:linear-gradient(to_bottom,transparent,black)]" />
+      </div>
       
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

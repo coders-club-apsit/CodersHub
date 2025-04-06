@@ -28,6 +28,11 @@ const AppLayout = () => {
       <main className=" mx-auto min-h-screen overflow-hidden">
         <Outlet />
       </main>
+      <DotPattern
+        className={cn(
+          '-z-50 [mask-image:radial-gradient(250px_circle_at_center,white,transparent)] lg:[mask-image:radial-gradient(350px_circle_at_center,white,transparent)]'
+        )}
+      />
       <div className="mt-12">
         <Footer />
       </div>

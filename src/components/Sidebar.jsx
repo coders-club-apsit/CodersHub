@@ -140,7 +140,10 @@ export function Sidebar() {
           </SidebarMenu>
         </SignedIn>
 
-        {isAdmin && (
+        
+      </SidebarContent>
+      <SidebarFooter>
+      {isAdmin && (
             <>
               <Link to="/add-notes">
                 <Button
@@ -160,21 +163,9 @@ export function Sidebar() {
                   Add Resources
                 </Button>
               </Link>
-              {/* <Link to="/certificates">
-                  <Button
-                    variant="ghost"
-                    className={`w-full justify-start ${
-                      isActive("/certificates") ? "bg-accent text-primary" : "text-foreground"
-                    } hover:text-primary hover:bg-accent`}
-                  >
-                    <FaAward className="mr-2 h-4 w-4" />
-                    Certificates
-                  </Button>
-                </Link> */}
+              
             </>
           )}
-      </SidebarContent>
-      <SidebarFooter>
         <SignOutButton>
           <Button
             variant="ghost"

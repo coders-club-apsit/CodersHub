@@ -6,10 +6,14 @@ import { cn } from '@/lib/utils';
 import Footer from '@/components/Footer';
 import Spline from '@splinetool/react-spline';
 import { ToastContainer } from 'react-toastify';
+import { useSessionTimeout } from '@/utils/session-timer';
 
 const AppLayout = () => {
   const matches = useMatches();
   const navigate = useNavigate();
+
+  // Initialize session timeout
+  useSessionTimeout();
 
   useEffect(() => {
     const isPrivacyPolicy = matches.some(match => match.pathname === '/privacy-policy');

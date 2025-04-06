@@ -39,4 +39,3 @@ This project abides by our [Privacy Policy](./PRIVACY.md) and is licensed under 
 ---
 
 > _“Code, Collaborate, Conquer!”_ — Coder's Club
-

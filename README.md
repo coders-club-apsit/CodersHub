@@ -25,14 +25,6 @@ We conduct:
 
 ---
 
-## 🛠️ Tech Stack
-- **Frontend**: React + Tailwind CSS + ShadCN UI
-- **Backend**: Node.js / Express (planned)
-- **Database**: Firebase / MongoDB (TBD)
-- **Deployment**: Vercel / Netlify (for frontend)
-
----
-
 
 ## 🔒 Privacy & License
 This project abides by our [Privacy Policy](./PRIVACY.md) and is licensed under the MIT License.

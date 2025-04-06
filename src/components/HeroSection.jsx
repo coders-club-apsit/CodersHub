@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { isAndroid } from "react-device-detect";
-
+import { useUser } from "@clerk/clerk-react";
 
 const NeonCircles = () => (
   <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
@@ -42,6 +42,12 @@ const CodeBlock = () => (
 
 const HeroSection = () => {
   const navigate = useNavigate();
+  const { user, isSignedIn } = useUser();
+
+  // Function to capitalize first letter only
+  const capitalizeFirstLetter = (str) => {
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  };
 
   const buttonVariants = {
     initial: { scale: 1 },
@@ -64,11 +70,24 @@ const HeroSection = () => {
       <div className="container px-8 mx-auto z-10">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 animate-fade-in [animation-delay:300ms]">
-            Welcome to the <span className="text-gradient">Coder's Club</span>
+            {isSignedIn ? (
+              <>Welcome back <span className="text-gradient">{capitalizeFirstLetter(user.firstName)}</span></>
+            ) : (
+              <>Welcome to the <span className="text-gradient">Coder's Club</span></>
+            )}
           </h1>
           <p className="text-lg md:text-xl mb-8 text-muted-foreground animate-fade-in [animation-delay:200ms]">
-            Join our vibrant community of problem solvers and ace your coding interviews.
-            Learn Data Structures & Algorithms with hands-on practice and peer mentorship.
+            {isSignedIn ? (
+              <>
+                Ready to continue your coding journey? Explore our latest resources
+                and practice problems to enhance your DSA skills.
+              </>
+            ) : (
+              <>
+                Join our vibrant community of problem solvers and ace your coding interviews.
+                Learn Data Structures & Algorithms with hands-on practice and peer mentorship.
+              </>
+            )}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in [animation-delay:400ms]">
             <MotionWrapper

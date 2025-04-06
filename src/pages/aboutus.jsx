@@ -149,7 +149,7 @@ export default function AboutUs() {
 
   return (
     <SidebarProvider>
-      <div className="flex h-screen w-full overflow-auto flex-col md:flex-row">
+      <div className="flex h-screen w-full flex-col md:flex-row">
         <Sidebar />
         <div className="flex-1 bg-gradient-to-b from-background via-background/95 to-background relative">
           <SideHeader />

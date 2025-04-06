@@ -3,7 +3,7 @@ import "./App.css";
 import AppLayout from "./layout/app-layout";
 import LandingPage from "./pages/landingpage";
 import AboutUs from "./pages/aboutus";
-import { ThemeProvider } from "./components/theme-provider";
+import { ThemeProvider } from "@/components/theme-provider";
 import Notes from "./pages/notes";
 import ProtectedRoute from "./components/protected-route";
 import AddNotes from "./pages/add-notes";
@@ -139,7 +139,7 @@ const App = () => {
   );
 
   return (
-    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+    <ThemeProvider defaultTheme="dark" storageKey="app-theme">
       <RouterProvider router={router} />
       <PrivacyPolicyModal
         open={showPrivacyPolicy}

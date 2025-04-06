@@ -3,7 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { Button } from './ui/button';
 import { SignedIn, SignedOut, UserButton, SignIn } from '@clerk/clerk-react';
 import { PenBox, NotebookPen, Save, Link2 } from 'lucide-react';
-import "@/components/ThemeToggle";
+import { ThemeToggle } from "./ThemeToggle";
 import { motion } from 'framer-motion';
 
 const Header = () => {

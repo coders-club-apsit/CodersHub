@@ -47,7 +47,9 @@ const ResourcesListing = () => {
           />
           <main className="flex-1 p-6">
             <h1 className="text-3xl font-bold mb-6 text-primary">Resources</h1>
-            <div className="relative mb-6 flex justify-end">
+            
+            {/* Search Input */}
+            <div className="relative mb-6">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
               <Input
                 type="text"
@@ -55,35 +57,43 @@ const ResourcesListing = () => {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10 w-full pr-20 bg-background text-foreground rounded-md"
-                              />
-                            </div>
-                            {loadingResources && (
-                              <div className="flex flex-col sm:flex-row flex-wrap gap-6 p-4">
-                                {[...Array(4)].map((_, index) => (
-                                  <div key={index} className="flex flex-col space-y-3">
-                                    <Skeleton className="h-[300px] w-[290px] rounded-xl" />
-                                    <div className="space-y-2">
-                                      <Skeleton className="h-4 w-[250px]" />
-                                      <Skeleton className="h-4 w-[200px]" />
-                                      <Skeleton className="h-4 w-[150px]" />
-                                    </div>
-                                  </div>
-                                ))}
-                              </div>
-                            )}
-            <div className="flex flex-col sm:flex-row gap-6 p-4">
-              {!loadingResources && resources?.length ? (
-                resources.map((resource) => (
-                  <ResourcesCard
-                    key={resource.id}
-                    resource={resource}
-                    savedInit={resource?.saved?.length > 0}
-                  />
-                ))
-              ) : (
-                <div className="col-span-full text-center items-center text-muted-foreground"></div>
-              )}
+              />
             </div>
+
+            {/* Loading Skeletons */}
+            {loadingResources && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 auto-rows-fr">
+                {[...Array(4)].map((_, index) => (
+                  <div key={index} className="flex flex-col space-y-3">
+                    <Skeleton className="h-[300px] rounded-xl" />
+                    <div className="space-y-2">
+                      <Skeleton className="h-4 w-[80%]" />
+                      <Skeleton className="h-4 w-[60%]" />
+                      <Skeleton className="h-4 w-[40%]" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Resources Grid */}
+            {!loadingResources && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 auto-rows-fr">
+                {resources?.length ? (
+                  resources.map((resource) => (
+                    <ResourcesCard
+                      key={resource.id}
+                      resource={resource}
+                      savedInit={resource?.saved?.length > 0}
+                    />
+                  ))
+                ) : (
+                  <div className="col-span-full flex flex-col items-center justify-center text-muted-foreground min-h-[300px]">
+                    <p className="text-lg">No resources found</p>
+                  </div>
+                )}
+              </div>
+            )}
           </main>
         </div>
       </div>

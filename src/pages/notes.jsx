@@ -56,7 +56,9 @@ const NotesListing = () => {
           />
           <main className="flex-1 p-6">
             <h1 className="text-3xl font-bold mb-6 text-primary">Notes</h1>
-            <div className="relative mb-6 flex justify-end">
+            
+            {/* Search Input */}
+            <div className="relative mb-6">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
               <Input
                 type="text"
@@ -66,29 +68,41 @@ const NotesListing = () => {
                 className="pl-10 w-full pr-20 bg-background text-foreground rounded-md"
               />
             </div>
+
+            {/* Loading Skeletons */}
             {loadingNotes && (
-              <div className="flex flex-col sm:flex-row flex-wrap gap-6 p-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 auto-rows-fr">
                 {[...Array(4)].map((_, index) => (
                   <div key={index} className="flex flex-col space-y-3">
-                    <Skeleton className="h-[300px] w-[290px] rounded-xl" />
+                    <Skeleton className="h-[300px] rounded-xl" />
                     <div className="space-y-2">
-                      <Skeleton className="h-4 w-[250px]" />
-                      <Skeleton className="h-4 w-[200px]" />
-                      <Skeleton className="h-4 w-[150px]" />
+                      <Skeleton className="h-4 w-[80%]" />
+                      <Skeleton className="h-4 w-[60%]" />
+                      <Skeleton className="h-4 w-[40%]" />
                     </div>
                   </div>
                 ))}
               </div>
             )}
-            <div className="flex flex-col sm:flex-row gap-6 p-4">
-              {!loadingNotes && notes?.length ? (
-                notes.map((note) => (
-                  <NoteCard key={note.id} note={note} savedInit={note?.saved?.length > 0} />
-                ))
-              ) : (
-                <div className="col-span-full text-center items-center text-muted-foreground"></div>
-              )}
-            </div>
+
+            {/* Notes Grid */}
+            {!loadingNotes && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 auto-rows-fr">
+                {notes?.length ? (
+                  notes.map((note) => (
+                    <NoteCard 
+                      key={note.id} 
+                      note={note} 
+                      savedInit={note?.saved?.length > 0}
+                    />
+                  ))
+                ) : (
+                  <div className="col-span-full flex flex-col items-center justify-center text-muted-foreground min-h-[300px]">
+                    <p className="text-lg">No notes found</p>
+                  </div>
+                )}
+              </div>
+            )}
           </main>
         </div>
       </div>
@@ -97,4 +111,3 @@ const NotesListing = () => {
 };
 
 export default NotesListing;
-  

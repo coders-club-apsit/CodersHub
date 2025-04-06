@@ -40,57 +40,79 @@ const NotePage = () => {
   return (
     <>
       <Header />
-      <div
-        className={`mt-9 pt-16 px-4 transition-all duration-300 ${
-          mode === 'compact'
-            ? 'md:px-8 lg:px-16 mx-auto max-w-4xl'
-            : 'w-full px-6 sm:px-10 md:px-20 lg:px-32'
-        }`}
-      >
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <Link
-            to="/notes"
-            className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors mb-6"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            <span>Back to Notes</span>
-          </Link>
-        </motion.div>
+      <div className="min-h-screen pt-20 pb-12 px-4 bg-gradient-to-b from-background to-background/50">
+        <div className={`mx-auto transition-all duration-500 ease-in-out
+          ${mode === 'compact' ? 'max-w-3xl' : 'max-w-7xl'}
+        `}>
+          {/* Navigation and Controls */}
+          <div className="flex items-center justify-between mb-8">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Link
+                to="/notes"
+                className="group flex items-center gap-2 text-muted-foreground hover:text-primary transition-all"
+              >
+                <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
+                <span>Back to Notes</span>
+              </Link>
+            </motion.div>
 
-        <div className="flex flex-col gap-6 md:flex-row justify-between items-center mb-4">
-          <h1 className="gradient-title font-extrabold pb-3 text-4xl sm:text-6xl">
-            {notes?.title}
-          </h1>
-          <motion.button
-            whileTap={{ scale: 0.95 }}
-            whileHover={{ scale: 1.02 }}
-            onClick={toggleMode}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl shadow-md text-sm font-medium transition
-              ${mode === 'compact' ? 'bg-muted hover:bg-muted/80' : 'bg-primary/10 hover:bg-primary/20'}
-            `}
+            <motion.button
+              whileTap={{ scale: 0.95 }}
+              whileHover={{ scale: 1.05 }}
+              onClick={toggleMode}
+              className={`
+                flex items-center gap-2 px-4 py-2 rounded-xl
+                backdrop-blur-sm border transition-all duration-300
+                ${mode === 'compact' 
+                  ? 'bg-blue-500/10 border-blue-500/20 hover:bg-blue-500/20 hover:border-blue-500/30' 
+                  : 'bg-primary/10 border-primary/20 hover:bg-primary/20 hover:border-primary/30'}
+              `}
+            >
+              <Expand className={`w-4 h-4 transition-transform ${mode === 'compact' ? 'rotate-0' : 'rotate-90'}`} />
+              <span className="text-sm font-medium">{mode === 'compact' ? 'Full Width' : 'Compact'}</span>
+            </motion.button>
+          </div>
+
+          {/* Note Content */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="space-y-8"
           >
-            <Expand className="w-4 h-4" />
-            {mode === 'compact' ? 'Full Width' : 'Compact'}
-          </motion.button>
+            {/* Title and Topic */}
+            <div className="space-y-4">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-500">
+                {notes?.title}
+              </h1>
+              {notes?.topics?.topic_logo_url && (
+                <img
+                  src={notes?.topics?.topic_logo_url}
+                  className="h-12 transition-transform hover:scale-105"
+                  alt={notes?.title}
+                />
+              )}
+            </div>
+
+            {/* Description */}
+            {notes?.description && (
+              <div className="glass-card p-6 rounded-xl">
+                <h2 className="text-xl font-semibold mb-3 text-primary/80">About this Note</h2>
+                <p className="text-lg text-muted-foreground">{notes?.description}</p>
+              </div>
+            )}
+
+            {/* Content */} 
+              <MDEditor.Markdown
+                source={notes?.content}
+                className="prose prose-invert max-w-none sm:text-lg"
+              />
+          </motion.div>
         </div>
-
-        <img
-          src={notes?.topics?.topic_logo_url}
-          className="h-12 mb-6"
-          alt={notes?.title}
-        />
-
-        <h2 className="text-2xl sm:text-3xl font-bold mt-6">About this Note</h2>
-        <p className="sm:text-lg">{notes?.description}</p>
-
-        <MDEditor.Markdown
-          source={notes?.content}
-          className="bg-transparent sm:text-lg mt-6"
-        />
       </div>
     </>
   );

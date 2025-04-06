@@ -33,8 +33,22 @@ const teamMembers = [
     linkedin: "parth-das-675784259",
   },
   {
+    name: "Samay Navale",
+    role: "Community Head",
+    img: "samay.png",
+    linkedin: "samay-navale",
+  },
+  {
+    name: "Ovee Dolkar",
+    role: "Event Head",
+    img: "ovee.jpeg",
+    // twitter: "kunal_mehta",
+    linkedin: "ovee-dolkar-639261346",
+    // github: "kunalmehta",
+  },
+  {
     name: "Abhishek Thormothe",
-    role: "Design Head",
+    role: "Design & Publicity Head",
     img: "abhiiii.png",
     twitter: "yadneshbamne",
     linkedin: "thormotheabhishek",
@@ -42,7 +56,7 @@ const teamMembers = [
   },
   {
     name: "Sarakshi More",
-    role: "Community Head",
+    role: "Joint Community Head",
     img: "sarakshi.jpg",
     linkedin: "sarakshi-m-158212211",
   },
@@ -53,6 +67,35 @@ const teamMembers = [
     twitter: "Yadnesh_Bamne",
     linkedin: "yadneshbamne21",
   },
+  {
+    name: "Aarya Bivalakr",
+    role: "Joint Publicity Head",
+    img: "aarya.jpg",
+    // twitter: "riya_sharma",
+    linkedin: "aarya-bivalkar-1a89b928a",
+  },
+  {
+    name: "Durva Waghchaure",
+    role: "Joint Event Head",
+    img: "durva.jpg",
+    // twitter: "kunal_mehta",
+    linkedin: "durva-waghchaure-4793942b9",
+    // github: "kunalmehta",
+  },
+  {
+    name: "Abdul Khan",
+    role: "Joint Technical Head",
+    img: "abdul.jpg",
+    linkedin: "abdul-rehman-khan-68130328b",
+  },
+  {
+    name: "Zahid Hamdule",
+    role: "Joint Content Head",
+    img: "zahid.jpg",
+    // twitter: "rohan_patel",
+    linkedin: "zahid-hamdule-5a198a285",
+    // github: "rohanpatel",
+  }
 ];
 
 const containerVariants = {
@@ -159,6 +202,7 @@ export default function AboutUs() {
                         <img
                           src={imageUrls[img] || "/placeholder.jpg"}
                           alt={name}
+                          align="top"
                           className={`w-full h-full object-cover rounded-full border-2 border-primary/20 group-hover:border-primary/40 transition-all duration-500 ${
                             loadedImages[img] ? "opacity-100" : "opacity-0"
                           }`}

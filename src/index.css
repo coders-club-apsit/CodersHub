@@ -107,6 +107,24 @@
 
   html {
     @apply scroll-smooth;
+    scrollbar-gutter: stable;
+  }
+
+  body {
+    @apply overflow-y-scroll;
+  }
+
+  /* Consistent scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-background/50;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-primary/10 rounded-full hover:bg-primary/20 transition-colors;
   }
 }
 

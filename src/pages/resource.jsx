@@ -9,6 +9,7 @@ import Header from "@/components/header";
 import { ArrowLeft, Expand } from "lucide-react";
 import { motion } from "framer-motion";
 import useReadingMode from "@/hooks/useReadingMode";
+import { isAndroid } from "react-device-detect";
 
 const ResourcesPage = () => {
   const { isLoaded } = useUser();
@@ -42,8 +43,8 @@ const ResourcesPage = () => {
           {/* Navigation and Controls */}
           <div className="flex items-center justify-between mb-8">
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
+              initial={!isAndroid && { opacity: 0, x: -20 }}
+              animate={!isAndroid && { opacity: 1, x: 0 }}
               transition={{ duration: 0.3 }}
             >
               <Link
@@ -55,11 +56,13 @@ const ResourcesPage = () => {
               </Link>
             </motion.div>
 
-            <motion.button
-              whileTap={{ scale: 0.95 }}
-              whileHover={{ scale: 1.05 }}
-              onClick={toggleMode}
-              className={`
+            {/* Hide width toggle on mobile */}
+            <div className="hidden md:block">
+              <motion.button
+                whileTap={!isAndroid && { scale: 0.95 }}
+                whileHover={!isAndroid && { scale: 1.05 }}
+                onClick={toggleMode}
+                className={`
                 flex items-center gap-2 px-4 py-2 rounded-xl
                 backdrop-blur-sm border transition-all duration-300
                 ${
@@ -68,28 +71,32 @@ const ResourcesPage = () => {
                     : "bg-primary/10 border-primary/20 hover:bg-primary/20 hover:border-primary/30"
                 }
               `}
-            >
-              <Expand
-                className={`w-4 h-4 transition-transform ${
-                  mode === "compact" ? "rotate-0" : "rotate-90"
-                }`}
-              />
-              <span className="text-sm font-medium">
-                {mode === "compact" ? "Full Width" : "Compact"}
-              </span>
-            </motion.button>
+              >
+                <Expand
+                  className={`w-4 h-4 transition-transform ${
+                    mode === "compact" ? "rotate-0" : "rotate-90"
+                  }`}
+                />
+                <span className="text-sm font-medium">
+                  {mode === "compact" ? "Full Width" : "Compact"}
+                </span>
+              </motion.button>
+            </div>
           </div>
 
           {/* Resource Content */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={!isAndroid && { opacity: 0, y: 20 }}
+            animate={!isAndroid && { opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
             className="space-y-8"
           >
             {/* Title and Topic Logo */}
             <div className="space-y-4">
-              <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-500">
+              <h1 
+                className="text-4xl sm:text-5xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-500"
+                title={resources?.title}
+              >
                 {resources?.title}
               </h1>
               {resources?.topics?.topic_logo_url && (
@@ -97,6 +104,7 @@ const ResourcesPage = () => {
                   src={resources?.topics?.topic_logo_url}
                   className="h-12 transition-transform hover:scale-105"
                   alt={resources?.title}
+                  title={resources?.title}
                 />
               )}
             </div>
@@ -114,10 +122,10 @@ const ResourcesPage = () => {
             )}
 
             {/* Content */}
-              <MDEditor.Markdown
-                source={resources?.content}
-                className="prose prose-invert max-w-none sm:text-lg"
-              />
+            <MDEditor.Markdown
+              source={resources?.content}
+              className="prose prose-invert max-w-none sm:text-lg"
+            />
           </motion.div>
         </div>
       </div>

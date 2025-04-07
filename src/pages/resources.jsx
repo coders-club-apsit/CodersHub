@@ -10,17 +10,21 @@ import { getResources } from "@/api/api-resources";
 import { useUser } from "@clerk/clerk-react";
 import ResourcesCard from "@/components/ResourcesCard";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const ResourcesListing = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const { isLoaded } = useUser();
-  const [topic_id, setTopic_id] = useState("");
+  const [selectedTopic, setSelectedTopic] = useState("all");
 
   const {
     fn: fnResources,
     data: resources,
     loading: loadingResources,
-  } = useFetch(getResources, { searchQuery, topic_id });
+  } = useFetch(getResources, { 
+    searchQuery, 
+    topic_id: selectedTopic === "all" ? "" : selectedTopic 
+  });
 
   const { fn: fnTopics, data: topics } = useFetch(getTopics);
 
@@ -30,10 +34,10 @@ const ResourcesListing = () => {
 
   useEffect(() => {
     if (isLoaded) fnResources();
-  }, [isLoaded, searchQuery, topic_id]);
+  }, [isLoaded, searchQuery, selectedTopic]);
 
   if (!isLoaded) {
-    return <div>Loading...</div>; // Simple fallback while user data loads
+    return <div className="flex items-center justify-center h-screen">Loading...</div>; // Centered fallback while user data loads
   }
 
   return (
@@ -48,16 +52,32 @@ const ResourcesListing = () => {
           <main className="flex-1 p-6">
             <h1 className="text-3xl font-bold mb-6 text-primary">Resources</h1>
             
-            {/* Search Input */}
-            <div className="relative mb-6">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
-              <Input
-                type="text"
-                placeholder="Search..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 w-full pr-20 bg-background text-foreground rounded-md"
-              />
+            {/* Search and Filter Controls */}
+            <div className="flex gap-4 mb-6">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  type="text"
+                  placeholder="Search..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10 w-full pr-20 bg-background text-foreground rounded-md"
+                />
+              </div>
+            
+              <Select value={selectedTopic} onValueChange={setSelectedTopic}>
+                <SelectTrigger className="w-[200px]">
+                  <SelectValue placeholder="Select Topic" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Topics</SelectItem>
+                  {topics?.map((topic) => (
+                    <SelectItem key={topic.id} value={topic.id.toString()}>
+                      {topic.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             {/* Loading Skeletons */}

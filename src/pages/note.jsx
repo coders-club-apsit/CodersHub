@@ -8,6 +8,7 @@ import MDEditor from '@uiw/react-md-editor';
 import Header from '@/components/header';
 import { ArrowLeft, Expand } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { isAndroid } from 'react-device-detect';
 
 const NotePage = () => {
   const { isLoaded } = useUser();
@@ -47,8 +48,8 @@ const NotePage = () => {
           {/* Navigation and Controls */}
           <div className="flex items-center justify-between mb-8">
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
+              initial={!isAndroid && { opacity: 0, x: -20 }}
+              animate={!isAndroid && { opacity: 1, x: 0 }}
               transition={{ duration: 0.3 }}
             >
               <Link
@@ -60,33 +61,39 @@ const NotePage = () => {
               </Link>
             </motion.div>
 
-            <motion.button
-              whileTap={{ scale: 0.95 }}
-              whileHover={{ scale: 1.05 }}
-              onClick={toggleMode}
-              className={`
-                flex items-center gap-2 px-4 py-2 rounded-xl
-                backdrop-blur-sm border transition-all duration-300
-                ${mode === 'compact' 
-                  ? 'bg-blue-500/10 border-blue-500/20 hover:bg-blue-500/20 hover:border-blue-500/30' 
-                  : 'bg-primary/10 border-primary/20 hover:bg-primary/20 hover:border-primary/30'}
-              `}
-            >
-              <Expand className={`w-4 h-4 transition-transform ${mode === 'compact' ? 'rotate-0' : 'rotate-90'}`} />
-              <span className="text-sm font-medium">{mode === 'compact' ? 'Full Width' : 'Compact'}</span>
-            </motion.button>
+            {/* Hide width toggle on mobile */}
+            <div className="hidden md:block">
+              <motion.button
+                whileTap={!isAndroid && { scale: 0.95 }}
+                whileHover={!isAndroid && { scale: 1.05 }}
+                onClick={toggleMode}
+                className={`
+                  flex items-center gap-2 px-4 py-2 rounded-xl
+                  backdrop-blur-sm border transition-all duration-300
+                  ${mode === 'compact' 
+                    ? 'bg-blue-500/10 border-blue-500/20 hover:bg-blue-500/20 hover:border-blue-500/30' 
+                    : 'bg-primary/10 border-primary/20 hover:bg-primary/20 hover:border-primary/30'}
+                `}
+              >
+                <Expand className={`w-4 h-4 transition-transform ${mode === 'compact' ? 'rotate-0' : 'rotate-90'}`} />
+                <span className="text-sm font-medium">{mode === 'compact' ? 'Full Width' : 'Compact'}</span>
+              </motion.button>
+            </div>
           </div>
 
           {/* Note Content */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={!isAndroid && { opacity: 0, y: 20 }}
+            animate={!isAndroid && { opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
             className="space-y-8"
           >
-            {/* Title and Topic */}
+            {/* Title and Topic Logo */}
             <div className="space-y-4">
-              <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-500">
+              <h1 
+                className="text-4xl sm:text-5xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-500"
+                title={notes?.title}
+              >
                 {notes?.title}
               </h1>
               {notes?.topics?.topic_logo_url && (
@@ -94,6 +101,7 @@ const NotePage = () => {
                   src={notes?.topics?.topic_logo_url}
                   className="h-12 transition-transform hover:scale-105"
                   alt={notes?.title}
+                  title={notes?.title}
                 />
               )}
             </div>

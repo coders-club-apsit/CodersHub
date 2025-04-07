@@ -77,7 +77,7 @@ const NoteCard = ({
       whileHover={{ y: -5 }}
       className="space-y-6 w-full"
     >
-      <Card className="flex flex-col h-full max-w-[350px]  transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/10 border border-blue-500/10 bg-gradient-to-b from-white/5 to-transparent backdrop-blur-sm">
+      <Card className="flex flex-col h-full transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/10 border border-blue-500/10 bg-gradient-to-b from-white/5 to-transparent backdrop-blur-sm">
         {loadingDeleteNote && (
           <BarLoader className="mt-4 w-full" color="hsl(var(--primary))" />
         )}

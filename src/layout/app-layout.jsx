@@ -7,6 +7,7 @@ import Footer from '@/components/Footer';
 import Spline from '@splinetool/react-spline';
 import { ToastContainer } from 'react-toastify';
 import { useSessionTimeout } from '@/utils/session-timer';
+import { Analytics } from "@vercel/analytics/react"
 
 const AppLayout = () => {
   const matches = useMatches();

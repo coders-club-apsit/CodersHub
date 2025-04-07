@@ -7,7 +7,7 @@ import Footer from '@/components/Footer';
 import Spline from '@splinetool/react-spline';
 import { ToastContainer } from 'react-toastify';
 import { useSessionTimeout } from '@/utils/session-timer';
-import { Analytics } from "@vercel/analytics/react"
+import { Analytics } from '@vercel/analytics/react';
 
 const AppLayout = () => {
   const matches = useMatches();
@@ -38,6 +38,7 @@ const AppLayout = () => {
           '-z-50 [mask-image:radial-gradient(250px_circle_at_center,white,transparent)] lg:[mask-image:radial-gradient(350px_circle_at_center,white,transparent)]'
         )}
       />
+      <Analytics />
       <div className="mt-12">
         <Footer />
       </div>

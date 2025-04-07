@@ -14,4 +14,5 @@ export const ADMIN_EMAILS = [
     "oveedolkar186@apsit.edu.in",
     "23202004@apsit.edu.in",
     "ayushnayak141@apsit.edu.in",
+    "codersclub@apsit.edu.in",
 ];

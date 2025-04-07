@@ -75,7 +75,7 @@ const NotesListing = () => {
               </div>
               
               <Select value={selectedTopic} onValueChange={setSelectedTopic}>
-                <SelectTrigger className="w-[200px]">
+                <SelectTrigger className="w-[35%] sm:w-[200px] bg-background text-foreground rounded-md">
                   <SelectValue placeholder="Select Topic" />
                 </SelectTrigger>
                 <SelectContent>

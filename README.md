@@ -34,6 +34,7 @@ This project abides by our [Privacy Policy](./PRIVACY.md) and is licensed under 
 ## 📬 Contact Us
 - 📧 Email: codersclub@apsit.edu.in
 - 📸 Instagram: [@codersclub_apsit](https://instagram.com/codersclub_apsit)
+- 🧑‍💼 LinkedIn : [company/codersclub-apsit](https://www.linkedin.com/company/codersclub-apsit/)
 - 🌐 Website: [codersclub.apsit.edu.in](https://codersclub.apsit.edu.in/)
 
 ---

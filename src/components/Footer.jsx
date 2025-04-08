@@ -58,7 +58,7 @@ const Footer = () => {
   };
 
   return (
-    <footer className="relative mt-20">
+    <footer className="relative mt-20 overflow-hidden">
       {/* Top Shadow Gradient */}
       <div className="absolute inset-x-0 -top-20 h-20 bg-gradient-to-b from-transparent to-background pointer-events-none" />
       

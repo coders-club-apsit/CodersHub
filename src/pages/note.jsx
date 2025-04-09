@@ -36,7 +36,7 @@ const NotePage = () => {
   };
 
   if (!isLoaded || loadingNotes) {
-    return <BarLoader className="mb-4" width="100%" color="#36d7b7" />;
+    return <BarLoader className="mb-4 bg-gradient-to-r from-blue-400 to-cyan-400" width="100%" />;
   }
 
   return (

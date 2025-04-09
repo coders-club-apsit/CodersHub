@@ -10,19 +10,25 @@ import { Input } from "@/components/ui/input";
 import { getNotes } from "@/api/api-Notes";
 import { useUser } from "@clerk/clerk-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import Preloader from "@/components/Preloader";
 
 const NotesListing = () => {
+  const [showPreloader, setShowPreloader] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const { isLoaded } = useUser();
-  const [topic_id, setTopic_id] = useState("");
+  const [selectedTopic, setSelectedTopic] = useState("all");
 
   const {
     fn: fnNotes,
     data: notes,
     loading: loadingNotes,
-  } = useFetch(getNotes, { searchQuery, topic_id });
+  } = useFetch(getNotes, { 
+    searchQuery, 
+    topic_id: selectedTopic === "all" ? "" : selectedTopic 
+  });
 
-  const { fn: fnTopics } = useFetch(getTopics);
+  const { fn: fnTopics, data: topics } = useFetch(getTopics);
 
   useEffect(() => {
     if (isLoaded) fnTopics();
@@ -30,7 +36,21 @@ const NotesListing = () => {
 
   useEffect(() => {
     if (isLoaded) fnNotes();
-  }, [isLoaded, searchQuery, topic_id]);
+  }, [isLoaded, searchQuery, selectedTopic]);
+
+  // Add preloader delay effect
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowPreloader(false);
+    }, 3000); // 5 seconds delay
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Show preloader during initial load
+  if (!isLoaded || showPreloader) {
+    return <Preloader />;
+  }
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -47,48 +67,78 @@ const NotesListing = () => {
 
   return (
     <SidebarProvider>
-      <div className="flex bg-background text-foreground overflow-hidden w-full">
+      <div className="flex bg-background text-foreground w-full relative">
         <Sidebar />
-        <div className="flex flex-col flex-1 overflow-auto">
+        <div className="flex flex-col flex-1 min-h-screen">
           <SideHeader
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
           />
-          <main className="flex-1 p-6">
+          <main className="flex-1 p-6 relative">
             <h1 className="text-3xl font-bold mb-6 text-primary">Notes</h1>
-            <div className="relative mb-6 flex justify-end">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
-              <Input
-                type="text"
-                placeholder="Search..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 w-full pr-20 bg-background text-foreground rounded-md"
-              />
+            
+            {/* Search and Filter Controls */}
+            <div className="flex gap-4 mb-6">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  type="text"
+                  placeholder="Search..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10 w-full pr-20 bg-background text-foreground rounded-md"
+                />
+              </div>
+              
+              <Select value={selectedTopic} onValueChange={setSelectedTopic}>
+                <SelectTrigger className="w-[35%] sm:w-[200px] bg-background text-foreground rounded-md">
+                  <SelectValue placeholder="Select Topic" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Topics</SelectItem>
+                  {topics?.map((topic) => (
+                    <SelectItem key={topic.id} value={topic.id.toString()}>
+                      {topic.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
+
+            {/* Loading Skeletons */}
             {loadingNotes && (
-              <div className="flex flex-col sm:flex-row flex-wrap gap-6 p-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 auto-rows-fr">
                 {[...Array(4)].map((_, index) => (
                   <div key={index} className="flex flex-col space-y-3">
-                    <Skeleton className="h-[300px] w-[290px] rounded-xl" />
+                    <Skeleton className="h-[300px] rounded-xl" />
                     <div className="space-y-2">
-                      <Skeleton className="h-4 w-[250px]" />
-                      <Skeleton className="h-4 w-[200px]" />
-                      <Skeleton className="h-4 w-[150px]" />
+                      <Skeleton className="h-4 w-[80%]" />
+                      <Skeleton className="h-4 w-[60%]" />
+                      <Skeleton className="h-4 w-[40%]" />
                     </div>
                   </div>
                 ))}
               </div>
             )}
-            <div className="flex flex-col sm:flex-row gap-6 p-4">
-              {!loadingNotes && notes?.length ? (
-                notes.map((note) => (
-                  <NoteCard key={note.id} note={note} savedInit={note?.saved?.length > 0} />
-                ))
-              ) : (
-                <div className="col-span-full text-center items-center text-muted-foreground"></div>
-              )}
-            </div>
+
+            {/* Notes Grid */}
+            {!loadingNotes && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 auto-rows-fr">
+                {notes?.length ? (
+                  notes.map((note) => (
+                    <NoteCard 
+                      key={note.id} 
+                      note={note} 
+                      savedInit={note?.saved?.length > 0}
+                    />
+                  ))
+                ) : (
+                  <div className="col-span-full flex flex-col items-center justify-center text-muted-foreground min-h-[300px]">
+                    <p className="text-lg">No notes found</p>
+                  </div>
+                )}
+              </div>
+            )}
           </main>
         </div>
       </div>
@@ -97,4 +147,3 @@ const NotesListing = () => {
 };
 
 export default NotesListing;
-  

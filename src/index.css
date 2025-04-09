@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -101,12 +101,30 @@
   
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Poppins', sans-serif;
     margin-top: 50px;
   }
 
   html {
     @apply scroll-smooth;
+    scrollbar-gutter: stable;
+  }
+
+  body {
+    @apply overflow-y-scroll;
+  }
+
+  /* Consistent scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-background/50;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-primary/10 rounded-full hover:bg-primary/20 transition-colors;
   }
 }
 
@@ -215,9 +233,9 @@
 
 /* Additional performance optimizations */
 .circle {
-  -webkit-backface-visibility: hidden; /* Prevent flicker on Android */
+  -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
-  -webkit-transform: translateZ(0); /* Force hardware acceleration */
+  -webkit-transform: translateZ(0);
   transform: translateZ(0);
 }
 
@@ -239,6 +257,18 @@
   list-style-type: disc;
   padding-left: 25px;
   color: white;
+}
+.resource-card {
+  transition: transform 0.2s ease;
+}
+
+.resource-card:hover {
+  transform: translateY(-4px);
+  transition: transform 0.2s ease;
+}
+
+.action-button button:hover .arrow-icon {
+  transform: translateX(4px);
 }
 
 .cl-card {

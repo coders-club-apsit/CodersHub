@@ -2,6 +2,7 @@ import { BookOpen, Code, Lightbulb, UserCheck, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { isAndroid } from "react-device-detect";
 
 const resources = [
   {
@@ -37,6 +38,33 @@ const resources = [
 const ResourcesSection = () => {
   const navigate = useNavigate();
 
+  // Conditional wrapper components
+  const MotionWrapper = ({ children, ...props }) => {
+    if (isAndroid) {
+      return <div className={props.className}>{children}</div>;
+    }
+    return <motion.div {...props}>{children}</motion.div>;
+  };
+
+  const AnimatedArrow = () => {
+    if (isAndroid) {
+      return <ArrowRight className="h-5 w-5" />;
+    }
+    return (
+      <motion.span
+        initial={{ x: 0 }}
+        animate={{ x: [0, 5, 0] }}
+        transition={{
+          duration: 1.5,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+      >
+        <ArrowRight className="h-5 w-5" />
+      </motion.span>
+    );
+  };
+
   return (
     <section id="resources" className="py-20 relative overflow-hidden">
       <div className="absolute top-0 left-0 size-[400px] rounded-full bg-transparent" />
@@ -54,7 +82,7 @@ const ResourcesSection = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {resources.map((resource, index) => (
             <div 
-              key={index}
+              key={resource.title}
               className="glass-card p-6 rounded-xl hover:shadow-lg transition-all hover:-translate-y-1"
             >
               <div className={`size-12 ${resource.color} rounded-lg flex items-center justify-center mb-4`}>
@@ -62,15 +90,14 @@ const ResourcesSection = () => {
               </div>
               <h3 className="text-xl font-semibold mb-2">{resource.title}</h3>
               <p className="text-muted-foreground mb-4">{resource.description}</p>
-              {/* <Button variant="outline" className="w-full">Explore</Button> */}
             </div>
           ))}
         </div>
         
         <div className="mt-16 text-center">
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+          <MotionWrapper
+            whileHover={!isAndroid && { scale: 1.05 }}
+            whileTap={!isAndroid && { scale: 0.95 }}
           >
             <Button 
               size="lg" 
@@ -79,21 +106,11 @@ const ResourcesSection = () => {
             >
               <span className="relative z-10 flex items-center gap-2">
                 View All Resources
-                <motion.span
-                  initial={{ x: 0 }}
-                  animate={{ x: [0, 5, 0] }}
-                  transition={{
-                    duration: 1.5,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }}
-                >
-                  <ArrowRight className="h-5 w-5" />
-                </motion.span>
+                <AnimatedArrow />
               </span>
               <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-md" />
             </Button>
-          </motion.div>
+          </MotionWrapper>
         </div>
       </div>
     </section>

@@ -4,6 +4,7 @@ import App from './App.jsx'
 import './index.css'
 import { ClerkProvider } from '@clerk/clerk-react'
 import { dark } from '@clerk/themes'
+import { Analytics } from "@vercel/analytics/react"
 
 // Import your publishable key
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY

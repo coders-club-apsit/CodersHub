@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@clerk/clerk-react";
-import supabaseClient, { supabaseUrl } from "@/utils/supabase";
+import supabaseClient from "@/utils/supabase";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { Sidebar } from "@/components/Sidebar";
 import { SideHeader } from "@/components/sidebarhead";
@@ -8,6 +8,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXTwitter, faGithub } from "@fortawesome/free-brands-svg-icons";
 import { LucideLinkedin } from "lucide-react";
 import { motion } from "framer-motion";
+import TeamMemberSkeleton from "@/components/TeamMemberSkeleton";
+import Preloader from "@/components/Preloader";
 
 const teamMembers = [
   {
@@ -32,8 +34,22 @@ const teamMembers = [
     linkedin: "parth-das-675784259",
   },
   {
+    name: "Samay Navale",
+    role: "Community Head",
+    img: "samay.png",
+    linkedin: "samay-navale",
+  },
+  {
+    name: "Ovee Dolkar",
+    role: "Event Head",
+    img: "ovee.jpeg",
+    // twitter: "kunal_mehta",
+    linkedin: "ovee-dolkar-639261346",
+    // github: "kunalmehta",
+  },
+  {
     name: "Abhishek Thormothe",
-    role: "Design Head",
+    role: "Design & Publicity Head",
     img: "abhiiii.png",
     twitter: "yadneshbamne",
     linkedin: "thormotheabhishek",
@@ -41,7 +57,7 @@ const teamMembers = [
   },
   {
     name: "Sarakshi More",
-    role: "Community Head",
+    role: "Joint Community Head",
     img: "sarakshi.jpg",
     linkedin: "sarakshi-m-158212211",
   },
@@ -52,6 +68,35 @@ const teamMembers = [
     twitter: "Yadnesh_Bamne",
     linkedin: "yadneshbamne21",
   },
+  {
+    name: "Aarya Bivalakr",
+    role: "Joint Publicity Head",
+    img: "aarya.jpg",
+    // twitter: "riya_sharma",
+    linkedin: "aarya-bivalkar-1a89b928a",
+  },
+  {
+    name: "Durva Waghchaure",
+    role: "Joint Event Head",
+    img: "durva.jpg",
+    // twitter: "kunal_mehta",
+    linkedin: "durva-waghchaure-4793942b9",
+    // github: "kunalmehta",
+  },
+  {
+    name: "Abdul Khan",
+    role: "Joint Technical Head",
+    img: "abdul.jpg",
+    linkedin: "abdul-rehman-khan-68130328b",
+  },
+  {
+    name: "Zahid Hamdule",
+    role: "Joint Content Head",
+    img: "zahid.jpg",
+    // twitter: "rohan_patel",
+    linkedin: "zahid-hamdule-5a198a285",
+    // github: "rohanpatel",
+  }
 ];
 
 const containerVariants = {
@@ -77,46 +122,55 @@ const cardVariants = {
 };
 
 export default function AboutUs() {
-  const { getToken } = useAuth(); // Get Clerk session token
+  const { getToken } = useAuth();
   const [imageUrls, setImageUrls] = useState({});
+  const [loadedImages, setLoadedImages] = useState({});
+  const [showPreloader, setShowPreloader] = useState(true);
 
+  // Add preloader effect
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowPreloader(false);
+    }, 3000); // 5 seconds delay
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Existing image fetching effect
   useEffect(() => {
     const fetchImages = async () => {
       try {
-        const token = await getToken(); // ✅ Get Clerk token
-        const supabase = await supabaseClient(token); // ✅ Pass it to Supabase
+        const token = await getToken();
+        const supabase = await supabaseClient(token);
 
         let urls = {};
         for (const member of teamMembers) {
           const { data } = supabase.storage
             .from("team_photos")
             .getPublicUrl(member.img);
-
-          if (data && data.publicUrl) {
-            urls[member.img] = data.publicUrl;
-          } else {
-            console.error(`Failed to fetch URL for ${member.img}`);
-          }
+          if (data && data.publicUrl) urls[member.img] = data.publicUrl;
         }
-
-        console.log("Fetched Image URLs:", urls);
         setImageUrls(urls);
-      } catch (error) {
-        console.error("Error fetching images:", error);
+      } catch (err) {
+        console.error("Image load error:", err);
       }
     };
 
     fetchImages();
   }, [getToken]);
 
+  // Show preloader
+  if (showPreloader) {
+    return <Preloader />;
+  }
+
   return (
     <SidebarProvider>
-      <div className="flex h-screen w-full overflow-auto flex-col md:flex-row">
+      <div className="flex h-screen w-full flex-col md:flex-row">
         <Sidebar />
         <div className="flex-1 bg-gradient-to-b from-background via-background/95 to-background relative">
           <SideHeader />
 
-          {/* Background decorative elements */}
           <div className="absolute inset-0 overflow-hidden -z-10">
             <div className="absolute inset-0 bg-grid-white/5 bg-[size:40px_40px]" />
             <div className="absolute top-0 left-0 size-[500px] rounded-full bg-primary/20 -z-10 blur-[100px]" />
@@ -143,81 +197,105 @@ export default function AboutUs() {
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
-              The passionate individuals behind Coders Club, working together
-              to create an amazing learning community.
+              The passionate individuals behind Coders Club, working together to
+              create an amazing learning community.
             </motion.p>
 
             <motion.div
               className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 w-full max-w-6xl"
               variants={containerVariants}
             >
-              {teamMembers.map(({ name, role, img, twitter, linkedin, github }, index) => (
-                <motion.div
-                  key={name}
-                  variants={cardVariants}
-                  whileHover={{ y: -5, transition: { duration: 0.2 } }}
-                  className="group relative bg-black/20 backdrop-blur-xl p-6 rounded-xl border border-primary/10 hover:border-primary/30 transition-all duration-300"
-                >
-                  <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              {teamMembers.map(
+                ({ name, role, img, twitter, linkedin, github }) => (
+                  <motion.div
+                    key={name}
+                    variants={cardVariants}
+                    whileHover={{ y: -5, transition: { duration: 0.2 } }}
+                    className="group relative bg-black/20 backdrop-blur-xl p-6 rounded-xl border border-primary/10 hover:border-primary/30 transition-all duration-300"
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <div className="relative z-10">
+                      <div className="relative w-32 h-32 mx-auto rounded-full overflow-hidden">
+                        <img
+                          src={imageUrls[img] || "/placeholder.jpg"}
+                          alt={name}
+                          align="top"
+                          className={`w-full h-full object-cover rounded-full border-2 border-primary/20 group-hover:border-primary/40 transition-all duration-500 ${
+                            loadedImages[img] ? "opacity-100" : "opacity-0"
+                          }`}
+                          onLoad={() =>
+                            setLoadedImages((prev) => ({
+                              ...prev,
+                              [img]: true,
+                            }))
+                          }
+                          onError={() =>
+                            setLoadedImages((prev) => ({
+                              ...prev,
+                              [img]: true,
+                            }))
+                          }
+                        />
+                        {!loadedImages[img] && (
+                          <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/10 to-blue-400/10 animate-pulse" />
+                        )}
+                      </div>
 
-                  <div className="relative z-10">
-                    <div className="relative">
-                      <div className="absolute inset-0 bg-gradient-to-b from-primary/20 to-blue-500/20 rounded-full blur-lg transform group-hover:scale-110 transition-transform duration-300" />
-                      <img
-                        src={imageUrls[img] ?? "/placeholder.jpg"}
-                        alt={name}
-                        className="relative w-32 h-32 mx-auto rounded-full object-cover border-2 border-primary/20 group-hover:border-primary/40 transition-all duration-300"
-                      />
+                      <h3 className="text-xl font-bold mt-4 text-center group-hover:text-primary transition-colors duration-300">
+                        {name}
+                      </h3>
+                      <p className="text-sm text-muted-foreground mt-1 text-center">
+                        {role}
+                      </p>
+
+                      <div className="flex justify-center gap-4 mt-4">
+                        {twitter && (
+                          <motion.a
+                            whileHover={{ scale: 1.2 }}
+                            whileTap={{ scale: 0.9 }}
+                            href={`https://x.com/${twitter}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:text-primary transition-colors duration-300"
+                          >
+                            <FontAwesomeIcon
+                              icon={faXTwitter}
+                              className="w-5 h-5"
+                            />
+                          </motion.a>
+                        )}
+                        {linkedin && (
+                          <motion.a
+                            whileHover={{ scale: 1.2 }}
+                            whileTap={{ scale: 0.9 }}
+                            href={`https://www.linkedin.com/in/${linkedin}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:text-primary transition-colors duration-300"
+                          >
+                            <LucideLinkedin className="w-5 h-5" />
+                          </motion.a>
+                        )}
+                        {github && (
+                          <motion.a
+                            whileHover={{ scale: 1.2 }}
+                            whileTap={{ scale: 0.9 }}
+                            href={`https://github.com/${github}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:text-primary transition-colors duration-300"
+                          >
+                            <FontAwesomeIcon
+                              icon={faGithub}
+                              className="w-5 h-5"
+                            />
+                          </motion.a>
+                        )}
+                      </div>
                     </div>
-
-                    <h3 className="text-xl font-bold mt-4 text-center group-hover:text-primary transition-colors duration-300">
-                      {name}
-                    </h3>
-                    <p className="text-sm text-muted-foreground mt-1 text-center">
-                      {role}
-                    </p>
-
-                    <div className="flex justify-center gap-4 mt-4">
-                      {twitter && (
-                        <motion.a
-                          whileHover={{ scale: 1.2 }}
-                          whileTap={{ scale: 0.9 }}
-                          href={`https://x.com/${twitter}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="hover:text-primary transition-colors duration-300"
-                        >
-                          <FontAwesomeIcon icon={faXTwitter} className="w-5 h-5" />
-                        </motion.a>
-                      )}
-                      {linkedin && (
-                        <motion.a
-                          whileHover={{ scale: 1.2 }}
-                          whileTap={{ scale: 0.9 }}
-                          href={`https://www.linkedin.com/in/${linkedin}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="hover:text-primary transition-colors duration-300"
-                        >
-                          <LucideLinkedin className="w-5 h-5" />
-                        </motion.a>
-                      )}
-                      {github && (
-                        <motion.a
-                          whileHover={{ scale: 1.2 }}
-                          whileTap={{ scale: 0.9 }}
-                          href={`https://github.com/${github}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="hover:text-primary transition-colors duration-300"
-                        >
-                          <FontAwesomeIcon icon={faGithub} className="w-5 h-5" />
-                        </motion.a>
-                      )}
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
+                  </motion.div>
+                )
+              )}
             </motion.div>
           </motion.div>
         </div>

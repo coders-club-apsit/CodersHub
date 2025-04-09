@@ -11,8 +11,10 @@ import { useUser } from "@clerk/clerk-react";
 import ResourcesCard from "@/components/ResourcesCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import Preloader from "@/components/Preloader";
 
 const ResourcesListing = () => {
+  const [showPreloader, setShowPreloader] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const { isLoaded } = useUser();
   const [selectedTopic, setSelectedTopic] = useState("all");
@@ -36,8 +38,16 @@ const ResourcesListing = () => {
     if (isLoaded) fnResources();
   }, [isLoaded, searchQuery, selectedTopic]);
 
-  if (!isLoaded) {
-    return <div className="flex items-center justify-center h-screen">Loading...</div>; // Centered fallback while user data loads
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowPreloader(false);
+    }, 3000); // 5 seconds delay
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (!isLoaded || showPreloader) {
+    return <Preloader />;
   }
 
   return (

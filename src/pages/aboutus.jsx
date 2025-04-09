@@ -9,6 +9,7 @@ import { faXTwitter, faGithub } from "@fortawesome/free-brands-svg-icons";
 import { LucideLinkedin } from "lucide-react";
 import { motion } from "framer-motion";
 import TeamMemberSkeleton from "@/components/TeamMemberSkeleton";
+import Preloader from "@/components/Preloader";
 
 const teamMembers = [
   {
@@ -124,7 +125,18 @@ export default function AboutUs() {
   const { getToken } = useAuth();
   const [imageUrls, setImageUrls] = useState({});
   const [loadedImages, setLoadedImages] = useState({});
+  const [showPreloader, setShowPreloader] = useState(true);
 
+  // Add preloader effect
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowPreloader(false);
+    }, 3000); // 5 seconds delay
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Existing image fetching effect
   useEffect(() => {
     const fetchImages = async () => {
       try {
@@ -146,6 +158,11 @@ export default function AboutUs() {
 
     fetchImages();
   }, [getToken]);
+
+  // Show preloader
+  if (showPreloader) {
+    return <Preloader />;
+  }
 
   return (
     <SidebarProvider>

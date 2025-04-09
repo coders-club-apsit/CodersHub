@@ -2,17 +2,17 @@ import { motion } from "framer-motion";
 
 const Preloader = () => {
   return (
-    <div className="fixed inset-0 bg-background/80 backdrop-blur-lg z-50 flex items-center justify-center">
+    <div className="fixed inset-0 bg-background/60 backdrop-blur z-50 flex items-center justify-center lg:flex-row">
       <div className="relative">
         {/* Animated background rings */}
-        <motion.div 
+        {/* <motion.div 
           className="absolute inset-0"
           animate={{ rotate: 360 }}
           transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
         >
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full border-2 border-primary/20 blur-sm" />
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full border-2 border-blue-500/20 blur-sm" />
-        </motion.div>
+        </motion.div> */}
 
         <motion.div 
           className="flex flex-col items-center gap-8 relative"
@@ -80,15 +80,6 @@ const Preloader = () => {
               
             </div>
 
-            {/* Subtle Status Message */}
-            {/* <motion.p
-              className="text-muted-foreground/80 text-sm font-medium"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8 }}
-            >
-              Preparing your coding experience
-            </motion.p> */}
           </div>
         </motion.div>
       </div>

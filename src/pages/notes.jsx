@@ -11,8 +11,10 @@ import { getNotes } from "@/api/api-Notes";
 import { useUser } from "@clerk/clerk-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import Preloader from "@/components/Preloader";
 
 const NotesListing = () => {
+  const [showPreloader, setShowPreloader] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const { isLoaded } = useUser();
   const [selectedTopic, setSelectedTopic] = useState("all");
@@ -35,6 +37,20 @@ const NotesListing = () => {
   useEffect(() => {
     if (isLoaded) fnNotes();
   }, [isLoaded, searchQuery, selectedTopic]);
+
+  // Add preloader delay effect
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowPreloader(false);
+    }, 3000); // 5 seconds delay
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Show preloader during initial load
+  if (!isLoaded || showPreloader) {
+    return <Preloader />;
+  }
 
   const handleSearch = (e) => {
     e.preventDefault();

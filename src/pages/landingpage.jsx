@@ -7,6 +7,7 @@ import HeroSection from "@/components/HeroSection";
 import FaqSection from "@/components/FaqSection";
 import { motion, useReducedMotion } from "framer-motion"; // Add useReducedMotion
 import { isAndroid } from "react-device-detect";
+import Preloader from "@/components/Preloader";
 
 const ResourcesSection = lazy(() => import('@/components/ResourceSection'));
 
@@ -73,6 +74,7 @@ function LandingPage() {
 
       {/* Content */}
       <Header />
+      {/* <Preloader/> */}
       <HeroSection />
       <Suspense fallback={<div>Loading...</div>}>
         <ResourcesSection />

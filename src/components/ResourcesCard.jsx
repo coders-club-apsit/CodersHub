@@ -149,12 +149,12 @@ const ResourcesCard = ({
 
         <CardFooter className="p-4 sm:p-6 flex-shrink-0">
         <div className="flex items-center justify-between w-full gap-4">
-            <Link to={`/note/${resource.id}`} className="flex-1">
+            <Link to={`/resource/${resource.id}`} className="flex-1">
               <Button
                 variant="secondary"
                 className="w-full bg-gradient-to-r from-blue-500/10 to-cyan-500/10 hover:from-blue-500/20 hover:to-cyan-500/20 transition-all duration-300 text-sm sm:text-base"
               >
-                View Note
+                View More
                 <motion.span
                   className="ml-2"
                   initial={{ x: 0 }}

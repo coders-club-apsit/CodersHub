@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Button } from './ui/button';
 import { SignedIn, SignedOut, UserButton, SignIn } from '@clerk/clerk-react';
-import { PenBox, NotebookPen, Save, Link2 } from 'lucide-react';
+import { PenBox, NotebookPen, Book, Link2 } from 'lucide-react';
 import { ThemeToggle } from "./ThemeToggle";
 import { motion } from 'framer-motion';
 
@@ -77,7 +77,7 @@ const Header = () => {
                                     <UserButton.MenuItems>
                                         <UserButton.Link
                                             label="Saved Notes"
-                                            labelIcon={<Save className="text-blue-500" size={15} />}
+                                            labelIcon={<Book className="text-blue-500" size={15} />}
                                             href="/saved-notes"
                                         />
                                         <UserButton.Link

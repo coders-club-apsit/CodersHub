@@ -49,34 +49,39 @@ const HeroSection = () => {
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
   };
 
-  const buttonVariants = {
+  // Only define animation variants if not on Android
+  const buttonVariants = !isAndroid ? {
     initial: { scale: 1 },
     hover: { scale: 1.05, transition: { duration: 0.2, ease: "easeInOut" } },
     tap: { scale: 0.95, transition: { duration: 0.1 } },
-  };
+  } : {};
 
-  const arrowVariants = {
+  const arrowVariants = !isAndroid ? {
     initial: { y: 0 },
     hover: {
       x: 3,
       transition: { duration: 0.3, repeat: Infinity, repeatType: "reverse" },
     },
-  };
+  } : {};
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center max-h-screen overflow-hidden -mt-12">
+    <section className="relative min-h-screen flex items-center justify-center max-h-screen overflow-hidden ">
       <NeonCircles />
 
       <div className="container px-8 mx-auto z-10">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 animate-fade-in [animation-delay:300ms]">
+          <h1 className={`text-4xl sm:text-5xl md:text-6xl font-bold mb-6 ${
+            !isAndroid ? "animate-fade-in [animation-delay:300ms]" : ""
+          }`}>
             {isSignedIn ? (
               <>Welcome back <span className="text-gradient">{capitalizeFirstLetter(user.firstName)}</span></>
             ) : (
               <>Welcome to the <span className="text-gradient">Coder's Club</span></>
             )}
           </h1>
-          <p className="text-lg md:text-xl mb-8 text-muted-foreground animate-fade-in [animation-delay:200ms]">
+          <p className={`text-lg md:text-xl mb-8 text-muted-foreground ${
+            !isAndroid ? "animate-fade-in [animation-delay:200ms]" : ""
+          }`}>
             {isSignedIn ? (
               <>
                 Ready to continue your coding journey? Explore our latest resources
@@ -89,30 +94,21 @@ const HeroSection = () => {
               </>
             )}
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in [animation-delay:400ms]">
+          <div className={`flex flex-col sm:flex-row gap-4 justify-center items-center ${
+            !isAndroid ? "animate-fade-in [animation-delay:400ms]" : ""
+          }`}>
             <MotionWrapper
-              variants={!isAndroid && buttonVariants}
-              initial="initial"
-              whileHover="hover"
-              whileTap="tap"
+              variants={buttonVariants}
+              initial={!isAndroid && "initial"}
+              whileHover={!isAndroid && "hover"}
+              whileTap={!isAndroid && "tap"}
               className="glass-card bg-hero-gradient text-white hover:shadow-lg hover:shadow-primary/25 transition-all relative overflow-hidden group px-6 py-3 rounded-lg font-medium"
               onClick={() => navigate('/notes')}
             >
               <span className="relative z-10">Start Learning</span>
-              {!isAndroid ? (
-                <motion.span
-                  variants={arrowVariants}
-                  initial="initial"
-                  whileHover="hover"
-                  className="relative z-10 inline-block ml-2"
-                >
-                  <ArrowRight className="h-4 w-4" />
-                </motion.span>
-              ) : (
-                <span className="relative z-10 inline-block ml-2">
-                  <ArrowRight className="h-4 w-4" />
-                </span>
-              )}
+              <span className="relative z-10 inline-block ml-2">
+                <ArrowRight className="h-4 w-4" />
+              </span>
               <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </MotionWrapper>
 

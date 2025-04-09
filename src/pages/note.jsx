@@ -6,7 +6,7 @@ import { getSingleNote } from '@/api/api-Notes';
 import { BarLoader } from 'react-spinners';
 import MDEditor from '@uiw/react-md-editor';
 import Header from '@/components/header';
-import { ArrowLeft, Expand } from 'lucide-react';
+import { ArrowLeft, Expand, PanelLeftClose } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { isAndroid } from 'react-device-detect';
 import { useQuery } from '@tanstack/react-query';
@@ -36,7 +36,7 @@ const NotePage = () => {
   };
 
   if (!isLoaded || loadingNotes) {
-    return <BarLoader className="mb-4" width="100%" color="#36d7b7" />;
+    return <BarLoader className=" bg-gradient-to-r from-blue-400 to-cyan-400" width="100%"/>;
   }
 
   return (
@@ -69,7 +69,11 @@ const NotePage = () => {
                     : 'bg-primary/10 border-primary/20 hover:bg-primary/20 hover:border-primary/30'}
                 `}
               >
-                <Expand className={`w-4 h-4 transition-transform ${mode === 'compact' ? 'rotate-0' : 'rotate-90'}`} />
+                {mode === 'compact' ? (
+                  <Expand className="w-4 h-4 rotate-90" />
+                ) : (
+                   <PanelLeftClose className="w-4 h-4" />
+                )}
                 <span className="text-sm font-medium">{mode === 'compact' ? 'Full Width' : 'Compact'}</span>
               </motion.button>
             </div>

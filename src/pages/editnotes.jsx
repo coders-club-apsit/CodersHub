@@ -106,7 +106,7 @@ const EditNotes = () => {
   };
 
   if (!isLoaded || loadingTopics || loadingNote) {
-    return <BarLoader className="mb-4" width={"100%"} color="#36d7b7" />;
+    return <BarLoader className=" bg-gradient-to-r from-blue-400 to-cyan-400" width="100%" />;
   }
 
   return (
@@ -196,7 +196,7 @@ const EditNotes = () => {
           <p className="text-red-500">{errorUpdateNote.message}</p>
         )}
 
-        {loadingUpdateNote && <BarLoader width={"100%"} color="#36d7b7" />}
+        {loadingUpdateNote && <BarLoader className=" bg-gradient-to-r from-blue-400 to-cyan-400" width="100%" />}
 
         <div className="flex gap-4">
           <Button 

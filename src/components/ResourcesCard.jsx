@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
-import { Heart, Trash2Icon, PenBox } from "lucide-react";
+import { Bookmark, Trash2Icon, PenBox } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
 import useFetch from "@/hooks/use-fetch";
@@ -94,43 +94,6 @@ const ResourcesCard = ({
                 </span>
               </CardTitle>
               <div className="flex items-center gap-2 sm:gap-3 self-start sm:self-center">
-                {isAdmin && (
-                  <motion.button
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 p-0"
-                      onClick={handleEditClick}
-                    >
-                      <PenBox className="h-4 w-4 text-blue-500 hover:text-blue-400 transition-colors" />
-                    </Button>
-                  </motion.button>
-                )}
-                {!isMyResource && (
-                  <motion.button
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                    disabled={loadingSavedResources}
-                  >
-                    <Button
-                      variant="ghost"
-                      className="w-8 h-8 p-0 hover:bg-blue-500/10"
-                      onClick={handleSaveResource}
-                      disabled={loadingSavedResources}
-                    >
-                      <Heart 
-                        size={20} 
-                        className={cn(
-                          "transition-all duration-300",
-                          saved ? "text-red-500 fill-red-500" : "text-muted-foreground hover:text-red-500"
-                        )} 
-                      />
-                    </Button>
-                  </motion.button>
-                )}
                 {isMyResource && (
                   <motion.button
                     whileHover={{ scale: 1.1 }}
@@ -185,21 +148,65 @@ const ResourcesCard = ({
         </CardContent>
 
         <CardFooter className="p-4 sm:p-6 flex-shrink-0">
-          <Link to={`/resource/${resource.id}`} className="w-full">
-            <Button 
-              variant="secondary" 
-              className="w-full bg-gradient-to-r from-blue-500/10 to-cyan-500/10 hover:from-blue-500/20 hover:to-cyan-500/20 transition-all duration-300 text-sm sm:text-base"
-            >
-              More Details
-              <motion.span
-                className="ml-2"
-                initial={{ x: 0 }}
-                whileHover={{ x: 3 }}
+        <div className="flex items-center justify-between w-full gap-4">
+            <Link to={`/note/${resource.id}`} className="flex-1">
+              <Button
+                variant="secondary"
+                className="w-full bg-gradient-to-r from-blue-500/10 to-cyan-500/10 hover:from-blue-500/20 hover:to-cyan-500/20 transition-all duration-300 text-sm sm:text-base"
               >
-                →
-              </motion.span>
-            </Button>
-          </Link>
+                View Note
+                <motion.span
+                  className="ml-2"
+                  initial={{ x: 0 }}
+                  whileHover={{ x: 3 }}
+                >
+                  →
+                </motion.span>
+              </Button>
+            </Link>
+            
+            <div className="flex items-center gap-2">
+              {isAdmin && (
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 p-0 bg-blue-500/5 hover:bg-blue-500/10"
+                    onClick={handleEditClick}
+                  >
+                    <PenBox className="h-4 w-4 text-blue-500 hover:text-blue-400 transition-colors" />
+                  </Button>
+                </motion.button>
+              )}
+              {!isMyResource && (
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                  disabled={loadingSavedResources}
+                >
+                  <Button
+                    variant="ghost"
+                    className="h-8 w-8 p-0 bg-blue-500/5 hover:bg-blue-500/10"
+                    onClick={handleSaveResource}
+                    disabled={loadingSavedResources}
+                  >
+                    <Bookmark
+                      size={20}
+                      className={cn(
+                        "transition-all duration-300",
+                        saved
+                          ? "text-blue-500 fill-blue-500"
+                          : "text-muted-foreground hover:text-blue-500"
+                      )}
+                    />
+                  </Button>
+                </motion.button>
+              )}
+            </div>
+          </div>
         </CardFooter>
       </Card>
     </motion.div>

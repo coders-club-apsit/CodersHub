@@ -81,7 +81,6 @@ export async function addNewResource(token, _, resourceData) {
 
 // Get saved resources for the current user
 export async function getSavedResources(token) {
-  console.log("Token:", token);
   const supabase = await supabaseClient(token);
   const { data, error } = await supabase
     .from("saved_resources")

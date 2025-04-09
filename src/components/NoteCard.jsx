@@ -1,6 +1,6 @@
-// eslint-disable react/prop-types
-import { useUser, useAuth } from "@clerk/clerk-react";
-import React, { useState, useEffect } from "react";
+// --- NoteCard.jsx ---
+import { useUser } from "@clerk/clerk-react";
+import { useState, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -22,17 +22,10 @@ import { ADMIN_EMAILS } from "@/config/admin";
 const NoteCard = ({ note, isMyNote = false, savedInit = false, onNoteSaved = () => {}, onNoteDeleted = () => {} }) => {
   const [saved, setSaved] = useState(savedInit);
   const { user } = useUser();
-  const { getToken } = useAuth();
   const navigate = useNavigate();
   const [isAdmin, setIsAdmin] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
 
-  const {
-    fn: fnSavedNotes,
-    data: savedNotes,
-    loading: loadingSavedNotes,
-  } = useFetch(saveNote);
-
+  const { fn: fnSavedNotes, data: savedNotes, loading: loadingSavedNotes } = useFetch(saveNote, { alreadySaved: saved });
   const { fn: fnDeleteNote, loading: loadingDeleteNote } = useFetch(deleteNote);
 
   useEffect(() => {
@@ -48,8 +41,7 @@ const NoteCard = ({ note, isMyNote = false, savedInit = false, onNoteSaved = () 
 
   const handleSaveNote = async (e) => {
     e.preventDefault();
-    const token = await getToken();
-    await fnSavedNotes({ user_id: user.id, note_id: note.id }, token);
+    await fnSavedNotes({ user_id: user.id, note_id: note.id });
     onNoteSaved();
   };
 
@@ -58,18 +50,11 @@ const NoteCard = ({ note, isMyNote = false, savedInit = false, onNoteSaved = () 
       e.preventDefault();
       e.stopPropagation();
       if (window.confirm("Are you sure you want to delete this note?")) {
-        setIsDeleting(true);
-        const token = await getToken();
-        const response = await fnDeleteNote({ note_id: note.id }, token);
-        
-        if (response) {
-          onNoteDeleted();
-        }
+        const response = await fnDeleteNote({ note_id: note.id });
+        if (response) onNoteDeleted();
       }
     } catch (error) {
       console.error("Error deleting note:", error);
-    } finally {
-      setIsDeleting(false);
     }
   };
 
@@ -90,31 +75,20 @@ const NoteCard = ({ note, isMyNote = false, savedInit = false, onNoteSaved = () 
                   {note.title}
                 </span>
               </CardTitle>
-              <div className="flex items-center self-start shrink-0">
+              <div className="flex items-center gap-2">
+                {isMyNote && (
+                  <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
+                    <Button variant="ghost" size="icon" onClick={handleDeleteNote}>
+                      <Trash2Icon className="h-4 w-4 text-red-500 hover:text-red-400 transition-colors" />
+                    </Button>
+                  </motion.div>
+                )}
                 {isAdmin && (
-                  <div className="relative">
-                    <motion.div
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8 p-0 bg-red-500/5 hover:bg-red-500/10"
-                        onClick={handleDeleteNote}
-                        disabled={loadingDeleteNote}
-                      >
-                        <Trash2Icon 
-                          className="h-4 w-4 text-red-500 hover:text-red-400 transition-colors" 
-                        />
-                      </Button>
-                    </motion.div>
-                    {loadingDeleteNote && (
-                      <div className="absolute inset-0 flex items-center justify-center bg-background/50 rounded-md">
-                        <BarLoader color="hsl(var(--primary))" width={20} />
-                      </div>
-                    )}
-                  </div>
+                  <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
+                    <Button variant="ghost" size="icon" onClick={handleEditClick}>
+                      <PenBox className="h-4 w-4 text-blue-500 hover:text-blue-400 transition-colors" />
+                    </Button>
+                  </motion.div>
                 )}
               </div>
             </div>
@@ -148,13 +122,7 @@ const NoteCard = ({ note, isMyNote = false, savedInit = false, onNoteSaved = () 
             <Link to={`/note/${note.id}`} className="flex-1">
               <Button variant="secondary" className="w-full bg-gradient-to-r from-blue-500/10 to-cyan-500/10 hover:from-blue-500/20 hover:to-cyan-500/20 transition-all duration-300 text-sm sm:text-base">
                 View Note
-                {/* <motion.span
-                  className="ml-2"
-                  initial={{ x: 0 }}
-                  whileHover={{ x: 3 }}
-                >
-                  →
-                </motion.span> */}
+                <motion.span className="ml-2" initial={{ x: 0 }} whileHover={{ x: 3 }}>→</motion.span>
               </Button>
             </Link>
 

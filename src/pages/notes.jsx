@@ -30,17 +30,16 @@ const NotesListing = () => {
   });
 
   const {
-    data: notes = [], // Provide default empty array
+    data: notes = [],
     isLoading: loadingNotes,
   } = useQuery({
     queryKey: ["notes", searchQuery, selectedTopic],
     queryFn: async () => {
       const token = await session.getToken({ template: "supabase" });
-      const result = await getNotes(token, {
+      return getNotes(token, {
         searchQuery,
         topic_id: selectedTopic === "all" ? "" : selectedTopic,
       });
-      return result || []; // Ensure we always return an array
     },
     enabled: isLoaded,
   });

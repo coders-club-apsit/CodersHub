@@ -47,40 +47,6 @@ const Preloader = () => {
               }}
             />
           </div>
-
-          {/* Loading text with animated dots */}
-          <div className="flex flex-col items-center gap-2">
-            <div className="flex items-center gap-2">
-              {/* Animated Loading Text */}
-              <motion.div
-                className="flex overflow-hidden"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
-              >
-                {"Loading".split("").map((letter, index) => (
-                  <motion.span
-                    key={index}
-                    className="text-2xl font-semibold bg-gradient-to-r from-primary to-blue-500 bg-clip-text text-transparent"
-                    initial={{ y: 50 }}
-                    animate={{ y: 0 }}
-                    transition={{
-                      duration: 0.5,
-                      delay: index * 0.05,
-                      repeat: Infinity,
-                      repeatDelay: 3,
-                    }}
-                  >
-                    {letter === " " ? "\u00A0" : letter}
-                  </motion.span>
-                ))}
-              </motion.div>
-
-              {/* Animated Dots */}
-              
-            </div>
-
-          </div>
         </motion.div>
       </div>
     </div>

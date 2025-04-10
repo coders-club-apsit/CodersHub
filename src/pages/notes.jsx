@@ -30,16 +30,17 @@ const NotesListing = () => {
   });
 
   const {
-    data: notes = [],
+    data: notes = [], // Provide default empty array
     isLoading: loadingNotes,
   } = useQuery({
     queryKey: ["notes", searchQuery, selectedTopic],
     queryFn: async () => {
       const token = await session.getToken({ template: "supabase" });
-      return getNotes(token, {
+      const result = await getNotes(token, {
         searchQuery,
         topic_id: selectedTopic === "all" ? "" : selectedTopic,
       });
+      return result || []; // Ensure we always return an array
     },
     enabled: isLoaded,
   });
@@ -121,12 +122,13 @@ const NotesListing = () => {
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 auto-rows-fr">
-                {notes.length ? (
+                {notes?.length ? (
                   notes.map((note) => (
                     <NoteCard
                       key={note.id}
                       note={note}
-                      savedInit={note?.saved?.length > 0}
+                      // Add null checks and provide default value
+                      savedInit={Boolean(note?.saved?.length)}
                     />
                   ))
                 ) : (

@@ -1,8 +1,7 @@
-import supabaseClient from "../utils/supabase.js";
+import { getSupabase } from '@/lib/supabase'
 
-// Get all resources
 export async function getResources(token, { resource_id, searchQuery, topic_id }) {
-  const supabase = await supabaseClient(token);
+  const supabase = getSupabase(token)
   let query = supabase
     .from("resources")
     .select("*, topic: topics(name, topic_logo_url), saved: saved_resources(id)");
@@ -17,16 +16,25 @@ export async function getResources(token, { resource_id, searchQuery, topic_id }
     query = query.ilike("title", `%${searchQuery}%`);
   }
   
-  const { data, error } = await query;
-  if (error) {
+  try {
+    const { data, error } = await query;
+    if (error) {
+      console.error("Error fetching resources:", error);
+      return [];
+    }
+    
+    return data?.map(resource => ({
+      ...resource,
+      saved: resource.saved || []
+    })) || [];
+  } catch (error) {
     console.error("Error fetching resources:", error);
-    return null;
+    return [];
   }
-  return data;
 }
 
 export async function saveResource(token, { alreadySaved }, saveData) {
-  const supabase = await supabaseClient(token);
+  const supabase = getSupabase(token)
   if (alreadySaved) {
     const { data, error: deleteError } = await supabase
       .from("saved_resources")
@@ -52,7 +60,7 @@ export async function saveResource(token, { alreadySaved }, saveData) {
 
 // Get a single resource by ID
 export async function getSingleResource(token, { resource_id }) {
-  const supabase = await supabaseClient(token);
+  const supabase = getSupabase(token)
   const { data, error } = await supabase
     .from("resources")
     .select("*, topics(name, topic_logo_url)")
@@ -67,7 +75,7 @@ export async function getSingleResource(token, { resource_id }) {
 
 // Add a new resource
 export async function addNewResource(token, _, resourceData) {
-  const supabase = await supabaseClient(token);
+  const supabase = getSupabase(token)
   const { data, error } = await supabase
     .from("resources")
     .insert([resourceData])
@@ -81,7 +89,7 @@ export async function addNewResource(token, _, resourceData) {
 
 // Get saved resources for the current user
 export async function getSavedResources(token) {
-  const supabase = await supabaseClient(token);
+  const supabase = getSupabase(token)
   const { data, error } = await supabase
     .from("saved_resources")
     .select("*, resource:resources(*, topic: topics(name, topic_logo_url))");
@@ -93,7 +101,7 @@ export async function getSavedResources(token) {
 }
 
 export async function getMyResources(token, { provider_id }) {
-  const supabase = await supabaseClient(token);
+  const supabase = getSupabase(token)
   const { data, error } = await supabase
     .from("resources")
     .select("*, topic: topics(name, topic_logo_url)")
@@ -106,7 +114,7 @@ export async function getMyResources(token, { provider_id }) {
 }
 
 export async function deleteResource(token, { resource_id }) {
-  const supabase = await supabaseClient(token);
+  const supabase = getSupabase(token)
   const { data, error } = await supabase
     .from("resources")
     .delete()
@@ -120,7 +128,7 @@ export async function deleteResource(token, { resource_id }) {
 }
 
 export async function updateResource(token, _, resourceData) {
-  const supabase = await supabaseClient(token);
+  const supabase = getSupabase(token)
   const { data, error } = await supabase
     .from("resources")
     .update({

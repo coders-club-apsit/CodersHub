@@ -121,13 +121,12 @@ const NotesListing = () => {
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 auto-rows-fr">
-                {notes?.length ? (
+                {notes.length ? (
                   notes.map((note) => (
                     <NoteCard
                       key={note.id}
                       note={note}
-                      // Add null checks and provide default value
-                      savedInit={Boolean(note?.saved?.length)}
+                      savedInit={note?.saved?.length > 0}
                     />
                   ))
                 ) : (

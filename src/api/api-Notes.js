@@ -1,35 +1,25 @@
 import { getSupabase } from '@/lib/supabase'
 
 export async function getNotes(token, { note_id, searchQuery, topic_id }) {
-  try {
-    const supabase = getSupabase(token);
-    let query = supabase
-      .from("notes")
-      .select("*, topic: topics(name, topic_logo_url), saved: saved_notes(id)");
-    if (note_id) {
-      query = query.eq("note_id", note_id);
-    }
-    if (topic_id) {
-      query = query.eq("topic_id", topic_id);
-    }
-    if (searchQuery) {
-      query = query.ilike("title", `%${searchQuery}%`);
-    }
-    const { data, error } = await query;
-    if (error) {
-      console.error("Error fetching notes:", error);
-      return [];
-    }
-
-    // Ensure saved property is always an array
-    return data?.map(note => ({
-      ...note,
-      saved: note.saved || []
-    })) || [];
-  } catch (error) {
-    console.error("Error in getNotes:", error);
-    return [];
+  const supabase = getSupabase(token)
+  let query = supabase
+    .from("notes")
+    .select("*, topic: topics(name, topic_logo_url), saved: saved_notes(id)");
+  if (note_id) {
+    query = query.eq("note_id", note_id);
   }
+  if (topic_id) {
+    query = query.eq("topic_id", topic_id);
+  }
+  if (searchQuery) {
+    query = query.ilike("title", `%${searchQuery}%`);
+  }
+  const { data, error } = await query;
+  if (error) {
+    console.error("Error fetching blogs :", error);
+    return null;
+  }
+  return data;
 }
 
 export async function saveNote(token, { alreadySaved }, saveData) {

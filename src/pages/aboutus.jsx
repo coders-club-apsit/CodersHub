@@ -69,7 +69,7 @@ const teamMembers = [
     linkedin: "yadneshbamne21",
   },
   {
-    name: "Aarya Bivalkar",
+    name: "Aarya Bivalakr",
     role: "Joint Publicity Head",
     img: "aarya.jpg",
     // twitter: "riya_sharma",

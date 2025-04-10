@@ -275,6 +275,10 @@
   @apply bg-card text-card-foreground dark:bg-card dark:text-card-foreground;
 }
 
+.cl-internal-13u79ez{
+  background-color: none;
+}
+
 @media screen and (max-width: 640px) {
   .wmde-markdown {
     padding: 10px;

@@ -8,13 +8,11 @@ import { Input } from "@/components/ui/input";
 import { useUser, useSession } from "@clerk/clerk-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import Preloader from "@/components/Preloader";
 import { useQuery } from "@tanstack/react-query";
 import { getTopics } from "@/api/api-topics";
 import { getNotes } from "@/api/api-Notes";
 
 const NotesListing = () => {
-  const [showPreloader, setShowPreloader] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const { isLoaded } = useUser();
   const { session } = useSession();
@@ -43,18 +41,6 @@ const NotesListing = () => {
     },
     enabled: isLoaded,
   });
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowPreloader(false);
-    }, 3000);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (!isLoaded || showPreloader) {
-    return <Preloader />;
-  }
 
   const handleSearch = (e) => {
     e.preventDefault();

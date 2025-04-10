@@ -9,8 +9,6 @@ import { faXTwitter, faGithub } from "@fortawesome/free-brands-svg-icons";
 import { LucideLinkedin } from "lucide-react";
 import { motion } from "framer-motion";
 import TeamMemberSkeleton from "@/components/TeamMemberSkeleton";
-import Preloader from "@/components/Preloader";
-
 const teamMembers = [
   {
     name: "Atharva Shelke",
@@ -121,21 +119,39 @@ const cardVariants = {
   },
 };
 
+const ImageWithSkeleton = ({ src, alt, className, onLoad }) => {
+  const [isLoading, setIsLoading] = useState(true);
+
+  return (
+    <div className="relative w-full h-full">
+      {isLoading && (
+        <div className="absolute inset-0 rounded-full animate-pulse">
+          <div className="w-full h-full rounded-full bg-gradient-to-br from-primary/10 via-blue-400/10 to-primary/10">
+            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/10 to-transparent animate-shine" />
+          </div>
+        </div>
+      )}
+      <img
+        src={src}
+        alt={alt}
+        className={`${className} transition-opacity duration-300 ${
+          isLoading ? 'opacity-0' : 'opacity-100'
+        }`}
+        onLoad={() => {
+          setIsLoading(false);
+          onLoad?.();
+        }}
+      />
+    </div>
+  );
+};
+
 export default function AboutUs() {
   const { getToken } = useAuth();
   const [imageUrls, setImageUrls] = useState({});
   const [loadedImages, setLoadedImages] = useState({});
-  const [showPreloader, setShowPreloader] = useState(true);
 
-  // Add preloader effect
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowPreloader(false);
-    }, 3000); // 5 seconds delay
-
-    return () => clearTimeout(timer);
-  }, []);
-
+ 
   // Existing image fetching effect
   useEffect(() => {
     const fetchImages = async () => {
@@ -158,12 +174,7 @@ export default function AboutUs() {
 
     fetchImages();
   }, [getToken]);
-
-  // Show preloader
-  if (showPreloader) {
-    return <Preloader />;
-  }
-
+  
   return (
     <SidebarProvider>
       <div className="flex h-screen w-full flex-col md:flex-row">
@@ -216,29 +227,17 @@ export default function AboutUs() {
                     <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     <div className="relative z-10">
                       <div className="relative w-32 h-32 mx-auto rounded-full overflow-hidden">
-                        <img
+                        <ImageWithSkeleton
                           src={imageUrls[img] || "/placeholder.jpg"}
                           alt={name}
-                          align="top"
-                          className={`w-full h-full object-cover rounded-full border-2 border-primary/20 group-hover:border-primary/40 transition-all duration-500 ${
-                            loadedImages[img] ? "opacity-100" : "opacity-0"
-                          }`}
+                          className="w-full h-full object-cover rounded-full border-2 border-primary/20 group-hover:border-primary/40 transition-all duration-500"
                           onLoad={() =>
                             setLoadedImages((prev) => ({
                               ...prev,
                               [img]: true,
                             }))
                           }
-                          onError={() =>
-                            setLoadedImages((prev) => ({
-                              ...prev,
-                              [img]: true,
-                            }))
-                          }
                         />
-                        {!loadedImages[img] && (
-                          <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/10 to-blue-400/10 animate-pulse" />
-                        )}
                       </div>
 
                       <h3 className="text-xl font-bold mt-4 text-center group-hover:text-primary transition-colors duration-300">

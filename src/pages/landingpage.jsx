@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from "react";
+import React, { lazy, Suspense, useState, useEffect } from "react";
 import Header from "@/components/header";
 import "@/components/HeroSection";
 import { TextAnimate } from "@/components/ui/text-animate"; 
@@ -7,12 +7,28 @@ import HeroSection from "@/components/HeroSection";
 import FaqSection from "@/components/FaqSection";
 import { motion, useReducedMotion } from "framer-motion"; // Add useReducedMotion
 import { isAndroid } from "react-device-detect";
+import Preloader from "@/components/Preloader";
 
 const ResourcesSection = lazy(() => import('@/components/ResourceSection'));
 
 function LandingPage() {
+  const [isLoading, setIsLoading] = useState(true);
   const prefersReducedMotion = useReducedMotion();
   const shouldAnimate = !isAndroid && !prefersReducedMotion;
+
+  // Add loading state handler
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2500); // Adjust timing as needed
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Show preloader while loading
+  if (isLoading) {
+    return <Preloader />;
+  }
 
   const GradientOrbs = () => {
     const baseStyles = {
@@ -64,18 +80,17 @@ function LandingPage() {
     <div className="relative min-h-screen overflow-hidden " style={{minWidth: "100vw"}}>
       {/* Background Graphics */}
       <div className="fixed inset-0 -z-10">
-        {/* Gradient Orbs */}
-        {/* <GradientOrbs /> */}
-        
-        {/* Radial Gradient */}
-        {/* <div className="absolute inset-0 bg-gradient-radial from-transparent via-background to-background" /> */}
+        <GradientOrbs />
       </div>
 
       {/* Content */}
       <Header />
-      {/* <Preloader/> */}
       <HeroSection />
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+        </div>
+      }>
         <ResourcesSection />
       </Suspense>
       <FaqSection />

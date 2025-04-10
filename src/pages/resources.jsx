@@ -8,13 +8,11 @@ import { useUser, useSession } from "@clerk/clerk-react";
 import ResourcesCard from "@/components/ResourcesCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import Preloader from "@/components/Preloader";
 import { useQuery } from "@tanstack/react-query";
 import { getTopics } from "@/api/api-topics";
 import { getResources } from "@/api/api-resources";
 
 const ResourcesListing = () => {
-  const [showPreloader, setShowPreloader] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const { isLoaded } = useUser();
   const { session } = useSession();
@@ -43,15 +41,6 @@ const ResourcesListing = () => {
     },
     enabled: isLoaded,
   });
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowPreloader(false);
-    }, 3000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (!isLoaded || showPreloader) return <Preloader />;
 
   return (
     <SidebarProvider>

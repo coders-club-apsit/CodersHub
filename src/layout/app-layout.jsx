@@ -31,7 +31,7 @@ const AppLayout = () => {
 
   return (
     <>
-      <main className=" mx-auto min-h-screen overflow-hidden">
+      <main className=" overflow-hidden">
         <Outlet />
       </main>
       <DotPattern

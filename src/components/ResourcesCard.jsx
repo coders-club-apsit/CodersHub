@@ -77,13 +77,6 @@ const ResourcesCard = ({ resource, isMyResource = false, savedInit = false, onRe
                     </Button>
                   </motion.div>
                 )}
-                {(isMyResource || isAdmin) && (
-                  <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
-                    <Button variant="ghost" size="icon" onClick={handleEditClick}>
-                      <PenBox className="h-4 w-4 text-blue-500 hover:text-blue-400 transition-colors" />
-                    </Button>
-                  </motion.div>
-                )}
               </div>
             </div>
             {resource.last_edited_by && (

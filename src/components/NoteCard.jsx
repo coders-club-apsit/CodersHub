@@ -83,13 +83,6 @@ const NoteCard = ({ note, isMyNote = false, savedInit = false, onNoteSaved = () 
                     </Button>
                   </motion.div>
                 )}
-                {isAdmin && (
-                  <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
-                    <Button variant="ghost" size="icon" onClick={handleEditClick}>
-                      <PenBox className="h-4 w-4 text-blue-500 hover:text-blue-400 transition-colors" />
-                    </Button>
-                  </motion.div>
-                )}
               </div>
             </div>
             {note.last_edited_by && (
@@ -126,6 +119,19 @@ const NoteCard = ({ note, isMyNote = false, savedInit = false, onNoteSaved = () 
               </Button>
             </Link>
 
+          <div className="flex items-center gap-2">
+              {isAdmin && (
+                <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 p-0 bg-blue-500/5 hover:bg-blue-500/10"
+                    onClick={handleEditClick}
+                  >
+                    <PenBox className="h-4 w-4 text-blue-500 hover:text-blue-400 transition-colors" />
+                  </Button>
+                </motion.div>
+              )}
             {!isMyNote && (
               <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
                 <Button variant="ghost" className="h-8 w-8 p-0 bg-blue-500/5 hover:bg-blue-500/10" onClick={handleSaveNote} disabled={loadingSavedNotes}>
@@ -133,6 +139,7 @@ const NoteCard = ({ note, isMyNote = false, savedInit = false, onNoteSaved = () 
                 </Button>
               </motion.div>
             )}
+          </div>
           </div>
         </CardFooter>
       </Card>

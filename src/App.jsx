@@ -22,6 +22,7 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import EditResources from "./pages/editresources";
 import PrivacyPolicyModal from "./components/PrivacyPolicyModal";
 
+
 const App = () => {
   const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
 

@@ -9,6 +9,7 @@ import { ToastContainer } from 'react-toastify';
 import { useSessionTimeout } from '@/utils/session-timer';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from "@vercel/speed-insights/react"
+import {onFCP} from 'web-vitals';
 
 const AppLayout = () => {
   const matches = useMatches();
@@ -28,6 +29,8 @@ const AppLayout = () => {
       return () => clearTimeout(timer);
     }
   }, [matches, navigate]);
+
+  onFCP(console.log);
 
   return (
     <>

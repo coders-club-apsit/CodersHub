@@ -75,7 +75,7 @@ function LandingPage() {
       {/* Content */}
       <Header />
       {/* <Preloader/> */}
-      {/* <HeroSection /> */}
+      <HeroSection />
       <Suspense fallback={<div>Loading...</div>}>
         <ResourcesSection />
       </Suspense>

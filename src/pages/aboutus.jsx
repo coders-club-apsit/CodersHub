@@ -78,7 +78,7 @@ const teamMembers = [
   {
     name: "Durva Waghchaure",
     role: "Joint Event Head",
-    img: "durva.jpg",
+    img: "durva1.jpg",
     // twitter: "kunal_mehta",
     linkedin: "durva-waghchaure-4793942b9",
     // github: "kunalmehta",

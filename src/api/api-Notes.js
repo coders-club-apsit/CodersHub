@@ -1,7 +1,7 @@
-import { getSupabase } from '@/lib/supabase'
+import supabaseClient from "../utils/supabase.js";
 
 export async function getNotes(token, { note_id, searchQuery, topic_id }) {
-  const supabase = getSupabase(token)
+  const supabase = await supabaseClient(token);
   let query = supabase
     .from("notes")
     .select("*, topic: topics(name, topic_logo_url), saved: saved_notes(id)");
@@ -23,7 +23,7 @@ export async function getNotes(token, { note_id, searchQuery, topic_id }) {
 }
 
 export async function saveNote(token, { alreadySaved }, saveData) {
-  const supabase = getSupabase(token)
+  const supabase = await supabaseClient(token);
   if (alreadySaved) {
     const { data, error: deleteError } = await supabase
       .from("saved_notes")
@@ -49,7 +49,7 @@ export async function saveNote(token, { alreadySaved }, saveData) {
 }
 
 export async function getSingleNote(token, { note_id }) {
-  const supabase = getSupabase(token)
+  const supabase = await supabaseClient(token);
   const { data, error } = await supabase
     .from("notes")
     .select("*, topics(name, topic_logo_url)")
@@ -63,7 +63,7 @@ export async function getSingleNote(token, { note_id }) {
 }
 
 export async function addNewNote(token, _, noteData) {
-  const supabase = getSupabase(token)
+  const supabase = await supabaseClient(token);
   const { data, error } = await supabase
     .from("notes")
     .insert([noteData])
@@ -76,7 +76,7 @@ export async function addNewNote(token, _, noteData) {
 }
 
 export async function getSavedNotes(token) {
-  const supabase = getSupabase(token)
+  const supabase = await supabaseClient(token);
   const { data, error } = await supabase
     .from("saved_notes")
     .select("* , note:notes(*, topic: topics(name, topic_logo_url))");
@@ -88,7 +88,7 @@ export async function getSavedNotes(token) {
 }
 
 export async function getMyNotes(token, { provider_id }) {
-  const supabase = getSupabase(token)
+  const supabase = await supabaseClient(token);
   const { data, error } = await supabase
     .from("notes")
     .select("* , topic: topics(name, topic_logo_url)")
@@ -101,7 +101,7 @@ export async function getMyNotes(token, { provider_id }) {
 }
 
 export async function deleteNote(token, { note_id }) {
-  const supabase = getSupabase(token)
+  const supabase = await supabaseClient(token);
   const { data, error } = await supabase
     .from("notes")
     .delete()
@@ -115,7 +115,7 @@ export async function deleteNote(token, { note_id }) {
 }
 
 export async function updateNote(token, _, noteData) {
-  const supabase = getSupabase(token)
+  const supabase = await supabaseClient(token);
   const { data, error } = await supabase
     .from("notes")
     .update({
@@ -136,7 +136,7 @@ export async function updateNote(token, _, noteData) {
 }
 
 export async function getNoteById(token, noteId) {
-  const supabase = getSupabase(token)
+  const supabase = await supabaseClient(token);
   const { data, error } = await supabase
     .from("notes")
     .select("*, topics(name, topic_logo_url)")

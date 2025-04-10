@@ -58,7 +58,7 @@
 
 //             {/* Hide width toggle on mobile */}
 //             <div className="hidden md:block">
-//               <motion.div
+//               <motion.button
 //                 whileTap={!isAndroid && { scale: 0.95 }}
 //                 whileHover={!isAndroid && { scale: 1.05 }}
 //                 onClick={toggleMode}
@@ -80,7 +80,7 @@
 //                 <span className="text-sm font-medium">
 //                   {mode === "compact" ? "Full Width" : "Compact"}
 //                 </span>
-//               </motion.div>
+//               </motion.button>
 //             </div>
 //           </div>
 
@@ -189,7 +189,7 @@ const ResourcesPage = () => {
             </motion.div>
 
             <div className="hidden md:block">
-              <motion.div
+              <motion.button
                 whileTap={!isAndroid && { scale: 0.95 }}
                 whileHover={!isAndroid && { scale: 1.05 }}
                 onClick={toggleMode}
@@ -205,7 +205,7 @@ const ResourcesPage = () => {
                 <span className="text-sm font-medium">
                   {mode === "compact" ? "Full Width" : "Compact"}
                 </span>
-              </motion.div>
+              </motion.button>
             </div>
           </div>
 

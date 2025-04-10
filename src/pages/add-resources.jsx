@@ -280,7 +280,7 @@ const AddResources = () => {
                 <span className="relative z-10 flex items-center justify-center gap-2">
                   {isSubmitting || loadingCreateResource ? (
                     <>
-                      <BarLoader className=" bg-gradient-to-r from-blue-400 to-cyan-400" width="100%"/>
+                      <BarLoader width={100} height={2} className=" bg-gradient-to-r from-blue-400 to-cyan-400"/>
                       Posting...
                     </>
                   ) : (

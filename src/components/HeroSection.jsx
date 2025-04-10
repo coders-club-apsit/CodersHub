@@ -22,7 +22,7 @@ const MotionWrapper = ({ children, ...props }) => {
   if (isAndroid) {
     return <button className={props.className} onClick={props.onClick}>{children}</button>;
   }
-  return <motion.div {...props}>{children}</motion.div>;
+  return <motion.button {...props}>{children}</motion.button>;
 };
 
 const CodeBlock = () => (

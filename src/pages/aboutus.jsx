@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@clerk/clerk-react";
-import { getSupabase } from '@/lib/supabase'
+import supabaseClient from "@/utils/supabase";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { Sidebar } from "@/components/Sidebar";
 import { SideHeader } from "@/components/sidebarhead";
@@ -131,7 +131,7 @@ export default function AboutUs() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowPreloader(false);
-    }, 2500); // 5 seconds delay
+    }, 3000); // 5 seconds delay
 
     return () => clearTimeout(timer);
   }, []);
@@ -141,7 +141,7 @@ export default function AboutUs() {
     const fetchImages = async () => {
       try {
         const token = await getToken();
-        const supabase = getSupabase(token)
+        const supabase = await supabaseClient(token);
 
         let urls = {};
         for (const member of teamMembers) {

@@ -57,7 +57,7 @@ const NotePage = () => {
               </Link>
             </motion.div>
             <div className="hidden md:block">
-              <motion.div
+              <motion.button
                 whileTap={!isAndroid && { scale: 0.95 }}
                 whileHover={!isAndroid && { scale: 1.05 }}
                 onClick={toggleMode}
@@ -75,7 +75,7 @@ const NotePage = () => {
                    <PanelLeftClose className="w-4 h-4" />
                 )}
                 <span className="text-sm font-medium">{mode === 'compact' ? 'Full Width' : 'Compact'}</span>
-              </motion.div>
+              </motion.button>
             </div>
           </div>
 

@@ -47,10 +47,10 @@
 //   return data;
 // }
 
-import { getSupabase } from '@/lib/supabase'
+import supabaseClient, { supabaseUrl } from "../utils/supabase.js";
 
 export async function getTopics(token) {
-    const supabase = getSupabase(token)
+    const supabase = await supabaseClient(token);
     
     const { data, error } = await supabase
       .from("topics")

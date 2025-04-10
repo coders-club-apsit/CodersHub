@@ -47,7 +47,7 @@ const ResourcesListing = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowPreloader(false);
-    }, 2500);
+    }, 3000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -109,7 +109,7 @@ const ResourcesListing = () => {
                     <ResourcesCard
                       key={resource.id}
                       resource={resource}
-                      savedInit={Boolean(resource?.saved?.length)} 
+                      savedInit={resource?.saved?.length > 0}
                     />
                   ))
                 ) : (

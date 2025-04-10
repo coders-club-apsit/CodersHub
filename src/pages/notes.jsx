@@ -1,53 +1,57 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import NoteCard from "@/components/NoteCard";
-import useFetch from "@/hooks/use-fetch";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { Sidebar } from "@/components/Sidebar";
 import { SideHeader } from "@/components/sidebarhead";
 import { Search } from "lucide-react";
-import { getTopics } from "@/api/api-topics";
 import { Input } from "@/components/ui/input";
-import { getNotes } from "@/api/api-Notes";
-import { useUser } from "@clerk/clerk-react";
+import { useUser, useSession } from "@clerk/clerk-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Preloader from "@/components/Preloader";
+import { useQuery } from "@tanstack/react-query";
+import { getTopics } from "@/api/api-topics";
+import { getNotes } from "@/api/api-Notes";
 
 const NotesListing = () => {
   const [showPreloader, setShowPreloader] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const { isLoaded } = useUser();
+  const { session } = useSession();
   const [selectedTopic, setSelectedTopic] = useState("all");
 
-  const {
-    fn: fnNotes,
-    data: notes,
-    loading: loadingNotes,
-  } = useFetch(getNotes, { 
-    searchQuery, 
-    topic_id: selectedTopic === "all" ? "" : selectedTopic 
+  const { data: topics = [] } = useQuery({
+    queryKey: ["topics"],
+    queryFn: async () => {
+      const token = await session.getToken({ template: "supabase" });
+      return getTopics(token);
+    },
+    enabled: isLoaded,
   });
 
-  const { fn: fnTopics, data: topics } = useFetch(getTopics);
+  const {
+    data: notes = [],
+    isLoading: loadingNotes,
+  } = useQuery({
+    queryKey: ["notes", searchQuery, selectedTopic],
+    queryFn: async () => {
+      const token = await session.getToken({ template: "supabase" });
+      return getNotes(token, {
+        searchQuery,
+        topic_id: selectedTopic === "all" ? "" : selectedTopic,
+      });
+    },
+    enabled: isLoaded,
+  });
 
-  useEffect(() => {
-    if (isLoaded) fnTopics();
-  }, [isLoaded]);
-
-  useEffect(() => {
-    if (isLoaded) fnNotes();
-  }, [isLoaded, searchQuery, selectedTopic]);
-
-  // Add preloader delay effect
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowPreloader(false);
-    }, 3000); // 5 seconds delay
+    }, 3000);
 
     return () => clearTimeout(timer);
   }, []);
 
-  // Show preloader during initial load
   if (!isLoaded || showPreloader) {
     return <Preloader />;
   }
@@ -63,8 +67,6 @@ const NotesListing = () => {
     setSearchQuery("");
   };
 
-  const skeletonCount = notes?.length || 4; // Show at least 4 skeletons if notes are unknown
-
   return (
     <SidebarProvider>
       <div className="flex bg-background text-foreground w-full relative">
@@ -76,8 +78,7 @@ const NotesListing = () => {
           />
           <main className="flex-1 p-6 relative">
             <h1 className="text-3xl font-bold mb-6 text-primary">Notes</h1>
-            
-            {/* Search and Filter Controls */}
+
             <div className="flex gap-4 mb-6">
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
@@ -89,14 +90,14 @@ const NotesListing = () => {
                   className="pl-10 w-full pr-20 bg-background text-foreground rounded-md"
                 />
               </div>
-              
+
               <Select value={selectedTopic} onValueChange={setSelectedTopic}>
                 <SelectTrigger className="w-[35%] sm:w-[200px] bg-background text-foreground rounded-md">
                   <SelectValue placeholder="Select Topic" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Topics</SelectItem>
-                  {topics?.map((topic) => (
+                  {topics.map((topic) => (
                     <SelectItem key={topic.id} value={topic.id.toString()}>
                       {topic.name}
                     </SelectItem>
@@ -105,8 +106,7 @@ const NotesListing = () => {
               </Select>
             </div>
 
-            {/* Loading Skeletons */}
-            {loadingNotes && (
+            {loadingNotes ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 auto-rows-fr">
                 {[...Array(4)].map((_, index) => (
                   <div key={index} className="flex flex-col space-y-3">
@@ -119,16 +119,13 @@ const NotesListing = () => {
                   </div>
                 ))}
               </div>
-            )}
-
-            {/* Notes Grid */}
-            {!loadingNotes && (
+            ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 auto-rows-fr">
-                {notes?.length ? (
+                {notes.length ? (
                   notes.map((note) => (
-                    <NoteCard 
-                      key={note.id} 
-                      note={note} 
+                    <NoteCard
+                      key={note.id}
+                      note={note}
                       savedInit={note?.saved?.length > 0}
                     />
                   ))

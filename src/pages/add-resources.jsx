@@ -122,7 +122,7 @@ const AddResources = () => {
 
   if (!isLoaded || loadingTopics) {
     return (
-      <BarLoader className="mb-4" width={"100%"} color="#36d7b7" />
+      <BarLoader className=" bg-gradient-to-r from-blue-400 to-cyan-400" width="100%" />
     );
   }
 
@@ -244,7 +244,7 @@ const AddResources = () => {
           {/* Loading State */}
           {loadingCreateResource && (
             <div className="py-2">
-              <BarLoader width={"100%"} color="#36d7b7" />
+              <BarLoader className=" bg-gradient-to-r from-blue-400 to-cyan-400" width="100%" />
             </div>
           )}
 
@@ -280,7 +280,7 @@ const AddResources = () => {
                 <span className="relative z-10 flex items-center justify-center gap-2">
                   {isSubmitting || loadingCreateResource ? (
                     <>
-                      <BarLoader width={100} height={2} color="#fff" />
+                      <BarLoader width={100} height={2} className=" bg-gradient-to-r from-blue-400 to-cyan-400"/>
                       Posting...
                     </>
                   ) : (

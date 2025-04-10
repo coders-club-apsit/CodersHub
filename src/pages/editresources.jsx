@@ -173,7 +173,7 @@ const EditResources = () => {
         {errors.content && <p className="text-red-500">{errors.content.message}</p>}
 
         {errorUpdateResource && <p className="text-red-500">{errorUpdateResource.message}</p>}
-        {loadingUpdateResource && <BarLoader width={"100%"} color="#36d7b7" />}
+        {loadingUpdateResource && <BarLoader wclassName=" bg-gradient-to-r from-blue-400 to-cyan-400" width="100%" />}
 
         <div className="flex gap-4">
           <Button

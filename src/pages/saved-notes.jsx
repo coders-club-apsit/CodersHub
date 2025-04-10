@@ -23,7 +23,7 @@ const savedNotes = () => {
   }, [isLoaded])
 
   if(!isLoaded || loadingSavedNotes){
-    return <BarLoader className='mb-4' color={'#36d7b7'} width={"100%"} />
+    return <BarLoader className=" bg-gradient-to-r from-blue-400 to-cyan-400" width="100%" />
   }
 
 

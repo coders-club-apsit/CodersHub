@@ -210,7 +210,7 @@ const AddTopicDrawer = ({ fetchTopics }) => {
             <p className="text-red-500 text-sm">{errorAddTopic?.message}</p>
           )}
 
-          {loadingAddTopic && <BarLoader width={"100%"} color="#36d7b7" />}
+          {loadingAddTopic && <BarLoader className=" bg-gradient-to-r from-blue-400 to-cyan-400" width="100%"/>}
 
           <div className="flex gap-2 justify-end mt-4">
             <DrawerClose asChild>

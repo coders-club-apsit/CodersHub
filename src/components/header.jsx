@@ -48,9 +48,9 @@ const Header = () => {
                         </motion.div>
 
                         <div className="flex items-center gap-6">
-                            {/* <SignedIn>
+                            <SignedIn>
                                 <NotificationDropdown />
-                            </SignedIn> */}
+                            </SignedIn>
 
                             <SignedOut>
                                 <motion.div

@@ -80,8 +80,9 @@ export function Sidebar() {
               { path: "/", icon: HouseIcon, label: "Home" },
               { path: "/notes", icon: Book, label: "Notes" },
               { path: "/resources", icon: LinkIcon, label: "Resources" },
-              { path: "/about-us", icon: Info, label: "About us" },
               { path: "/events", icon: Calendar, label: "Events" },
+              { path: "/about-us", icon: Info, label: "About us" },
+              
             ].map(({ path, icon: Icon, label }) => (
               <SidebarMenuItem key={path}>
                 <SidebarMenuButton asChild>

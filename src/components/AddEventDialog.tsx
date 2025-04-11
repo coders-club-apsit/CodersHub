@@ -5,6 +5,8 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { supabaseAnon } from "@/utils/supabase";
+import { toast } from 'sonner';
+import React from 'react';
 
 interface AddEventDialogProps {
   isOpen: boolean;
@@ -23,24 +25,6 @@ export function AddEventDialog({ isOpen, onClose, onSubmit }: AddEventDialogProp
     capacity: '',
     tags: '',
   });
-
-  const resetForm = () => {
-    setFormData({
-      title: '',
-      description: '',
-      start: '',
-      end: '',
-      location: '',
-      type: 'workshop',
-      capacity: '',
-      tags: '',
-    });
-  };
-
-  const handleClose = () => {
-    onClose();
-    resetForm();
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -67,26 +51,38 @@ export function AddEventDialog({ isOpen, onClose, onSubmit }: AddEventDialogProp
         .select()
         .single();
 
-      if (error || !data) {
+      if (error) {
+        toast.error('Failed to add event');
         console.error('Supabase error:', error);
-        alert('Failed to add event. Please check console.');
         return;
       }
 
-      console.log('Successfully added event:', data);
+      toast.success('Event added successfully!');
       onSubmit(data);
-      handleClose();
+      onClose();
+      setFormData({
+        title: '',
+        description: '',
+        start: '',
+        end: '',
+        location: '',
+        type: 'workshop',
+        capacity: '',
+        tags: '',
+      });
     } catch (error) {
-      console.error('Detailed error:', error);
-      alert('Unexpected error occurred. Check console for details.');
+      toast.error('An unexpected error occurred');
+      console.error('Error:', error);
     }
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleClose}>
+    <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[500px] bg-background/95 backdrop-blur-xl border-primary/10">
         <DialogHeader>
-          <DialogTitle className="text-xl font-semibold">Add New Event</DialogTitle>
+          <DialogTitle className="text-xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600">
+            Add New Event
+          </DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input
@@ -94,34 +90,34 @@ export function AddEventDialog({ isOpen, onClose, onSubmit }: AddEventDialogProp
             value={formData.title}
             onChange={e => setFormData({ ...formData, title: e.target.value })}
             required
-            className="bg-black/20 border-primary/20"
+            className="bg-black/20 border-primary/20 focus:border-primary/40 focus:ring-primary/30"
           />
           <Textarea
             placeholder="Description"
             value={formData.description}
             onChange={e => setFormData({ ...formData, description: e.target.value })}
             required
-            className="bg-black/20 border-primary/20 min-h-[100px]"
+            className="bg-black/20 border-primary/20 min-h-[100px] focus:border-primary/40 focus:ring-primary/30"
           />
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <label className="text-sm text-muted-foreground">Start</label>
+              <label className="text-sm text-muted-foreground">Start Date & Time</label>
               <Input
                 type="datetime-local"
                 value={formData.start}
                 onChange={e => setFormData({ ...formData, start: e.target.value })}
                 required
-                className="bg-black/20 border-primary/20"
+                className="bg-black/20 border-primary/20 focus:border-primary/40 focus:ring-primary/30"
               />
             </div>
             <div className="space-y-2">
-              <label className="text-sm text-muted-foreground">End</label>
+              <label className="text-sm text-muted-foreground">End Date & Time</label>
               <Input
                 type="datetime-local"
                 value={formData.end}
                 onChange={e => setFormData({ ...formData, end: e.target.value })}
                 required
-                className="bg-black/20 border-primary/20"
+                className="bg-black/20 border-primary/20 focus:border-primary/40 focus:ring-primary/30"
               />
             </div>
           </div>
@@ -130,7 +126,7 @@ export function AddEventDialog({ isOpen, onClose, onSubmit }: AddEventDialogProp
             value={formData.location}
             onChange={e => setFormData({ ...formData, location: e.target.value })}
             required
-            className="bg-black/20 border-primary/20"
+            className="bg-black/20 border-primary/20 focus:border-primary/40 focus:ring-primary/30"
           />
           <Select
             value={formData.type}
@@ -147,22 +143,30 @@ export function AddEventDialog({ isOpen, onClose, onSubmit }: AddEventDialogProp
           </Select>
           <Input
             type="number"
-            placeholder="Capacity"
+            placeholder="Capacity (optional)"
             value={formData.capacity}
             onChange={e => setFormData({ ...formData, capacity: e.target.value })}
-            className="bg-black/20 border-primary/20"
+            className="bg-black/20 border-primary/20 focus:border-primary/40 focus:ring-primary/30"
           />
           <Input
             placeholder="Tags (comma separated)"
             value={formData.tags}
             onChange={e => setFormData({ ...formData, tags: e.target.value })}
-            className="bg-black/20 border-primary/20"
+            className="bg-black/20 border-primary/20 focus:border-primary/40 focus:ring-primary/30"
           />
-          <div className="flex justify-end gap-2">
-            <Button type="button" variant="outline" onClick={handleClose}>
+          <div className="flex justify-end gap-2 pt-2">
+            <Button 
+              type="button" 
+              variant="outline" 
+              onClick={onClose}
+              className="border-primary/20 hover:bg-primary/10"
+            >
               Cancel
             </Button>
-            <Button type="submit" className="bg-primary hover:bg-primary/90">
+            <Button 
+              type="submit" 
+              className="bg-primary hover:bg-primary/90 text-white shadow-md"
+            >
               Add Event
             </Button>
           </div>

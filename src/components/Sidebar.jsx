@@ -15,6 +15,7 @@ import {
   Award,
   AwardIcon,
   LucideAward,
+  Calendar,
 } from "lucide-react";
 import { SignedIn, SignedOut, SignIn, UserButton } from "@clerk/clerk-react";
 import { PenBox, NotebookPen, Save } from "lucide-react";
@@ -80,6 +81,7 @@ export function Sidebar() {
               { path: "/notes", icon: Book, label: "Notes" },
               { path: "/resources", icon: LinkIcon, label: "Resources" },
               { path: "/about-us", icon: Info, label: "About us" },
+              { path: "/events", icon: Calendar, label: "Events" },
             ].map(({ path, icon: Icon, label }) => (
               <SidebarMenuItem key={path}>
                 <SidebarMenuButton asChild>

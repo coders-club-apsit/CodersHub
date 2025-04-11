@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -8,13 +8,7 @@ import { supabaseAnon } from "@/utils/supabase";
 import { toast } from 'sonner';
 import React from 'react';
 
-interface AddEventDialogProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onSubmit: (formData: any) => void;
-}
-
-export function AddEventDialog({ isOpen, onClose, onSubmit }: AddEventDialogProps) {
+export default function AddEventDialog({ isOpen, onClose, onSubmit }) {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -26,7 +20,7 @@ export function AddEventDialog({ isOpen, onClose, onSubmit }: AddEventDialogProp
     tags: '',
   });
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
@@ -78,13 +72,20 @@ export function AddEventDialog({ isOpen, onClose, onSubmit }: AddEventDialogProp
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px] bg-background/95 backdrop-blur-xl border-primary/10">
+      <DialogContent 
+        className="sm:max-w-[500px] bg-background/95 backdrop-blur-xl border-primary/10"
+        aria-describedby="add-event-dialog-description"
+      >
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600">
             Add New Event
           </DialogTitle>
+          <DialogDescription id="add-event-dialog-description" className="text-muted-foreground/80">
+            Fill in the details below to create a new event.
+          </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        
+        <form onSubmit={handleSubmit} className="space-y-4" aria-label="Add event form">
           <Input
             placeholder="Event Title"
             value={formData.title}

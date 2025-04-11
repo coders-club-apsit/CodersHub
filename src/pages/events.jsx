@@ -12,7 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { Sidebar } from "@/components/Sidebar";
 import { SideHeader } from "@/components/sidebarhead";
-import { AddEventDialog } from '@/components/AddEventDialog';
+import AddEventDialog from '@/components/AddEventDialog';
 
 const sampleEvents = [
   {
@@ -163,6 +163,8 @@ const Events = () => {
   const [showRegistrationSuccess, setShowRegistrationSuccess] = useState(false);
   const [registeredEvents, setRegisteredEvents] = useState(new Set());
   const [viewType, setViewType] = useState('dayGridMonth');
+  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1024);
+  const [isMounted, setIsMounted] = useState(false);
 
   const upcomingEvents = events.filter(e => DateTime.fromISO(e.start) > DateTime.now());
 
@@ -183,6 +185,7 @@ const Events = () => {
       start: eventData.start,
       end: eventData.end,
       location: eventData.location,
+      type: eventData.type,
       tags: eventData.tags.split(',').map(tag => tag.trim()),
       speakers: [], // Add default or get from form if needed
       color: eventData.type === 'workshop' ? '#3b82f6' : 
@@ -199,11 +202,20 @@ const Events = () => {
   };
 
   useEffect(() => {
+    setIsMounted(true);
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
     if (showRegistrationSuccess) {
       const timer = setTimeout(() => setShowRegistrationSuccess(false), 3000);
       return () => clearTimeout(timer);
     }
   }, [showRegistrationSuccess]);
+
+  if (!isMounted) return null; // Prevent SSR issues
 
   return (
     <SidebarProvider>
@@ -255,7 +267,7 @@ const Events = () => {
                 {/* Calendar Container */}
                 <div className="p-2 sm:p-4 md:p-6">
                   <div className="rounded-xl overflow-hidden bg-background/50 backdrop-blur-sm border border-primary/10">
-                    <style jsx global>{`
+                    <style global="true">{`
                       .fc {
                         --fc-border-color: rgba(59, 130, 246, 0.1);
                         --fc-button-bg-color: rgba(59, 130, 246, 0.1);
@@ -276,69 +288,51 @@ const Events = () => {
                         border-bottom: 1px solid rgba(59, 130, 246, 0.1);
                       }
 
-                      .fc .fc-toolbar-chunk,.fc-button-group{
+                      .fc .fc-toolbar-chunk,
+                      .fc-button-group {
                         gap: 0.5rem;
-                        button{
-                          padding: 0.5rem;
-                          font-weight: 500;}
+                      }
+                      
+                      .fc .fc-toolbar-chunk button,
+                      .fc-button-group button {
+                        padding: 0.5rem;
+                        font-weight: 500;
                       }
                       
                       @media (max-width: 640px) {
+                        .fc {
+                          font-size: 0.875rem;
+                        }
+                        
                         .fc .fc-toolbar {
                           padding: 0.75rem;
                           flex-direction: column;
                           gap: 0.75rem;
                         }
-                      }
-                      
-                      .fc .fc-button {
-                        padding: 0.5rem 1rem !important;
-                        font-weight: 500;
-                        border-radius: 0.5rem;
-                        transition: all 0.2s;
-                        text-transform: capitalize;
-                        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-                      }
-                      
-                      .fc .fc-button:hover {
-                        transform: translateY(-1px);
-                        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-                      }
-                      
-                      .fc .fc-button-primary:not(:disabled):active,
-                      .fc .fc-button-primary:not(:disabled).fc-button-active {
-                        background-color: var(--fc-button-active-bg-color);
-                        border-color: var(--fc-button-hover-border-color);
-                      }
-                      
-                      .fc .fc-daygrid-day {
-                        transition: background-color 0.2s;
-                      }
-                      
-                      .fc .fc-daygrid-day:hover {
-                        background-color: rgba(59, 130, 246, 0.05);
-                      }
-                      
-                      .fc .fc-daygrid-day-number {
-                        padding: 0.5rem;
-                        color: inherit;
-                      }
-                      
-                      .fc .fc-event {
-                        transition: all 0.2s;
-                        cursor: pointer;
-                        border-radius: 0.375rem;
-                        padding: 0.25rem 0.5rem;
-                        font-size: 0.875rem;
-                      }
-                      
-                      .fc .fc-event:hover {
-                        transform: translateY(-1px) scale(1.02);
-                        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-                      }
-                      
-                      .fc .fc-day-today {
-                        background-color: var(--fc-today-bg-color) !important;
+                        
+                        .fc .fc-toolbar-title {
+                          font-size: 1.25rem !important;
+                        }
+                        
+                        .fc .fc-button {
+                          padding: 0.375rem 0.75rem !important;
+                          font-size: 0.875rem;
+                        }
+                        
+                        .fc .fc-daygrid-day-number {
+                          padding: 0.25rem;
+                          font-size: 0.875rem;
+                        }
+                        
+                        .fc .fc-daygrid-event {
+                          padding: 0.125rem 0.375rem;
+                          font-size: 0.75rem;
+                        }
+                        
+                        .fc-view-harness {
+                          min-height: 400px !important;
+                          height: calc(100vh - 200px) !important;
+                        }
                       }
                     `}</style>
                     
@@ -355,29 +349,42 @@ const Events = () => {
                         backgroundColor: `${event.color}15`,
                         borderColor: event.color,
                         textColor: event.color,
-                        className: 'rounded-md border shadow-sm hover:shadow-md'
                       }))}
-                      height={window.innerWidth < 640 ? 500 : 'auto'}
+                      height="auto"
+                      aspectRatio={windowWidth < 640 ? 0.8 : 1.35}
+                      expandRows={true}
                       headerToolbar={{
-                        left: window.innerWidth < 640 ? 'prev,next' : 'prev,next today',
+                        left: windowWidth < 640 ? 'prev,next' : 'prev,next today',
                         center: 'title',
-                        right: window.innerWidth < 640 ? 'today' : 'dayGridMonth,dayGridWeek'
+                        right: windowWidth < 640 ? 'dayGridMonth' : 'dayGridMonth,dayGridWeek'
                       }}
-                      buttonText={{
-                        today: 'Today',
-                        month: 'Month',
-                        week: 'Week'
+                      views={{
+                        dayGridMonth: {
+                          dayMaxEvents: windowWidth < 640 ? 1 : 3,
+                          dayMaxEventRows: windowWidth < 640 ? 1 : 3,
+                        },
+                        dayGridWeek: {
+                          dayMaxEvents: windowWidth < 640 ? 2 : 4,
+                        }
                       }}
-                      dayMaxEvents={window.innerWidth < 640 ? 2 : 3}
                       moreLinkContent={(args) => (
                         <Badge 
                           variant="outline" 
-                          className="bg-primary/5 text-primary hover:bg-primary/10 text-xs"
+                          className="bg-primary/5 text-primary hover:bg-primary/10 text-[10px] sm:text-xs py-0 px-1"
                         >
                           +{args.num} more
                         </Badge>
                       )}
-                      className="font-medium"
+                      dayMaxEvents={windowWidth < 640 ? 2 : 3}
+                      // moreLinkContent={(args) => (
+                      //   <Badge 
+                      //     variant="outline" 
+                      //     className="bg-primary/5 text-primary hover:bg-primary/10 text-xs"
+                      //   >
+                      //     +{args.num} more
+                      //   </Badge>
+                      // )}
+                      // eventClassNames={['rounded-md', 'border', 'shadow-sm', 'hover:shadow-md']}
                     />
                   </div>
                 </div>

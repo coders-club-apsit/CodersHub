@@ -4,11 +4,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { supabaseAnon } from "@/utils/supabase";
+import { useSupabaseClient } from '@/utils/supabase';
 import { toast } from 'sonner';
-import React from 'react';
 
 export default function AddEventDialog({ isOpen, onClose, onSubmit }) {
+  const supabase = useSupabaseClient();
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -19,35 +19,41 @@ export default function AddEventDialog({ isOpen, onClose, onSubmit }) {
     capacity: '',
     tags: '',
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!supabase) {
+      toast.error('Authentication required. Please sign in.');
+      return;
+    }
 
+    setIsSubmitting(true);
     try {
       const formattedData = {
         title: formData.title.trim(),
         description: formData.description.trim(),
         start: new Date(formData.start).toISOString(),
-        end: new Date(formData.end).toISOString(),
+        end_time: new Date(formData.end).toISOString(), // Match table column 'end_time'
         location: formData.location.trim(),
         type: formData.type,
-        capacity: parseInt(formData.capacity) || 0,
+        capacity: parseInt(formData.capacity) || null,
         registered: 0,
-        tags: formData.tags.split(',').map(tag => tag.trim()),
+        tags: formData.tags ? formData.tags.split(',').map(tag => tag.trim()).filter(tag => tag) : [],
         color:
           formData.type === 'workshop' ? '#3b82f6' :
           formData.type === 'contest' ? '#22c55e' : '#a855f7',
       };
 
-      const { data, error } = await supabaseAnon
+      const { data, error } = await supabase
         .from('events')
         .insert([formattedData])
         .select()
         .single();
 
       if (error) {
-        toast.error('Failed to add event');
         console.error('Supabase error:', error);
+        toast.error(`Failed to add event: ${error.message}`);
         return;
       }
 
@@ -65,8 +71,10 @@ export default function AddEventDialog({ isOpen, onClose, onSubmit }) {
         tags: '',
       });
     } catch (error) {
+      console.error('Unexpected error:', error);
       toast.error('An unexpected error occurred');
-      console.error('Error:', error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -161,14 +169,16 @@ export default function AddEventDialog({ isOpen, onClose, onSubmit }) {
               variant="outline" 
               onClick={onClose}
               className="border-primary/20 hover:bg-primary/10"
+              disabled={isSubmitting}
             >
               Cancel
             </Button>
             <Button 
               type="submit" 
               className="bg-primary hover:bg-primary/90 text-white shadow-md"
+              disabled={isSubmitting}
             >
-              Add Event
+              {isSubmitting ? 'Adding...' : 'Add Event'}
             </Button>
           </div>
         </form>

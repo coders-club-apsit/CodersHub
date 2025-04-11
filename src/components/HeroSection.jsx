@@ -22,7 +22,7 @@ const MotionWrapper = ({ children, ...props }) => {
   if (isAndroid) {
     return <button className={props.className} onClick={props.onClick}>{children}</button>;
   }
-  return <motion.button {...props}>{children}</motion.button>;
+  return <motion.div {...props}>{children}</motion.div>;
 };
 
 const CodeBlock = () => (
@@ -65,7 +65,7 @@ const HeroSection = () => {
   } : {};
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center max-h-screen overflow-hidden ">
+    <section className="relative min-h-screen flex items-center justify-center max-h-screen overflow-hidden -mt-12 ">
       <NeonCircles />
 
       <div className="container px-8 mx-auto z-10">
@@ -74,7 +74,7 @@ const HeroSection = () => {
             !isAndroid ? "animate-fade-in [animation-delay:300ms]" : ""
           }`}>
             {isSignedIn ? (
-              <>Welcome back <span className="text-gradient">{capitalizeFirstLetter(user.firstName)}</span></>
+              <>Welcome back <span className="text-gradient">{capitalizeFirstLetter(user.firstName)}.</span></>
             ) : (
               <>Welcome to the <span className="text-gradient">Coder's Club</span></>
             )}

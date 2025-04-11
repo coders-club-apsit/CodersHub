@@ -179,7 +179,7 @@ export default function AboutUs() {
     <SidebarProvider>
       <div className="flex h-screen w-full flex-col md:flex-row">
         <Sidebar />
-        <div className="flex-1 bg-gradient-to-b from-background via-background/95 to-background relative overflow-y-auto">
+        <div className="flex-1 bg-gradient-to-b from-background via-background/95 to-background relative">
           <SideHeader />
 
           {/* Background elements */}

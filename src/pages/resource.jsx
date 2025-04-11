@@ -51,7 +51,7 @@ const ResourcesPage = () => {
             </motion.div>
 
             <div className="hidden md:block">
-              <motion.button
+              <motion.div
                 whileTap={!isAndroid && { scale: 0.95 }}
                 whileHover={!isAndroid && { scale: 1.05 }}
                 onClick={toggleMode}
@@ -69,7 +69,7 @@ const ResourcesPage = () => {
                    <PanelLeftClose className="w-4 h-4" />
                 )}
                 <span className="text-sm font-medium">{mode === 'compact' ? 'Full Width' : 'Compact'}</span>
-              </motion.button>
+              </motion.div>
             </div>
           </div>
 

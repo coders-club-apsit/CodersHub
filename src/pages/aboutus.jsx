@@ -197,13 +197,13 @@ export default function AboutUs() {
             transition={{ duration: 0.6 }}
           >
             <motion.div 
-              className="w-32 h-32 mb-8 relative group"
+              className="w-40 h-40 mb-8 relative group"
               whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.2 }}
             >
               <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-blue-500/20 rounded-full blur-xl group-hover:blur-2xl transition-all duration-300" />
               <img 
-                src="/cc_brain.png" 
+                src="/cc_logo.png" 
                 alt="Coders Club Logo" 
                 className="relative z-10 w-full h-full object-contain drop-shadow-lg"
               />

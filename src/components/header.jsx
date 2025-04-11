@@ -5,6 +5,7 @@ import { SignedIn, SignedOut, UserButton, SignIn } from '@clerk/clerk-react';
 import { PenBox, NotebookPen, Book, Link2 } from 'lucide-react';
 import { ThemeToggle } from "./ThemeToggle";
 import { motion } from 'framer-motion';
+import NotificationDropdown from './NotificationDropdown';
 
 const Header = () => {
     const [search, setSearch] = useSearchParams();
@@ -31,7 +32,7 @@ const Header = () => {
                 animate={{ y: 0 }}
                 transition={{ duration: 0.3 }}
             >
-                <div className="]mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between items-center h-20">
                         <motion.div
                             whileHover={{ scale: 1.05 }}
@@ -46,11 +47,11 @@ const Header = () => {
                             </Link>
                         </motion.div>
 
-
-
                         <div className="flex items-center gap-6">
-                            {/* <ThemeToggle /> */}
-                            
+                            {/* <SignedIn>
+                                <NotificationDropdown />
+                            </SignedIn> */}
+
                             <SignedOut>
                                 <motion.div
                                     whileHover={{ scale: 1.05 }}

@@ -56,14 +56,14 @@ const NotificationDropdown = () => {
         {isOpen && (
           <>
             <motion.div
-              className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40"
+              className="fixed inset-0 bg-black/20 z-40"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsOpen(false)}
             />
             <motion.div
-              className="absolute right-0 mt-2 w-96 rounded-xl border border-primary/10 bg-background/95 backdrop-blur-xl shadow-2xl z-50 overflow-hidden"
+              className="absolute right-0 mt-2 w-96 rounded-xl border border-primary/10 bg-background/95 shadow-2xl z-50 overflow-hidden"
               initial={{ opacity: 0, scale: 0.95, y: -20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: -20 }}

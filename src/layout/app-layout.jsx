@@ -36,7 +36,7 @@ const AppLayout = () => {
       </main>
       <DotPattern
         className={cn(
-          '-z-50 [mask-image:radial-gradient(250px_circle_at_center,white,transparent)] lg:[mask-image:radial-gradient(350px_circle_at_center,white,transparent)]'
+          '-z-50 [mask-image:radial-gradient(300px_circle_at_center,white,transparent)] lg:[mask-image:radial-gradient(350px_circle_at_center,white,transparent)]'
         )}
       />
       <SpeedInsights/>

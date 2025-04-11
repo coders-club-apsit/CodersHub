@@ -179,21 +179,75 @@ export default function AboutUs() {
     <SidebarProvider>
       <div className="flex h-screen w-full flex-col md:flex-row">
         <Sidebar />
-        <div className="flex-1 bg-gradient-to-b from-background via-background/95 to-background relative">
+        <div className="flex-1 bg-gradient-to-b from-background via-background/95 to-background relative overflow-y-auto">
           <SideHeader />
 
+          {/* Background elements */}
           <div className="absolute inset-0 overflow-hidden -z-10">
             <div className="absolute inset-0 bg-grid-white/5 bg-[size:40px_40px]" />
             <div className="absolute top-0 left-0 size-[500px] rounded-full bg-primary/20 -z-10 blur-[100px]" />
             <div className="absolute bottom-0 right-0 size-[500px] rounded-full bg-blue-500/20 -z-10 blur-[100px]" />
           </div>
 
+          {/* About Section */}
           <motion.div
-            className="flex flex-col items-center justify-center py-16 px-6 md:px-12"
-            initial="hidden"
-            animate="visible"
-            variants={containerVariants}
+            className="flex flex-col items-center justify-center py-16 px-6 md:px-12 mt-4"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
           >
+            <motion.div 
+              className="w-32 h-32 mb-8 relative group"
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: 0.2 }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-blue-500/20 rounded-full blur-xl group-hover:blur-2xl transition-all duration-300" />
+              <img 
+                src="/cc_brain.png" 
+                alt="Coders Club Logo" 
+                className="relative z-10 w-full h-full object-contain drop-shadow-lg"
+              />
+            </motion.div>
+
+            <motion.h1
+              className="text-4xl md:text-5xl font-extrabold text-center mb-6 text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+            >
+              About Coders Club
+            </motion.h1>
+
+            <motion.div
+              className="max-w-3xl text-center space-y-6 mb-24"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+            >
+              <p className="text-lg text-muted-foreground leading-relaxed">
+                Welcome to <b>Coders Club</b>, a vibrant community at <b>A.P. Shah Institute Of Technology</b> fostering technical excellence and innovation. 
+                We are dedicated to helping students master Data Structures, Algorithms, and competitive programming.
+              </p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+                <div className="p-6 rounded-xl bg-primary/5 backdrop-blur-sm border border-primary/10 hover:border-primary/20 transition-all duration-300">
+                  <h3 className="text-xl font-semibold text-primary mb-2">Our Mission</h3>
+                  <p className="text-muted-foreground">To cultivate a collaborative learning environment where students can enhance their programming skills and grow together.</p>
+                </div>
+                
+                <div className="p-6 rounded-xl bg-primary/5 backdrop-blur-sm border border-primary/10 hover:border-primary/20 transition-all duration-300">
+                  <h3 className="text-xl font-semibold text-primary mb-2">What We Do</h3>
+                  <p className="text-muted-foreground">Regular coding contests, workshops, mentorship programs, and hands-on projects to build practical skills.</p>
+                </div>
+                
+                <div className="p-6 rounded-xl bg-primary/5 backdrop-blur-sm border border-primary/10 hover:border-primary/20 transition-all duration-300">
+                  <h3 className="text-xl font-semibold text-primary mb-2">Our Vision</h3>
+                  <p className="text-muted-foreground">To create a community of skilled programmers ready to tackle real-world challenges and excel in their careers.</p>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Existing Team Section */}
             <motion.h1
               className="text-4xl md:text-5xl font-extrabold text-center mb-4 text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600"
               initial={{ y: -20, opacity: 0 }}

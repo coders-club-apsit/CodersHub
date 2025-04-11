@@ -78,10 +78,6 @@ function LandingPage() {
 
   return (
     <div className="relative min-h-screen overflow-hidden " style={{minWidth: "100vw"}}>
-      {/* Background Graphics */}
-      <div className="fixed inset-0 -z-10">
-        <GradientOrbs />
-      </div>
 
       {/* Content */}
       <Header />

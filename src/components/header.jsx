@@ -41,7 +41,7 @@ const Header = () => {
                             <Link to="/">
                                 <img 
                                     src="/cc2.png" 
-                                    className="h-16 hover:brightness-110 transition-all" 
+                                    className="h-14 hover:brightness-110 transition-all" 
                                     alt="Logo" 
                                 />
                             </Link>

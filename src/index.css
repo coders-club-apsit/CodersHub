@@ -367,7 +367,8 @@
   }
 
   .fc .fc-toolbar-title {
-    @apply text-xl md:text-2xl font-semibold text-primary;
+    @apply text-lg sm:text-xl font-semibold text-blue-500 !important;
+    margin: 0 !important;
   }
 
   .fc .fc-button-primary {
@@ -393,6 +394,10 @@
 
   .fc .fc-col-header-cell {
     @apply bg-black/20 text-primary/80 font-medium py-3;
+  }
+
+  a.fc-col-header-cell-cushion {
+    @apply text-primary/80 font-medium;
   }
 
   .fc .fc-day-today {
@@ -445,7 +450,7 @@
   }
 
   .fc .fc-toolbar-title {
-    @apply text-lg sm:text-xl font-semibold text-primary !important;
+    @apply text-lg sm:text-xl font-semibold text-blue-500 !important;
     margin: 0 !important;
   }
 

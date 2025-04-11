@@ -14,6 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { Sidebar } from "@/components/Sidebar";
 import { SideHeader } from "@/components/sidebarhead";
+import { AddEventDialog } from '@/components/AddEventDialog';
 
 // Helper function for date formatting
 const formatEventDate = (dateStr) => {
@@ -147,6 +148,7 @@ const Events = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [registeredEvents, setRegisteredEvents] = useState(new Set());
   const [showRegistrationSuccess, setShowRegistrationSuccess] = useState(false);
+  const [showAddDialog, setShowAddDialog] = useState(false);
 
   const handleEventClick = useCallback((eventClickInfo) => {
     setSelectedEvent(eventClickInfo.event);
@@ -166,6 +168,10 @@ const Events = () => {
     setTimeout(() => setShowRegistrationSuccess(false), 3000);
     setSelectedEvent(null);
   }, []);
+
+  const handleAddEvent = (newEvent) => {
+    setEvents(prev => [...prev, newEvent]);
+  };
 
   const upcomingEvents = events.filter(event => {
     const eventDate = DateTime.fromISO(event.start);
@@ -291,13 +297,21 @@ const Events = () => {
           </div>
 
           <div className="container mx-auto px-4 py-8 mt-4">
-            <motion.h1
-              className="text-4xl font-bold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600"
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-            >
-              Events Calendar
-            </motion.h1>
+            <div className="flex justify-between items-center mb-8">
+              <motion.h1
+                className="text-4xl font-bold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600"
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+              >
+                Events Calendar
+              </motion.h1>
+              <Button 
+                onClick={() => setShowAddDialog(true)}
+                className="bg-primary hover:bg-primary/90"
+              >
+                Add Event
+              </Button>
+            </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* Calendar */}
@@ -382,6 +396,12 @@ const Events = () => {
         event={selectedEvent} 
         isOpen={!!selectedEvent} 
         onClose={() => setSelectedEvent(null)}
+      />
+
+      <AddEventDialog
+        isOpen={showAddDialog}
+        onClose={() => setShowAddDialog(false)}
+        onAddEvent={handleAddEvent}
       />
 
       {/* Show success toast */}

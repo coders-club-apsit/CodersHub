@@ -16,7 +16,7 @@ export async function getNotes(token, { note_id, searchQuery, topic_id }) {
   }
   const { data, error } = await query;
   if (error) {
-    console.error("Error fetching blogs :", error);
+    console.error("Error fetching notes :", error);
     return null;
   }
   return data;
@@ -30,7 +30,7 @@ export async function saveNote(token, { alreadySaved }, saveData) {
       .delete()
       .eq("note_id", saveData.note_id);
     if (deleteError) {
-      console.error("Error Deleting saved blogs :", deleteError);
+      console.error("Error Deleting saved notes :", deleteError);
       return null;
     }
     return data;
@@ -40,7 +40,7 @@ export async function saveNote(token, { alreadySaved }, saveData) {
       .insert([saveData])
       .select();
     if (insertError) {
-      console.error("Error fetching blogs :", insertError);
+      console.error("Error fetching notes :", insertError);
       return null;
     }
 
@@ -69,7 +69,7 @@ export async function addNewNote(token, _, noteData) {
     .insert([noteData])
     .select();
   if (error) {
-    console.error("Error Creating New Blogs :", error);
+    console.error("Error Creating New notes :", error);
     return null;
   }
   return data;
@@ -81,7 +81,7 @@ export async function getSavedNotes(token) {
     .from("saved_notes")
     .select("* , note:notes(*, topic: topics(name, topic_logo_url))");
   if (error) {
-    console.error("Error fetching saved Blogs :", error);
+    console.error("Error fetching saved notes :", error);
     return null;
   }
   return data;
@@ -94,7 +94,7 @@ export async function getMyNotes(token, { provider_id }) {
     .select("* , topic: topics(name, topic_logo_url)")
     .eq("provider_id", provider_id);
   if (error) {
-    console.error("Error fetching Blogs :", error);
+    console.error("Error fetching notes :", error);
     return null;
   }
   return data;
@@ -108,7 +108,7 @@ export async function deleteNote(token, { note_id }) {
     .eq("id", note_id)
     .select();
   if (error) {
-    console.error("Error deleting Blogs :", error);
+    console.error("Error deleting notes :", error);
     return null;
   }
   return data;

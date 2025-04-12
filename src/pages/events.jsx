@@ -4,8 +4,8 @@ import { useState, useCallback, useEffect } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Calendar, Clock, MapPin, Tag, Plus } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Calendar, Clock, MapPin, Plus, Trash2 } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -13,10 +13,15 @@ import { SidebarProvider } from '@/components/ui/sidebar';
 import { Sidebar } from '@/components/Sidebar';
 import { SideHeader } from '@/components/sidebarhead';
 import AddEventDialog from '@/components/AddEventDialog';
-import { useSupabaseClient } from '@/utils/supabase';
 import { toast } from 'sonner';
+import ErrorBoundary from '@/components/ErrorBoundary';
+import { useUser } from '@clerk/clerk-react';
+import { getEvents, deleteEvent } from '@/api/api-events';
+import useFetch from '@/hooks/use-fetch';
+import { ADMIN_EMAILS } from "@/config/admin";
+import { useSupabaseClient } from '@/utils/supabase';
 
-const EventCard = ({ event, onClick, isRegistered }) => (
+const EventCard = ({ event, onClick }) => (
   <div
     onClick={onClick}
     className={cn(
@@ -26,15 +31,10 @@ const EventCard = ({ event, onClick, isRegistered }) => (
       'cursor-pointer hover:shadow-xl transform hover:-translate-y-1'
     )}
   >
-    <div className="flex items-start justify-between mb-4">
+    <div className="mb-4">
       <h2 className="text-xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600 group-hover:to-blue-500">
         {event.title}
       </h2>
-      {isRegistered && (
-        <Badge variant="success" className="bg-green-500/10 text-green-500 border border-green-500/20">
-          Registered
-        </Badge>
-      )}
     </div>
     
     <div className="space-y-3 text-muted-foreground/80">
@@ -44,7 +44,7 @@ const EventCard = ({ event, onClick, isRegistered }) => (
       </div>
       
       <div className="flex items-center group/item hover:text-primary transition-colors">
-        <Clock className="w-4 h-4 mr-3 text-primary/60 group-hover/item:text-primary" />
+        <Clock className="w-4 h-4 mr-3 text-primary/60 group-hover:item:text-primary" />
         <span>
           {DateTime.fromISO(event.start).toLocaleString(DateTime.TIME_SIMPLE)} - 
           {DateTime.fromISO(event.end_time).toLocaleString(DateTime.TIME_SIMPLE)}
@@ -52,7 +52,7 @@ const EventCard = ({ event, onClick, isRegistered }) => (
       </div>
       
       <div className="flex items-center group/item hover:text-primary transition-colors">
-        <MapPin className="w-4 h-4 mr-3 text-primary/60 group-hover/item:text-primary" />
+        <MapPin className="w-4 h-4 mr-3 text-primary/60 group-hover:item:text-primary" />
         <span>{event.location}</span>
       </div>
     </div>
@@ -71,131 +71,192 @@ const EventCard = ({ event, onClick, isRegistered }) => (
   </div>
 );
 
-const EventDialog = ({ event, isOpen, onClose, onRegister, isRegistered }) => (
+const EventDialog = ({ event, isOpen, onClose, isAdmin, onDelete }) => (
   <Dialog open={isOpen} onOpenChange={onClose}>
     <DialogContent 
-      className="sm:max-w-[600px] p-0" 
+      className="max-w-[95vw] sm:max-w-[600px] p-0 overflow-hidden sm:mx-auto" 
       aria-describedby="event-dialog-description"
     >
-      <div className="relative p-6 bg-background/95 backdrop-blur-xl">
-        <DialogHeader>
-          <DialogTitle className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600">
-            {event.title}
-          </DialogTitle>
-          <DialogDescription id="event-dialog-description" className="sr-only">
-            Details for the event {event.title}.
-          </DialogDescription>
-        </DialogHeader>
-        <div className="space-y-6">
-          <p className="mt-2 text-muted-foreground">{event.description}</p>
+      {/* Header with responsive gradient background */}
+      <div className="relative">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent" />
+        <div className="relative p-4 sm:p-6 pb-2 sm:pb-4">
+          <DialogHeader>
+            <DialogTitle className="text-2xl sm:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary via-blue-500 to-blue-600 leading-tight">
+              {event.title}
+            </DialogTitle>
+            <DialogDescription id="event-dialog-description" className="sr-only">
+              Details for the event {event.title}
+            </DialogDescription>
+          </DialogHeader>
+        </div>
+      </div>
 
-          <div className="space-y-3">
-            <div className="flex items-center text-muted-foreground">
-              <Calendar className="w-5 h-5 mr-3 text-primary" />
-              <span>{DateTime.fromISO(event.start).toLocaleString(DateTime.DATE_FULL)}</span>
+      {/* Responsive content with hover effects */}
+      <div className="p-4 sm:p-6 pt-2 space-y-4 sm:space-y-6 bg-background/95 backdrop-blur-xl">
+        {/* Description */}
+        <motion.div 
+          className="space-y-2 group"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+        >
+          <h4 className="text-sm font-medium text-primary/70 group-hover:text-primary transition-colors">
+            Description
+          </h4>
+          <p className="text-sm sm:text-base text-muted-foreground/90 leading-relaxed">
+            {event.description || 'No description provided'}
+          </p>
+        </motion.div>
+
+        {/* Type with responsive badge */}
+        <motion.div 
+          className="space-y-2"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+        >
+          <h4 className="text-sm font-medium text-primary/70">Type</h4>
+          <Badge 
+            variant="outline" 
+            className="text-xs sm:text-sm bg-primary/5 text-primary hover:bg-primary/10 transition-colors capitalize"
+          >
+            {event.type || 'General'}
+          </Badge>
+        </motion.div>
+
+        {/* Date & Time with improved responsive layout */}
+        <motion.div 
+          className="space-y-2"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+        >
+          <h4 className="text-sm font-medium text-primary/70">Date & Time</h4>
+          <div className="space-y-2 bg-primary/5 rounded-lg p-2 sm:p-3 hover:bg-primary/10 transition-colors">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <Calendar className="w-4 h-4 text-primary/70 flex-shrink-0" />
+              <span className="text-sm sm:text-base text-muted-foreground/90 font-medium">
+                {DateTime.fromISO(event.start).toLocaleString(DateTime.DATE_FULL)}
+              </span>
             </div>
-            
-            <div className="flex items-center text-muted-foreground">
-              <Clock className="w-5 h-5 mr-3 text-primary" />
-              <span>
+            <div className="flex items-center gap-2 sm:gap-3">
+              <Clock className="w-4 h-4 text-primary/70 flex-shrink-0" />
+              <span className="text-sm sm:text-base text-muted-foreground/90">
                 {DateTime.fromISO(event.start).toLocaleString(DateTime.TIME_SIMPLE)} - 
                 {DateTime.fromISO(event.end_time).toLocaleString(DateTime.TIME_SIMPLE)}
               </span>
             </div>
-            
-            <div className="flex items-center text-muted-foreground">
-              <MapPin className="w-5 h-5 mr-3 text-primary" />
-              <span>{event.location}</span>
-            </div>
           </div>
+        </motion.div>
 
-          <div className="flex flex-wrap gap-2">
-            {event.tags && event.tags.map(tag => (
-              <Badge 
-                key={tag}
-                variant="outline" 
-                className="bg-primary/5 text-primary/70"
-              >
-                {tag}
-              </Badge>
-            ))}
-          </div>
-
-          <Button 
-            className="w-full bg-primary hover:bg-primary/90" 
-            onClick={() => onRegister(event.id)} 
-            disabled={isRegistered}
+        {/* Tags with responsive grid */}
+        {event.tags && event.tags.length > 0 && (
+          <motion.div 
+            className="space-y-2"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
           >
-            {isRegistered ? 'Already Registered' : 'Register Now'}
-          </Button>
-        </div>
+            <h4 className="text-sm font-medium text-primary/70">Tags</h4>
+            <div className="flex flex-wrap gap-1.5 sm:gap-2">
+              {event.tags.map((tag, index) => (
+                <motion.div
+                  key={tag}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.5 + index * 0.1 }}
+                >
+                  <Badge 
+                    variant="outline" 
+                    className="text-xs sm:text-sm bg-primary/5 text-primary hover:bg-primary/10 transition-all hover:scale-105"
+                  >
+                    {tag}
+                  </Badge>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        )}
       </div>
+
+      {/* Add admin controls */}
+      {isAdmin && (
+        <motion.div 
+          className="p-4 sm:p-6 border-t border-primary/10"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+        >
+          <Button
+            variant="destructive"
+            className="w-full bg-red-500/10 text-red-500 hover:bg-red-500/20 group"
+            onClick={async () => {
+              console.log('Deleting event:', event); // Add this log
+              if (window.confirm('Are you sure you want to delete this event?')) {
+                try {
+                  await onDelete(event.id);
+                } catch (error) {
+                  console.error('Delete button error:', error);
+                  toast.error('Failed to delete event');
+                }
+              }
+            }}
+          >
+            <Trash2 className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform" />
+            Delete Event
+          </Button>
+        </motion.div>
+      )}
     </DialogContent>
   </Dialog>
 );
 
 const Events = () => {
+  const { user, isLoaded } = useUser();
   const supabase = useSupabaseClient();
-  const [events, setEvents] = useState([]);
+  const [isAdmin, setIsAdmin] = useState(false);
+  
+  // Add admin check
+  useEffect(() => {
+    if (user && user.primaryEmailAddress?.emailAddress) {
+      const email = user.primaryEmailAddress.emailAddress.toLowerCase();
+      setIsAdmin(ADMIN_EMAILS.map(e => e.toLowerCase()).includes(email));
+    } else {
+      setIsAdmin(false);
+    }
+  }, [user]);
+
+  const {
+    loading: loadingEvents,
+    data: events,
+    fn: fetchEvents
+  } = useFetch(getEvents);
+
+  const refreshEvents = useCallback(async () => {
+    try {
+      const updatedEvents = await fetchEvents();
+      console.log('Events refreshed:', updatedEvents);
+    } catch (error) {
+      console.error('Error refreshing events:', error);
+    }
+  }, [fetchEvents]);
+
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [showAddDialog, setShowAddDialog] = useState(false);
-  const [showRegistrationSuccess, setShowRegistrationSuccess] = useState(false);
-  const [registeredEvents, setRegisteredEvents] = useState(new Set());
   const [viewType, setViewType] = useState('dayGridMonth');
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1024);
   const [isMounted, setIsMounted] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
 
-  const upcomingEvents = events.filter(e => DateTime.fromISO(e.start) > DateTime.now());
+  const upcomingEvents = events?.filter(e => DateTime.fromISO(e.start) > DateTime.now()) || [];
 
-  const fetchEvents = useCallback(async () => {
-    if (!supabase) return;
-
-    setIsLoading(true);
-    try {
-      const { data, error } = await supabase
-        .from('events')
-        .select('*')
-        .order('start', { ascending: true });
-
-      if (error) {
-        console.error('Error fetching events:', error);
-        toast.error('Failed to load events');
-        return;
-      }
-
-      setEvents(data || []);
-    } catch (error) {
-      console.error('Unexpected error:', error);
-      toast.error('An unexpected error occurred');
-    } finally {
-      setIsLoading(false);
+  useEffect(() => {
+    if (isLoaded) {
+      fetchEvents().then(data => {
+        console.log('Event data:', data); // Check the data structure
+      });
     }
-  }, [supabase]);
-
-  const fetchRegistrations = useCallback(async () => {
-    if (!supabase) return;
-
-    try {
-      const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
-      if (sessionError || !sessionData.session) return;
-
-      const userId = sessionData.session.user.id;
-      const { data, error } = await supabase
-        .from('event_registrations')
-        .select('event_id')
-        .eq('user_id', userId);
-
-      if (error) {
-        console.error('Error fetching registrations:', error);
-        return;
-      }
-
-      setRegisteredEvents(new Set(data.map(reg => reg.event_id)));
-    } catch (error) {
-      console.error('Unexpected error:', error);
-    }
-  }, [supabase]);
+  }, [isLoaded]);
 
   const handleDateClick = useCallback(info => {
     console.log('Clicked on date:', info.dateStr);
@@ -207,73 +268,26 @@ const Events = () => {
   }, [events]);
 
   const handleAddEvent = useCallback((eventData) => {
-    setEvents(prev => [...prev, eventData]);
-  }, []);
+    fetchEvents();
+  }, [fetchEvents]);
 
-  const handleRegister = async (eventId) => {
-    if (!supabase) {
-      toast.error('Supabase client not initialized');
-      return;
-    }
-  
+  const handleDeleteEvent = async (id) => {
     try {
-      const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
-      console.log('Supabase session data:', sessionData, 'Error:', sessionError); // More detailed log
-      if (sessionError) {
-        console.error('Session fetch error:', sessionError);
-        toast.error('Failed to verify session. Please try again.');
+      if (!id) {
+        console.error('No event ID provided');
+        toast.error('Unable to delete event: Invalid ID');
         return;
       }
-      if (!sessionData.session) {
-        console.warn('No active Supabase session');
-        toast.error('Please sign in to register');
-        return;
-      }
-  
-      const userId = sessionData.session.user.id;
-      console.log('Registering user:', userId, 'for event:', eventId);
-  
-      const { error: insertError } = await supabase
-        .from('event_registrations')
-        .insert([{ event_id: eventId, user_id: userId }]);
-  
-      if (insertError) {
-        console.error('Registration insert error:', insertError);
-        toast.error(`Failed to register: ${insertError.message}`);
-        return;
-      }
-  
-      const { data: eventData, error: fetchError } = await supabase
-        .from('events')
-        .select('registered')
-        .eq('id', eventId)
-        .single();
-  
-      if (fetchError) {
-        console.error('Fetch event error:', fetchError);
-        toast.error('Registered, but failed to update count');
-        return;
-      }
-  
-      const newRegisteredCount = (eventData.registered || 0) + 1;
-      const { error: updateError } = await supabase
-        .from('events')
-        .update({ registered: newRegisteredCount })
-        .eq('id', eventId);
-  
-      if (updateError) {
-        console.error('Update registered count error:', updateError);
-        toast.error('Registered, but failed to update event count');
-        return;
-      }
-  
-      setRegisteredEvents(prev => new Set(prev).add(eventId));
-      setShowRegistrationSuccess(true);
+
+      toast.loading('Deleting event...');
+      await deleteEvent(id);
       setSelectedEvent(null);
-      toast.success('Successfully registered for the event!');
+      await refreshEvents(); // Use the new refresh function
+      toast.success('Event deleted successfully');
+
     } catch (error) {
-      console.error('Unexpected registration error:', error);
-      toast.error('An unexpected error occurred during registration');
+      console.error('Delete error:', error);
+      toast.error('Failed to delete event: ' + error.message);
     }
   };
 
@@ -284,48 +298,37 @@ const Events = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  useEffect(() => {
-    if (supabase) {
-      fetchEvents();
-      fetchRegistrations();
-    }
-  }, [supabase, fetchEvents, fetchRegistrations]);
-
-  useEffect(() => {
-    if (showRegistrationSuccess) {
-      const timer = setTimeout(() => setShowRegistrationSuccess(false), 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [showRegistrationSuccess]);
-
   if (!isMounted) return null;
 
   return (
     <SidebarProvider>
       <div className="flex h-screen">
         <Sidebar />
-        <div className="flex-1 bg-gradient-to-b from-background/80 via-background to-background/80">
-          <div className="px-6 py-8 max-w-7xl mx-auto space-y-8">
+        <div className="flex-1 min-h-screen bg-gradient-to-b from-background/80 via-background to-background/80">
+          <div className="mx-auto px-4 sm:px-6 py-8">
             <SideHeader />
             
-            <motion.div 
-              className="space-y-4 text-center"
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-            >
-              <h1 className="text-4xl sm:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary via-blue-500 to-blue-600 pb-4">
-                Upcoming Events
-              </h1>
-              <p className="text-lg text-muted-foreground/80 max-w-2xl mx-auto">
-                Discover and join upcoming workshops, contests, and seminars
-              </p>
-            </motion.div>
+            <div className="w-[100%] flex items-center justify-center mx-auto">
+              <motion.div 
+                className="space-y-4 text-center"
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+              >
+                <h1 className="text-4xl sm:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary via-blue-500 to-blue-600 pb-4">
+                  Upcoming Events
+                </h1>
+                <p className="text-lg text-muted-foreground/80 mb-4">
+                  Discover and join upcoming workshops, contests, and seminars
+                </p>
+              </motion.div>
+            </div>
 
-            {isLoading ? (
+            {loadingEvents ? (
               <div className="flex justify-center items-center h-[50vh]">
                 <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                 initial={{ opacity: 0, x: 40 }}
+                 animate={{ opacity: 1, x: 0 }}
+                 transition={{ delay: 0.3 }}
                   className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full"
                 />
               </div>
@@ -337,14 +340,14 @@ const Events = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
                 >
-                  <div className="px-4 sm:px-6 py-4 sm:py-5 border-b border-primary/10 bg-background/90 backdrop-blur-xl">
+                  <div className="px-4  py-4 sm:py-5 border-b border-primary/10 bg-background/90 backdrop-blur-xl">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                       <h3 className="text-xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600">
-                        Calendar View
+                        Event Calendar
                       </h3>
                       <div className="flex items-center gap-3">
                         <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20">
-                          {events.length} Total Events
+                          {events?.length || 0} Total Events
                         </Badge>
                         <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20">
                           {upcomingEvents.length} Upcoming
@@ -417,7 +420,7 @@ const Events = () => {
                         initialView={viewType}
                         dateClick={handleDateClick}
                         eventClick={handleEventClick}
-                        events={events.map(event => ({
+                        events={events?.map(event => ({
                           id: event.id,
                           title: event.title,
                           start: event.start,
@@ -491,7 +494,6 @@ const Events = () => {
                             <EventCard
                               event={event}
                               onClick={() => setSelectedEvent(event)}
-                              isRegistered={registeredEvents.has(event.id)}
                             />
                           </motion.div>
                         ))
@@ -512,50 +514,43 @@ const Events = () => {
               </div>
             )}
 
-            <motion.div
-              className="fixed bottom-6 right-6 z-20"
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <Button
-                onClick={() => setShowAddDialog(true)}
-                className="bg-primary hover:bg-primary/90 shadow-lg hover:shadow-xl rounded-full p-6"
-                size="lg"
+            {/* Only show Add button for admins */}
+            {isAdmin && (
+              <motion.div
+                className="fixed bottom-6 right-6 z-20"
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
               >
-                <Plus className="w-6 h-6" />
-              </Button>
-            </motion.div>
-
-            <AnimatePresence>
-              {showRegistrationSuccess && (
-                <motion.div
-                  initial={{ opacity: 0, y: 50 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 50 }}
-                  className="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50"
+                <Button
+                  onClick={() => setShowAddDialog(true)}
+                  className="bg-primary hover:bg-primary/90 shadow-lg hover:shadow-xl rounded-full p-6"
+                  size="lg"
                 >
-                  Successfully registered for the event!
-                </motion.div>
-              )}
-            </AnimatePresence>
+                  <Plus className="w-6 h-6" />
+                </Button>
+              </motion.div>
+            )}
 
             {selectedEvent && (
               <EventDialog
                 event={selectedEvent}
                 isOpen={!!selectedEvent}
                 onClose={() => setSelectedEvent(null)}
-                onRegister={handleRegister}
-                isRegistered={registeredEvents.has(selectedEvent.id)}
+                isAdmin={isAdmin}
+                onDelete={handleDeleteEvent}
               />
             )}
 
-            <AddEventDialog 
-              isOpen={showAddDialog}
-              onClose={() => setShowAddDialog(false)}
-              onSubmit={handleAddEvent}
-            />
+            {/* Only show AddEventDialog for admins */}
+            {isAdmin && showAddDialog && (
+              <AddEventDialog 
+                isOpen={showAddDialog}
+                onClose={() => setShowAddDialog(false)}
+                onSubmit={handleAddEvent}
+              />
+            )}
           </div>
         </div>
       </div>
@@ -563,4 +558,12 @@ const Events = () => {
   );
 };
 
-export default Events;
+const EventsPage = () => {
+  return (
+    <ErrorBoundary>
+      <Events />
+    </ErrorBoundary>
+  );
+};
+
+export default EventsPage;

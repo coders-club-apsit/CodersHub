@@ -54,6 +54,12 @@ const teamMembers = [
     github: "abhi2k4",
   },
   {
+    name: "Nishil Rathod",
+    role: "Content Head",
+    img: "nishil.jpg",
+    linkedin: "nishilrathod",
+  },
+  {
     name: "Sarakshi More",
     role: "Joint Community Head",
     img: "sarakshi.jpg",

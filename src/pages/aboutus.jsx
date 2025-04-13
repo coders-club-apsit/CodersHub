@@ -13,7 +13,7 @@ const teamMembers = [
   {
     name: "Atharva Shelke",
     role: "Founder & Head",
-    img: "atharva.jpg",
+    img: "atharva1.jpg",
     twitter: "_atharva_shelke",
     linkedin: "atharva-shelke-a9a9a9226",
   },

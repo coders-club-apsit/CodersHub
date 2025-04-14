@@ -79,12 +79,12 @@ const Header = () => {
                                     <UserButton.MenuItems>
                                         <UserButton.Link
                                             label="Saved Notes"
-                                            labelIcon={<Book className="text-blue-500" size={15} />}
+                                            labelIcon={<Book size={15} />}
                                             href="/saved-notes"
                                         />
                                         <UserButton.Link
                                             label="Saved Resources"
-                                            labelIcon={<Link2 className="text-blue-500" size={15} />}
+                                            labelIcon={<Link2 size={15} />}
                                             href="/saved-resources"
                                         />
                                     </UserButton.MenuItems>

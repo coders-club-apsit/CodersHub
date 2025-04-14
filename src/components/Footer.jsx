@@ -145,30 +145,20 @@ const Footer = () => {
               transition={{ delay: 0.2 }}
             >
               {quickLinks.map((link, index) => (
-                link.external ? (
-                  <a
-                    key={link.name}
-                    href={link.path}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-muted-foreground/80 hover:text-primary transition-all duration-300 hover:bg-blue-500/5 rounded-lg px-3 py-2"
-                  >
-                    {link.name}
-                  </a>
-                ) : (
-                  <MotionLink
-                    key={link.name}
-                    href={link.path}
-                    className="text-muted-foreground/80 hover:text-primary transition-all duration-300 hover:bg-blue-500/5 rounded-lg px-3 py-2"
-                    whileHover={!isAndroid && { x: 5 }}
-                    initial={{ opacity: 0, y: 10 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.1 * index }}
-                  >
-                    {link.name}
-                  </MotionLink>
-                )
+                <MotionLink
+                  key={link.name}
+                  href={link.path}
+                  target={link.external ? "_blank" : undefined}
+                  rel={link.external ? "noopener noreferrer" : undefined}
+                  className="text-muted-foreground/80 hover:text-primary transition-all duration-300 hover:bg-blue-500/5 rounded-lg px-3 py-2"
+                  whileHover={!isAndroid && { x: 5 }}
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.1 * index }}
+                >
+                  {link.name}
+                </MotionLink>
               ))}
             </MotionWrapper>
           </div>

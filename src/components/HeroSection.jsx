@@ -94,7 +94,7 @@ const HeroSection = () => {
               </>
             )}
           </p>
-          <div className={`flex flex-col sm:flex-row gap-4 justify-center items-center ${
+          <div className={`flex flex-col sm:flex-row gap-4 justify-center items-center  ${
             !isAndroid ? "animate-fade-in [animation-delay:400ms]" : ""
           }`}>
             <MotionWrapper
@@ -102,7 +102,7 @@ const HeroSection = () => {
               initial={!isAndroid && "initial"}
               whileHover={!isAndroid && "hover"}
               whileTap={!isAndroid && "tap"}
-              className="glass-card bg-hero-gradient text-white hover:shadow-lg hover:shadow-primary/25 transition-all relative overflow-hidden group px-6 py-3 rounded-lg font-medium"
+              className="glass-card bg-hero-gradient cursor-pointer text-white hover:shadow-lg hover:shadow-primary/25 transition-all relative overflow-hidden group px-6 py-3 rounded-lg font-medium"
               onClick={() => navigate('/notes')}
             >
               <span className="relative z-10">Start Learning</span>
@@ -117,7 +117,7 @@ const HeroSection = () => {
               initial="initial"
               whileHover="hover"
               whileTap="tap"
-              className="glass-card hover:shadow-lg transition-all relative overflow-hidden group px-6 py-3 rounded-lg border border-primary/20 font-medium"
+              className="glass-card hover:shadow-lg transition-all  cursor-pointer relative overflow-hidden group px-6 py-3 rounded-lg border border-primary/20 font-medium"
               onClick={() => window.open('https://chat.whatsapp.com/GXJ7PDV8ZKhH0KSiVTVK7g', '_blank')}
             >
               <span className="relative z-10">Join Our Community</span>

@@ -15,6 +15,7 @@ import {
   Award,
   AwardIcon,
   LucideAward,
+  Users,
 } from "lucide-react";
 import { SignedIn, SignedOut, SignIn, UserButton } from "@clerk/clerk-react";
 import { PenBox, NotebookPen, Save } from "lucide-react";
@@ -34,6 +35,15 @@ import { Link } from "react-router-dom";
 import { SignOutButton } from "@clerk/clerk-react";
 import { FaAward } from "react-icons/fa";
 
+const routes = [
+  { path: "/", icon: HouseIcon, label: "Home" },
+  { path: "/notes", icon: Book, label: "Notes" },
+  { path: "/resources", icon: LinkIcon, label: "Resources" },
+  // { path: "/events", icon: Calendar, label: "Events" },
+  { path: "/educators", icon: Users, label: "Educators", color: "text-violet-500" },
+  { path: "/about-us", icon: Info, label: "About us" },
+
+];
 
 export function Sidebar() {
   const { state } = useSidebar();
@@ -75,12 +85,7 @@ export function Sidebar() {
       <SidebarContent className="bg-black/10 space-y-4">
         <SignedIn>
         <SidebarMenu className="space-y-2 p-2">
-            {[
-              { path: "/", icon: HouseIcon, label: "Home" },
-              { path: "/notes", icon: Book, label: "Notes" },
-              { path: "/resources", icon: LinkIcon, label: "Resources" },
-              { path: "/about-us", icon: Info, label: "About us" },
-            ].map(({ path, icon: Icon, label }) => (
+            {routes.map(({ path, icon: Icon, label }) => (
               <SidebarMenuItem key={path}>
                 <SidebarMenuButton asChild>
                   <Link to={path}>

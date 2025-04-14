@@ -41,9 +41,7 @@ const teamMembers = [
     name: "Ovee Dolkar",
     role: "Event Head",
     img: "ovee.jpeg",
-    // twitter: "kunal_mehta",
     linkedin: "ovee-dolkar-639261346",
-    // github: "kunalmehta",
   },
   {
     name: "Abhishek Thormothe",
@@ -64,6 +62,7 @@ const teamMembers = [
     role: "Joint Community Head",
     img: "sarakshi.jpg",
     linkedin: "sarakshi-m-158212211",
+    github: "Sarakshimore",
   },
   {
     name: "Yadnesh Bamne",
@@ -88,7 +87,7 @@ const teamMembers = [
     // github: "kunalmehta",
   },
   {
-    name: "Abdul Khan",
+    name: "Abdul Rehman Khan",
     role: "Joint Technical Head",
     img: "abdul.jpg",
     linkedin: "abdul-rehman-khan-68130328b",

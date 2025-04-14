@@ -21,6 +21,8 @@ import ResourcesPage from "./pages/resource";
 import { useState, useEffect, useCallback, useMemo } from "react";
 import EditResources from "./pages/editresources";
 import PrivacyPolicyModal from "./components/PrivacyPolicyModal";
+// import Events from "./pages/events";
+import Educators from "./pages/educators";
 
 const App = () => {
   const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
@@ -133,6 +135,22 @@ const App = () => {
             return null;
           },
           element: null,
+        },
+        // {
+        //   path: "/events",
+        //   element: (
+        //     <ProtectedRoute>
+        //       <Events />
+        //     </ProtectedRoute>
+        //   ),
+        // },
+        {
+          path: "/educators",
+          element: (
+            <ProtectedRoute>
+              <Educators /> 
+            </ProtectedRoute>
+          ),
         },
       ]),
     [handlePrivacyPolicyOpen]

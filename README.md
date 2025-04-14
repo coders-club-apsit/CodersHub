@@ -1,4 +1,4 @@
-# Coder's Club Website
+# Coder's Hub
 
 Welcome to the official repository of the **Coder's Club** Website! This platform is designed and maintained by the student community of APSIT under the Department of Computer Engineering.
 

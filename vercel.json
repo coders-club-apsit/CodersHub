@@ -3,11 +3,15 @@
     {
       "source": "/(.*)",
       "destination": "/index.html"
+    },
+    {
+      "source": "/api/:path*",
+      "destination": "/src/api/:path*"
     }
   ],
   "functions": {
-    "/src/api/*.js": {
-      "maxDuration": 20
+    "src/api/*.js": {
+      "maxDuration": 15
     }
   }
 }

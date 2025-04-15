@@ -75,8 +75,14 @@ const teamMembers = [
     name: "Aarya Bivalkar",
     role: "Joint Publicity Head",
     img: "aarya.jpg",
-    // twitter: "riya_sharma",
     linkedin: "aarya-bivalkar-1a89b928a",
+  },
+  {
+    name: "Vedant Shinde",
+    role: "Joint Design Head",
+    img: "vedant.jpg",
+    // linkedin: "vedant-shinde-0b1a1a1b4",
+    github: "Vedants06",
   },
   {
     name: "Durva Waghchaure",

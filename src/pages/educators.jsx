@@ -56,6 +56,21 @@ const educators = [
     expertise: ["Problem SOlving", "DSA Expert", "Java"]
   },
   {
+    name: "Nayan Gaikwad",
+    img: "nayan1.jpg",
+    linkedin: "nayan-gaikwad-96b63726b",
+    whatsapp: "918828469293",
+    expertise: ["Mentorship", "Python", "Data Analysis"]
+  },
+  {
+    name: "Nikhil Bhosale",
+    img: "nikhil1.jpg",
+    // linkedin: "nikhil-shinde",
+    // github: "NikhilShinde",
+    whatsapp: "917248997996",
+    expertise: ["DSA", "Web Development", "Python"]
+  },
+  {
     name: "Sarakshi More",
     img: "sarakshi.jpg",
     linkedin: "sarakshi-m-158212211",
@@ -80,26 +95,19 @@ const educators = [
     expertise: ["Java", "Mentorship", "Problem Solving"]
   },
   {
+    name: "Vedant Shinde",
+    img: "vedant.jpg",
+    // linkedin: "vedant-shinde-0b1a1a1b4",
+    github: "Vedants06",
+    whatsapp: "918355927151",
+    expertise: ["Web Development", "DSA", "UI/UX"]
+  },
+  {
     name: "Zahid Hamdule",
     img: "zahid.jpg",
     linkedin: "zahid-hamdule-5a198a285",
     whatsapp: "918928989023",
     expertise: ["Content Strategy", "Technical Writing", "Documentation"]
-  },
-  {
-    name: "Nayan Gaikwad",
-    img: "nayan.jpg",
-    linkedin: "nayan-gaikwad-96b63726b",
-    whatsapp: "918828469293",
-    expertise: ["Mentorship", "Python", "Data Analysis"]
-  },
-  {
-    name: "Nikhil Bhosale",
-    img: "nikhil.jpg",
-    // linkedin: "nikhil-shinde",
-    // github: "NikhilShinde",
-    whatsapp: "917248997996",
-    expertise: ["Cloud Computing", "DevOps", "Kubernetes"]
   },
   {
     name: "Abdul Rehman Khan",

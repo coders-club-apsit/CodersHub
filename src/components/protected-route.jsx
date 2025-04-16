@@ -10,8 +10,8 @@ const ProtectedRoute = ({ children, adminOnly = false }) => {
   const isSignedIn = !!user;
   const isAdmin = user && ADMIN_EMAILS.includes(user.primaryEmailAddress?.emailAddress);
 
-  if (!isSignedIn) {
-    return <Navigate to="/sign-in" replace />;
+  if (isLoaded && !isSignedIn && isSignedIn !== undefined){
+      return <Navigate to="/?sign-in=true"/>
   }
 
   if (adminOnly && !isAdmin) {

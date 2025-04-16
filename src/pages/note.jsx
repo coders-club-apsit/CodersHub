@@ -10,6 +10,7 @@ import { ArrowLeft, Expand, PanelLeftClose } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { isAndroid } from 'react-device-detect';
 import { useQuery } from '@tanstack/react-query';
+import ScrollToTop from '@/components/ScrollToTop';
 
 const NotePage = () => {
   const { isLoaded } = useUser();
@@ -106,6 +107,7 @@ const NotePage = () => {
           </motion.div>
         </div>
       </div>
+      <ScrollToTop />
     </>
   );
 };

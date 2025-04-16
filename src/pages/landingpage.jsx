@@ -1,7 +1,6 @@
 import React, { lazy, Suspense, useState, useEffect } from "react";
 import Header from "@/components/header";
 import "@/components/HeroSection";
-import { TextAnimate } from "@/components/ui/text-animate"; 
 import "@/index.css";
 import HeroSection from "@/components/HeroSection";
 import FaqSection from "@/components/FaqSection";
@@ -30,51 +29,51 @@ function LandingPage() {
     return <Preloader />;
   }
 
-  const GradientOrbs = () => {
-    const baseStyles = {
-      orb1: "absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full bg-blue-500/20 blur-[100px]",
-      orb2: "absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full bg-cyan-500/20 blur-[100px]"
-    };
+  // const GradientOrbs = () => {
+  //   const baseStyles = {
+  //     orb1: "absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full bg-blue-500/20 blur-[100px]",
+  //     orb2: "absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full bg-cyan-500/20 blur-[100px]"
+  //   };
 
-    if (!shouldAnimate) {
-      return (
-        <>
-          <div className={baseStyles.orb1} />
-          <div className={baseStyles.orb2} />
-        </>
-      );
-    }
+  //   if (!shouldAnimate) {
+  //     return (
+  //       <>
+  //         <div className={baseStyles.orb1} />
+  //         <div className={baseStyles.orb2} />
+  //       </>
+  //     );
+  //   }
 
-    return (
-      <>
-        <motion.div
-          className={baseStyles.orb1}
-          animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.2, 0.3, 0.2],
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-        <motion.div
-          className={baseStyles.orb2}
-          animate={{
-            scale: [1.2, 1, 1.2],
-            opacity: [0.2, 0.3, 0.2],
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 1,
-          }}
-        />
-      </>
-    );
-  };
+  //   return (
+  //     <>
+  //       <motion.div
+  //         className={baseStyles.orb1}
+  //         animate={{
+  //           scale: [1, 1.2, 1],
+  //           opacity: [0.2, 0.3, 0.2],
+  //         }}
+  //         transition={{
+  //           duration: 8,
+  //           repeat: Infinity,
+  //           ease: "easeInOut",
+  //         }}
+  //       />
+  //       <motion.div
+  //         className={baseStyles.orb2}
+  //         animate={{
+  //           scale: [1.2, 1, 1.2],
+  //           opacity: [0.2, 0.3, 0.2],
+  //         }}
+  //         transition={{
+  //           duration: 8,
+  //           repeat: Infinity,
+  //           ease: "easeInOut",
+  //           delay: 1,
+  //         }}
+  //       />
+  //     </>
+  //   );
+  // };
 
   return (
     <div className="relative min-h-screen overflow-hidden " style={{minWidth: "100vw"}}>

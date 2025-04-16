@@ -54,7 +54,11 @@ const App = () => {
         },
         {
           path: "/note/edit/:noteId",
-          element: <EditNotes />,
+          element: (
+            <ProtectedRoute adminOnly>
+              <EditNotes />
+            </ProtectedRoute>
+          ),
         },
         {
           path: "/about-us",
@@ -98,12 +102,16 @@ const App = () => {
         },
         {
           path: "/resource/edit/:resourceId",
-          element: <EditResources />,
+          element: (
+            <ProtectedRoute adminOnly>
+              <EditResources />
+            </ProtectedRoute>
+          ),
         },
         {
           path: "/add-notes",
           element: (
-            <ProtectedRoute>
+            <ProtectedRoute adminOnly>
               <AddNotes />
             </ProtectedRoute>
           ),
@@ -111,7 +119,7 @@ const App = () => {
         {
           path: "/add-resources",
           element: (
-            <ProtectedRoute>
+            <ProtectedRoute adminOnly>
               <AddResoures />
             </ProtectedRoute>
           ),

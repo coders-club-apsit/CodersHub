@@ -145,7 +145,7 @@ const ImageWithSkeleton = ({ src, alt, className, onLoad }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   return (
-    <div className="relative w-full h-full">
+    <div className="relative w-full">
       {isLoading && (
         <div className="absolute inset-0 rounded-full animate-pulse">
           <div className="w-full h-full rounded-full bg-gradient-to-br from-primary/10 via-blue-400/10 to-primary/10">
@@ -196,7 +196,7 @@ export default function Educators() {
   }, [getToken]);
   return (
     <SidebarProvider>
-      <div className="flex h-screen w-full flex-col md:flex-row">
+      <div className="flex  w-full flex-col md:flex-row">
         <Sidebar />
         <div className="flex-1 bg-gradient-to-b from-background via-background/95 to-background relative">
           <SideHeader />

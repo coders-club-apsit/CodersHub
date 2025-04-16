@@ -87,11 +87,6 @@
     scrollbar-color: hsl(var(--primary) / 0.2) transparent;
   }
 
-  /* Preserve smooth scrolling */
-  html {
-    @apply scroll-smooth;
-    overflow-y: scroll;
-  }
 }
 
 @layer base {
@@ -128,7 +123,7 @@
   }
 }
 
-@layer base {
+/* @layer base {
   .prose-invert {
     --tw-prose-body: theme('colors.gray.300');
     --tw-prose-headings: theme('colors.white');
@@ -138,7 +133,7 @@
     --tw-prose-quotes: theme('colors.gray.200');
     --tw-prose-quote-borders: theme('colors.primary.700');
   }
-}
+} */
 
 @layer utilities {
   .glass {

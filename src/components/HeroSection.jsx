@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import { ArrowDown, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
@@ -43,6 +44,16 @@ const CodeBlock = () => (
 const HeroSection = () => {
   const navigate = useNavigate();
   const { user, isSignedIn } = useUser();
+  const [hasSeenHero, setHasSeenHero] = useState(() => {
+    return sessionStorage.getItem("hasSeenHeroSection") === "true";
+  });
+
+  useEffect(() => {
+    if (!hasSeenHero) {
+      sessionStorage.setItem("hasSeenHeroSection", "true");
+      setHasSeenHero(true);
+    }
+  }, []);
 
   // Function to capitalize first letter only
   const capitalizeFirstLetter = (str) => {
@@ -71,7 +82,7 @@ const HeroSection = () => {
       <div className="container px-8 mx-auto z-10">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className={`text-4xl sm:text-5xl md:text-6xl font-bold mb-6 ${
-            !isAndroid ? "animate-fade-in [animation-delay:300ms]" : ""
+            !isAndroid && !hasSeenHero ? "animate-fade-in [animation-delay:300ms]" : ""
           }`}>
             {isSignedIn ? (
               <>Welcome back <span className="text-gradient">{capitalizeFirstLetter(user.firstName)}.</span></>
@@ -80,7 +91,7 @@ const HeroSection = () => {
             )}
           </h1>
           <p className={`text-lg md:text-xl mb-8 text-muted-foreground ${
-            !isAndroid ? "animate-fade-in [animation-delay:200ms]" : ""
+            !isAndroid && !hasSeenHero ? "animate-fade-in [animation-delay:200ms]" : ""
           }`}>
             {isSignedIn ? (
               <>
@@ -95,7 +106,7 @@ const HeroSection = () => {
             )}
           </p>
           <div className={`flex flex-col sm:flex-row gap-4 justify-center items-center  ${
-            !isAndroid ? "animate-fade-in [animation-delay:400ms]" : ""
+            !isAndroid && !hasSeenHero ? "animate-fade-in [animation-delay:400ms]" : ""
           }`}>
             <MotionWrapper
               variants={buttonVariants}

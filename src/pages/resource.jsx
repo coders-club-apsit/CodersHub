@@ -69,7 +69,7 @@ const ResourcesPage = () => {
       <Header />
       <div className="min-h-screen pt-20 pb-12 px-4 bg-gradient-to-b from-background to-background/50 flex">
         {/* Sidebar Index */}
-        {resourceIndex.length > 0 && (
+        {/* {resourceIndex.length > 0 && (
           <aside
             className={`
               hidden lg:flex flex-col sticky top-24 self-start transition-all duration-300 z-20
@@ -82,7 +82,7 @@ const ResourcesPage = () => {
                 ${indexCollapsed ? "p-0" : "p-4"}
               `}
             >
-              {/* Toggle button always visible */}
+
               <button
                 className={`
                   absolute top-6 -right-5 z-30
@@ -128,7 +128,7 @@ const ResourcesPage = () => {
               )}
             </div>
           </aside>
-        )}
+        )} */}
 
         {/* Main Content */}
         <div className={`flex-1 w-full mx-auto transition-all duration-500 ease-in-out ${mode === "compact" ? "max-w-3xl" : "max-w-7xl"}`}>

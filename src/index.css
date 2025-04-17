@@ -228,14 +228,7 @@
 }
 
 
-.prose .markdown-table-wrapper {
-  overflow-x: auto;
-  margin-bottom: 1.5rem;
-}
-.prose table {
-  min-width: 600px; /* or whatever fits your content */
-  width: max-content;
-}
+
 
 /* Additional performance optimizations */
 .circle {
@@ -359,5 +352,19 @@
     ul {
       padding-left: 15px;
     }
+
   }
+
+  .prose table {
+    max-width: 600px; /* or whatever fits your content */
+    overflow-x: auto;
+  }
+
+  
+    pre{
+    overflow-x: auto;
+    margin-bottom: 1.5rem;
+    max-width: 600px;
+  }
+  
 }

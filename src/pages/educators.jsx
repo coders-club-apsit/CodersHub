@@ -229,7 +229,7 @@ export default function Educators() {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.4 }}
             >
-              Meet our expert educators who are passionate about teaching and helping students grow.
+              Meet and connect with our expert educators who are passionate about teaching and helping students grow.
             </motion.p>
 
             <motion.div

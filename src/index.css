@@ -132,6 +132,7 @@
     --tw-prose-bullets: theme('colors.gray.500');
     --tw-prose-quotes: theme('colors.gray.200');
     --tw-prose-quote-borders: theme('colors.primary.700');
+    
   }
 } */
 
@@ -226,6 +227,16 @@
   }
 }
 
+
+.prose .markdown-table-wrapper {
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
+}
+.prose table {
+  min-width: 600px; /* or whatever fits your content */
+  width: max-content;
+}
+
 /* Additional performance optimizations */
 .circle {
   -webkit-backface-visibility: hidden;
@@ -240,7 +251,7 @@
 }
 
 .cl-internal-1foj88f {
-  background-color: rgb(15, 15, 15);
+  background-color: #09090b;
 }
 
 .cl-internal-ckqcxi {
@@ -300,7 +311,7 @@
   }
 }
 .cl-internal-13u79ez,.cl-internal-1efiaa8{
-  background: #141414;
+  background: #09090b;
 }
 
 .cl-internal-kgbfts{

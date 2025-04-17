@@ -35,12 +35,12 @@ const Header = () => {
                 <div className="mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between items-center h-20">
                         <motion.div
-                            whileHover={{ scale: 1.05 }}
+                            whileHover={{ scale: 1.02 }}
                             transition={{ duration: 0.2 }}
                         >
                             <Link to="/">
                                 <img 
-                                    src="/cc2.png" 
+                                    src="/cc2.svg" 
                                     className="h-14 hover:brightness-110 transition-all" 
                                     alt="Logo" 
                                 />
@@ -51,6 +51,7 @@ const Header = () => {
                             {/* <SignedIn>
                                 <NotificationDropdown />
                             </SignedIn> */}
+                            {/* <ThemeToggle /> */}
 
                             <SignedOut>
                                 <motion.div

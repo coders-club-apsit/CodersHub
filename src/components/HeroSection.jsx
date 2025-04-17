@@ -113,7 +113,7 @@ const HeroSection = () => {
               initial={!isAndroid && "initial"}
               whileHover={!isAndroid && "hover"}
               whileTap={!isAndroid && "tap"}
-              className="glass-card bg-hero-gradient cursor-pointer text-white hover:shadow-lg hover:shadow-primary/25 transition-all relative overflow-hidden group px-6 py-3 rounded-lg font-medium"
+              className="glass-card bg-hero-gradient cursor-pointer hover:shadow-lg hover:shadow-primary/25 transition-all relative overflow-hidden group px-6 py-3 rounded-lg font-medium"
               onClick={() => navigate('/notes')}
             >
               <span className="relative z-10">Start Learning</span>

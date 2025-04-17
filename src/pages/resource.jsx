@@ -89,7 +89,7 @@ const ResourcesPage = () => {
                 className={`
                   absolute top-6 -right-5 z-30
                   bg-background border border-primary/20 shadow-lg
-                  rounded-full p-2 flex items-center justify-center
+                  rounded-md p-2 flex items-center justify-center
                   transition-all duration-200
                   hover:bg-primary/10 hover:border-primary/40
                   ${indexCollapsed ? "scale-110" : ""}

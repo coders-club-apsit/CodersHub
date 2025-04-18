@@ -2,14 +2,28 @@ import React, { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Button } from './ui/button';
 import { SignedIn, SignedOut, UserButton, SignIn } from '@clerk/clerk-react';
-import { PenBox, NotebookPen, Book, Link2 } from 'lucide-react';
+import { PenBox, NotebookPen, Book, Link2, Menu } from 'lucide-react';
 import { ThemeToggle } from "./ThemeToggle";
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import NotificationDropdown from './NotificationDropdown';
 
 const Header = () => {
     const [search, setSearch] = useSearchParams();
     const [showSignIn, setShowSignIn] = useState(false);
+    const [scrolled, setScrolled] = useState(false);
+
+    // Track scroll position for changing header appearance
+    useEffect(() => {
+        const handleScroll = () => {
+            const isScrolled = window.scrollY > 10;
+            if (isScrolled !== scrolled) {
+                setScrolled(isScrolled);
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, [scrolled]);
 
     const handleOverlayClick = (e) => {
         if (e.target === e.currentTarget) {
@@ -27,32 +41,34 @@ const Header = () => {
     return (
         <>
             <motion.nav 
-                className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-background/80 border-b border-blue-500/10"
+                className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+                    scrolled 
+                    ? "bg-background/90 backdrop-blur-md shadow-lg border-b border-blue-500/10" 
+                    : "bg-transparent border-b border-transparent"
+                }`}
                 initial={{ y: -100 }}
                 animate={{ y: 0 }}
-                transition={{ duration: 0.3 }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
             >
                 <div className="mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between items-center h-20">
                         <motion.div
-                            whileHover={{ scale: 1.02 }}
-                            transition={{ duration: 0.2 }}
+                            whileHover={{ scale: 1.03 }}
+                            whileTap={{ scale: 0.98 }}
+                            transition={{ duration: 0.2, type: "spring", stiffness: 400 }}
                         >
-                            <Link to="/">
+                            <Link to="/" className="flex items-center gap-2">
                                 <img 
                                     src="/cc2.svg" 
-                                    className="h-14 hover:brightness-110 transition-all" 
-                                    alt="Logo" 
+                                    className="h-14 transition-all" 
+                                    alt="Coders Club Logo" 
                                 />
                             </Link>
                         </motion.div>
 
                         <div className="flex items-center gap-6">
-                            {/* <SignedIn>
-                                <NotificationDropdown />
-                            </SignedIn> */}
-                            {/* <ThemeToggle /> */}
-
+                            {/* Additional nav items could go here */}
+                            
                             <SignedOut>
                                 <motion.div
                                     whileHover={{ scale: 1.05 }}
@@ -61,19 +77,26 @@ const Header = () => {
                                     <Button 
                                         variant="outline" 
                                         onClick={() => setShowSignIn(true)}
-                                        className="bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border-blue-500/20 hover:border-blue-500/40 hover:from-blue-500/20 hover:to-cyan-500/20 transition-all duration-300"
+                                        className="bg-gradient-to-r from-blue-500/10 to-cyan-500/10 
+                                            border-blue-500/20 hover:border-blue-500/40 
+                                            hover:from-blue-500/20 hover:to-cyan-500/20 
+                                            transition-all duration-300
+                                            relative overflow-hidden group"
                                     >
-                                        Login
+                                        <span className="relative z-10">Login</span>
+                                        <div className="absolute inset-0 translate-y-[100%] bg-gradient-to-r from-blue-500/20 to-cyan-500/20 
+                                            group-hover:translate-y-[0%] transition-transform duration-300"></div>
                                     </Button>
                                 </motion.div>
                             </SignedOut>
 
                             <SignedIn>
+                                
                                 <UserButton
                                     appearance={{
                                         elements: {
                                             avatarBox: 'w-10 h-10 ring-2 ring-blue-500/20 hover:ring-blue-500/40 transition-all duration-300',
-                                            userButtonPopover: 'backdrop-blur-md bg-background/80 border border-blue-500/10',
+                                            userButtonPopover: 'backdrop-blur-md bg-background/80 border border-blue-500/10 shadow-lg',
                                         },
                                     }}
                                 >
@@ -96,20 +119,30 @@ const Header = () => {
                 </div>
             </motion.nav>
 
-            {showSignIn && (
-                <motion.div
-                    className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
-                    onClick={handleOverlayClick}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                >
-                    <SignIn
-                        signUpForceRedirectUrl="/"
-                        fallbackRedirectUrl="/"
-                    />
-                </motion.div>
-            )}
+            <AnimatePresence>
+                {showSignIn && (
+                    <motion.div
+                        className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50"
+                        onClick={handleOverlayClick}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.3 }}
+                    >
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.9, opacity: 0 }}
+                            transition={{ duration: 0.3 }}
+                        >
+                            <SignIn
+                                signUpForceRedirectUrl="/"
+                                fallbackRedirectUrl="/"
+                            />
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </>
     );
 };

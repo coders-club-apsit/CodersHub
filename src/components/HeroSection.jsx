@@ -76,7 +76,7 @@ const HeroSection = () => {
   } : {};
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center max-h-screen overflow-hidden -mt-12 ">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       <NeonCircles />
 
       <div className="container px-8 mx-auto z-10">
@@ -113,14 +113,14 @@ const HeroSection = () => {
               initial={!isAndroid && "initial"}
               whileHover={!isAndroid && "hover"}
               whileTap={!isAndroid && "tap"}
-              className="glass-card bg-hero-gradient cursor-pointer hover:shadow-lg hover:shadow-primary/25 transition-all relative overflow-hidden group px-6 py-3 rounded-lg font-medium"
+              className="glass-card bg-hero-gradient cursor-pointer hover:shadow-2xl hover:shadow-primary/40 transition-all duration-300 ease-in-out relative overflow-hidden group px-8 py-4 rounded-2xl font-semibold backdrop-blur-lg"
               onClick={() => navigate('/notes')}
             >
-              <span className="relative z-10">Start Learning</span>
-              <span className="relative z-10 inline-block ml-2">
-                <ArrowRight className="h-4 w-4" />
+              <span className="relative z-10 flex items-center gap-2 text-white">
+                Start Learning
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </span>
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/30 to-cyan-500/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </MotionWrapper>
 
             <MotionWrapper
@@ -128,12 +128,13 @@ const HeroSection = () => {
               initial="initial"
               whileHover="hover"
               whileTap="tap"
-              className="glass-card hover:shadow-lg transition-all  cursor-pointer relative overflow-hidden group px-6 py-3 rounded-lg border border-primary/20 font-medium"
+              className="glass-card cursor-pointer relative overflow-hidden group px-8 py-4 rounded-2xl border border-primary/30 font-semibold hover:shadow-2xl transition-all duration-300 ease-in-out backdrop-blur-lg"
               onClick={() => window.open('https://chat.whatsapp.com/GXJ7PDV8ZKhH0KSiVTVK7g', '_blank')}
             >
-              <span className="relative z-10">Join Our Community</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <span className="relative z-10 text-white">Join Our Community</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-blue-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </MotionWrapper>
+
           </div>
         </div>
       </div>
@@ -142,7 +143,7 @@ const HeroSection = () => {
 
       {/* Scroll Indicator - Use CSS animation for Android */}
       <div className={`
-        absolute bottom-10 left-1/2 transform -translate-x-1/2
+        absolute bottom-10 left-1/2 transform -translate-x-1/2 z-30
         ${isAndroid ? 'animate-bounce' : ''}
       `}>
         {!isAndroid ? (
@@ -154,15 +155,15 @@ const HeroSection = () => {
               ease: "easeInOut"
             }}
           >
-            <ArrowDown className="h-6 w-6 text-primary/60 z-22" />
+            <ArrowDown className="h-6 w-6 text-primary/60" />
           </motion.div>
         ) : (
-          <ArrowDown className="h-6 w-6 text-primary/60 z-22" />
+          <ArrowDown className="h-6 w-6 text-primary/60" />
         )}
       </div>
 
       {/* Bottom black gradient shadow for seamless look */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent to-[#09090b] z-20" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent to-[#09090b] z-0" />
     </section>
   );
 };

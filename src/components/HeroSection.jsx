@@ -29,7 +29,7 @@ const MotionWrapper = ({ children, ...props }) => {
 const CodeBlock = () => (
   <div className="absolute bottom-20 right-10 hidden lg:block">
     <pre className="text-sm bg-black/20 backdrop-blur-sm p-4 rounded-lg border border-primary/10">
-      <code className="text-primary/70">
+      <code className="text-primary/90">
         {`function solve(problem) {
   if (problem.isSolved) {
     return celebrate();
@@ -154,12 +154,15 @@ const HeroSection = () => {
               ease: "easeInOut"
             }}
           >
-            <ArrowDown className="h-6 w-6 text-primary/60" />
+            <ArrowDown className="h-6 w-6 text-primary/60 z-22" />
           </motion.div>
         ) : (
-          <ArrowDown className="h-6 w-6 text-primary/60" />
+          <ArrowDown className="h-6 w-6 text-primary/60 z-22" />
         )}
       </div>
+
+      {/* Bottom black gradient shadow for seamless look */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent to-[#09090b] z-20" />
     </section>
   );
 };

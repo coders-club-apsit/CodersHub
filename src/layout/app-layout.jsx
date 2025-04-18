@@ -1,7 +1,7 @@
 import Header from '@/components/header';
 import DotPattern from '@/components/ui/dot-pattern';
 import React, { useEffect } from 'react';
-import { Outlet, useMatches, useNavigate } from 'react-router-dom';
+import { Outlet, useMatches, useNavigate, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import Footer from '@/components/Footer';
 import Spline from '@splinetool/react-spline';
@@ -13,6 +13,10 @@ import { SpeedInsights } from "@vercel/speed-insights/react"
 const AppLayout = () => {
   const matches = useMatches();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // List of routes where you don't want the footer
+  const hideFooterRoutes = ["/aboutus", "/about-us"];
 
   // Initialize session timeout
   useSessionTimeout();
@@ -41,9 +45,11 @@ const AppLayout = () => {
       />
       <SpeedInsights/>
       <Analytics />
-      <div className="mt-12">
-        <Footer />
-      </div>
+      {!hideFooterRoutes.includes(location.pathname) && (
+        <div className="mt-12">
+          <Footer />
+        </div>
+      )}
     </>
   );
 };

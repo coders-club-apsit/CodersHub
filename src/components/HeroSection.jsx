@@ -27,21 +27,148 @@ const MotionWrapper = ({ children, ...props }) => {
   return <motion.div {...props}>{children}</motion.div>;
 };
 
-const CodeBlock = () => (
-  <div className="absolute bottom-20 right-10 hidden lg:block">
-    <pre className="text-sm bg-black/20 backdrop-blur-sm p-4 rounded-lg border border-primary/10">
-      <code className="text-primary/90">
-        {`function solve(problem) {
-  if (problem.isSolved) {
-    return celebrate();
-  }
-  return keepLearning();
-}`}
-      </code>
-    </pre>
-  </div>
-);
+const CodeBlock = () => {
+  // Define animation variants
+  const containerVariants = {
+    initial: { opacity: 0, y: 20 },
+    animate: { 
+      opacity: 1, 
+      y: 0,
+      transition: { duration: 0.7, delay: 0.5 }
+    }
+  };
 
+  const lineHighlightVariants = {
+    initial: { width: "0%" },
+    animate: { 
+      width: "100%",
+      transition: { 
+        duration: 0.8, 
+        delay: 1.5,
+        ease: "easeInOut" 
+      }
+    }
+  };
+
+  // Cursor blink effect
+  const cursorVariants = {
+    blink: {
+      opacity: [0, 1, 0],
+      transition: {
+        duration: 1,
+        repeat: Infinity,
+        repeatType: "loop"
+      }
+    }
+  };
+
+  return (
+    <motion.div 
+      className="absolute bottom-20 right-10 hidden lg:block"
+      variants={containerVariants}
+      initial="initial"
+      animate="animate"
+    >
+      <div className="relative group">
+        <div className="absolute -inset-0.5  rounded-lg opacity-30 
+          group-hover:opacity-60 transition duration-1000 group-hover:duration-300"></div>
+        
+        <pre className="relative text-sm bg-black/50 backdrop-blur-md p-4 rounded-lg border border-primary/20 
+          shadow-[0_0_15px_rgba(124,58,237,0.1)] hover:shadow-[0_0_25px_rgba(124,58,237,0.2)] transition-all duration-300">
+          <code className="text-primary/90 font-mono">
+            <div className="flex flex-col">
+              <motion.div className="flex"
+                initial={{ opacity: 0 }} 
+                animate={{ opacity: 1 }} 
+                transition={{ delay: 0.8, duration: 0.3 }}
+              >
+                <span className="text-blue-400">function</span>
+                <span className="text-white"> solve(</span>
+                <span className="text-yellow-300">problem</span>
+                <span className="text-white">) {'{'}</span>
+              </motion.div>
+              
+              <motion.div 
+                className="relative pl-4 my-1" 
+                initial={{ opacity: 0 }} 
+                animate={{ opacity: 1 }} 
+                transition={{ delay: 1.0, duration: 0.3 }}
+              >
+                <span className="flex items-center">
+                  <span className="text-pink-400">if</span>
+                  <span className="text-white"> (</span>
+                  <span className="text-yellow-300">problem</span>
+                  <span className="text-white">.</span>
+                  <span className="text-green-400">isSolved</span>
+                  <span className="text-white">) {'{'}</span>
+                  
+                </span>
+              </motion.div>
+              
+              <motion.div 
+                className="pl-8" 
+                initial={{ opacity: 0 }} 
+                animate={{ opacity: 1 }} 
+                transition={{ delay: 1.2, duration: 0.3 }}
+              >
+                <span className="text-blue-400">return</span>
+                <span className="text-cyan-300"> celebrate</span>
+                <span className="text-white">();</span>
+              </motion.div>
+              
+              <motion.div 
+                className="pl-4" 
+                initial={{ opacity: 0 }} 
+                animate={{ opacity: 1 }} 
+                transition={{ delay: 1.4, duration: 0.3 }}
+              >
+                <span className="text-white">{'}'}</span>
+              </motion.div>
+              
+              <motion.div 
+                className="pl-4 flex" 
+                initial={{ opacity: 0 }} 
+                animate={{ opacity: 1 }} 
+                transition={{ delay: 1.6, duration: 0.3 }}
+              >
+                <span className="text-blue-400">return</span>
+                <span className="text-cyan-300"> keepLearning</span>
+                <span className="text-white">();</span>
+              </motion.div>
+              
+              <motion.div 
+                initial={{ opacity: 0 }} 
+                animate={{ opacity: 1 }} 
+                transition={{ delay: 1.8, duration: 0.3 }}
+              >
+                <span className="text-white">{'}'}</span>
+                <motion.span 
+                  className="inline-block w-2 h-4 ml-1 -mb-1 bg-primary/90" 
+                  variants={cursorVariants}
+                  animate="blink"
+                />
+              </motion.div>
+            </div>
+          </code>
+        </pre>
+        
+        {/* Moving glow effect */}
+        <motion.div 
+          className="absolute -inset-0.5 rounded-lg bg-gradient-to-r from-blue-500/20 via-primary/20 to-cyan-500/20 blur z-[-1]"
+          animate={{ 
+            backgroundPosition: ["0% 0%", "100% 100%"],
+          }}
+          transition={{ 
+            duration: 8, 
+            repeat: Infinity,
+            repeatType: "reverse" 
+          }}
+          style={{ backgroundSize: "200% 200%" }}
+        />
+      </div>
+    </motion.div>
+  );
+};
 const HeroSection = () => {
   const navigate = useNavigate();
   const { user, isSignedIn } = useUser();
@@ -109,34 +236,46 @@ const HeroSection = () => {
           <div className={`flex flex-col sm:flex-row gap-4 justify-center items-center  ${
             !isAndroid && !hasSeenHero ? "animate-fade-in [animation-delay:400ms]" : ""
           }`}>
-            <MotionWrapper
-              variants={buttonVariants}
-              initial={!isAndroid && "initial"}
-              whileHover={!isAndroid && "hover"}
-              whileTap={!isAndroid && "tap"}
-              className="glass-card bg-hero-gradient cursor-pointer hover:shadow-2xl hover:shadow-primary/40 transition-all duration-300 ease-in-out relative overflow-hidden group px-8 py-4 rounded-2xl font-semibold backdrop-blur-lg"
-              onClick={() => navigate('/notes')}
-            >
-              <ShineBorder shineColor={["#A07CFE", "#FE8FB5", "#FFBE7B"]} />
-              <span className="relative z-10 flex items-center gap-2 text-white">
-                Start Learning
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </span>
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/30 to-cyan-500/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            </MotionWrapper>
+           <MotionWrapper
+            variants={buttonVariants}
+            initial={!isAndroid && "initial"}
+            whileHover={!isAndroid && "hover"}
+            whileTap={!isAndroid && "tap"}
+            className="glass-card cursor-pointer relative overflow-hidden group 
+              px-6 py-3 rounded-lg font-medium 
+              bg-gradient-to-br from-blue-600/30 to-blue-400/20
+              border border-blue-500/30 hover:border-blue-400/60
+              hover:shadow-[0_0_25px_rgba(59,130,246,0.5)]
+              transition-all duration-300"
+            onClick={() => navigate('/notes')}
+          >
+            <ShineBorder shineColor={["#3B82F6", "#06B6D4", "#2563EB"]} />
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-gradient-to-r from-blue-500/20 to-cyan-400/20 transition-opacity duration-300"></div>
+            <span className="relative z-10 flex items-center gap-2 text-white group-hover:tracking-wide transition-all duration-300">
+              Start Learning
+              <ArrowRight className="h-4 w-4 transform group-hover:translate-x-1 transition-transform duration-300" />
+            </span>
+          </MotionWrapper>
 
-            <MotionWrapper
-              variants={!isAndroid && buttonVariants}
-              initial="initial"
-              whileHover="hover"
-              whileTap="tap"
-              className="glass-card cursor-pointer relative overflow-hidden group px-8 py-4 rounded-2xl border border-primary/30 font-semibold hover:shadow-2xl transition-all duration-300 ease-in-out backdrop-blur-lg"
-              onClick={() => window.open('https://chat.whatsapp.com/GXJ7PDV8ZKhH0KSiVTVK7g', '_blank')}
-            >
-              <ShineBorder shineColor={["#A07CFE", "#FE8FB5", "#FFBE7B"]} />
-              <span className="relative z-10 text-white">Join Our Community</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-blue-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            </MotionWrapper>
+          <MotionWrapper
+            variants={!isAndroid && buttonVariants}
+            initial="initial"
+            whileHover="hover"
+            whileTap="tap"
+            className="glass-card cursor-pointer relative overflow-hidden group
+              px-6 py-3 rounded-lg font-medium
+              bg-gradient-to-br from-primary/20 to-purple-500/10
+              border border-primary/30 hover:border-primary/60
+              hover:shadow-[0_0_25px_rgba(168,85,247,0.4)]
+              transition-all duration-300"
+            onClick={() => window.open('https://chat.whatsapp.com/GXJ7PDV8ZKhH0KSiVTVK7g', '_blank')}
+          >
+            <ShineBorder shineColor={["#8B5CF6", "#D946EF", "#7C3AED"]} />
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-gradient-to-r from-primary/20 to-purple-500/20 transition-opacity duration-300"></div>
+            <span className="relative z-10 text-white group-hover:tracking-wide transition-all duration-300">
+              Join Our Community
+            </span>
+          </MotionWrapper>
 
           </div>
         </div>

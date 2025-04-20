@@ -1,81 +1,45 @@
-import React, { lazy, Suspense } from "react";
+import React, { lazy, Suspense, useState, useEffect } from "react";
 import Header from "@/components/header";
 import "@/components/HeroSection";
-import { TextAnimate } from "@/components/ui/text-animate"; 
 import "@/index.css";
 import HeroSection from "@/components/HeroSection";
 import FaqSection from "@/components/FaqSection";
-import { motion, useReducedMotion } from "framer-motion"; // Add useReducedMotion
+import { motion, useReducedMotion } from "framer-motion";
 import { isAndroid } from "react-device-detect";
-
-const ResourcesSection = lazy(() => import('@/components/ResourceSection'));
+import Preloader from "@/components/Preloader";
+import ResourcesSection from '@/components/ResourceSection';
 
 function LandingPage() {
+  const [isLoading, setIsLoading] = useState(() => {
+    // Only show preloader if not visited in this session
+    return !sessionStorage.getItem("hasVisitedThisSession");
+  });
   const prefersReducedMotion = useReducedMotion();
   const shouldAnimate = !isAndroid && !prefersReducedMotion;
 
-  const GradientOrbs = () => {
-    const baseStyles = {
-      orb1: "absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full bg-blue-500/20 blur-[100px]",
-      orb2: "absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full bg-cyan-500/20 blur-[100px]"
-    };
-
-    if (!shouldAnimate) {
-      return (
-        <>
-          <div className={baseStyles.orb1} />
-          <div className={baseStyles.orb2} />
-        </>
-      );
+  useEffect(() => {
+    if (isLoading) {
+      const timer = setTimeout(() => {
+        setIsLoading(false);
+        sessionStorage.setItem("hasVisitedThisSession", "true");
+      }, 2500);
+      return () => clearTimeout(timer);
     }
+  }, [isLoading]);
 
-    return (
-      <>
-        <motion.div
-          className={baseStyles.orb1}
-          animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.2, 0.3, 0.2],
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-        <motion.div
-          className={baseStyles.orb2}
-          animate={{
-            scale: [1.2, 1, 1.2],
-            opacity: [0.2, 0.3, 0.2],
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 1,
-          }}
-        />
-      </>
-    );
-  };
+  if (isLoading) {
+    return <Preloader />;
+  }
 
   return (
     <div className="relative min-h-screen overflow-hidden " style={{minWidth: "100vw"}}>
-      {/* Background Graphics */}
-      <div className="fixed inset-0 -z-10">
-        {/* Gradient Orbs */}
-        {/* <GradientOrbs /> */}
-        
-        {/* Radial Gradient */}
-        {/* <div className="absolute inset-0 bg-gradient-radial from-transparent via-background to-background" /> */}
-      </div>
-
-      {/* Content */}
       <Header />
-      {/* <Preloader/> */}
       <HeroSection />
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+        </div>
+      }>
         <ResourcesSection />
       </Suspense>
       <FaqSection />

@@ -8,13 +8,12 @@ import { useUser, useSession } from "@clerk/clerk-react";
 import ResourcesCard from "@/components/ResourcesCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import Preloader from "@/components/Preloader";
 import { useQuery } from "@tanstack/react-query";
 import { getTopics } from "@/api/api-topics";
 import { getResources } from "@/api/api-resources";
+import ScrollToTop from "@/components/ScrollToTop";
 
 const ResourcesListing = () => {
-  const [showPreloader, setShowPreloader] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const { isLoaded } = useUser();
   const { session } = useSession();
@@ -44,18 +43,9 @@ const ResourcesListing = () => {
     enabled: isLoaded,
   });
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowPreloader(false);
-    }, 3000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (!isLoaded || showPreloader) return <Preloader />;
-
   return (
     <SidebarProvider>
-      <div className="flex h-screen bg-background text-foreground overflow-hidden w-full">
+      <div className="flex h-screen w-full flex-col md:flex-row">
         <Sidebar />
         <div className="flex flex-col flex-1 overflow-auto">
           <SideHeader searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
@@ -121,6 +111,7 @@ const ResourcesListing = () => {
             )}
           </main>
         </div>
+        <ScrollToTop />
       </div>
     </SidebarProvider>
   );

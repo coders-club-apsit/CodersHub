@@ -1,9 +1,11 @@
+import React, { useEffect, useState, useRef } from "react";
 import { ArrowDown, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { isAndroid } from "react-device-detect";
 import { useUser } from "@clerk/clerk-react";
+import { ShineBorder } from "./magicui/shine-border";
 
 const NeonCircles = () => (
   <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
@@ -22,27 +24,184 @@ const MotionWrapper = ({ children, ...props }) => {
   if (isAndroid) {
     return <button className={props.className} onClick={props.onClick}>{children}</button>;
   }
-  return <motion.button {...props}>{children}</motion.button>;
+  return <motion.div {...props}>{children}</motion.div>;
 };
 
-const CodeBlock = () => (
-  <div className="absolute bottom-20 right-10 hidden lg:block">
-    <pre className="text-sm bg-black/20 backdrop-blur-sm p-4 rounded-lg border border-primary/10">
-      <code className="text-primary/70">
-        {`function solve(problem) {
-  if (problem.isSolved) {
-    return celebrate();
-  }
-  return keepLearning();
-}`}
-      </code>
-    </pre>
-  </div>
-);
+const CodeBlock = () => {
+  // Use ref to track if animation has already run
+  const animationPlayedRef = useRef(false);
+  // Determine if we should animate on mount
+  const [shouldAnimate, setShouldAnimate] = useState(() => {
+    return !sessionStorage.getItem("codeBlockAnimated");
+  });
+  
+  // Define animation variants
+  const containerVariants = {
+    initial: { opacity: 0, y: 20 },
+    animate: { 
+      opacity: 1, 
+      y: 0,
+      transition: { duration: 0.7, delay: 0.5 }
+    },
+    alreadySeen: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0 }
+    }
+  };
 
+  const lineHighlightVariants = {
+    initial: { width: "0%" },
+    animate: { 
+      width: "100%",
+      transition: { 
+        duration: 0.8, 
+        delay: 1.5,
+        ease: "easeInOut" 
+      }
+    }
+  };
+
+  // Cursor blink effect
+  const cursorVariants = {
+    blink: {
+      opacity: [0, 1, 0],
+      transition: {
+        duration: 1,
+        repeat: Infinity,
+        repeatType: "loop"
+      }
+    }
+  };
+
+  // Set animation as played after first render
+  useEffect(() => {
+    if (shouldAnimate && !animationPlayedRef.current) {
+      animationPlayedRef.current = true;
+      sessionStorage.setItem("codeBlockAnimated", "true");
+    }
+  }, [shouldAnimate]);
+
+  return (
+    <motion.div 
+      className="absolute bottom-20 right-10 hidden lg:block"
+      variants={containerVariants}
+      initial={shouldAnimate ? "initial" : "alreadySeen"}
+      animate="animate"
+    >
+      <div className="relative group">
+        <div className="absolute -inset-0.5  rounded-lg opacity-30 
+          group-hover:opacity-60 transition duration-1000 group-hover:duration-300"></div>
+        
+        <pre className="relative text-sm bg-black/50 backdrop-blur-md p-4 rounded-lg border border-primary/20 
+          shadow-[0_0_15px_rgba(124,58,237,0.1)] hover:shadow-[0_0_25px_rgba(124,58,237,0.2)] transition-all duration-300">
+          <code className="text-primary/90 font-mono">
+            <div className="flex flex-col">
+              <motion.div className="flex"
+                initial={{ opacity: shouldAnimate ? 0 : 1 }} 
+                animate={{ opacity: 1 }} 
+                transition={{ delay: shouldAnimate ? 0.8 : 0, duration: shouldAnimate ? 0.3 : 0 }}
+              >
+                <span className="text-blue-400">function</span>
+                <span className="text-white"> solve(</span>
+                <span className="text-yellow-300">problem</span>
+                <span className="text-white">) {'{'}</span>
+              </motion.div>
+              
+              <motion.div 
+                className="relative pl-4 my-1" 
+                initial={{ opacity: shouldAnimate ? 0 : 1 }} 
+                animate={{ opacity: 1 }} 
+                transition={{ delay: shouldAnimate ? 1.0 : 0, duration: shouldAnimate ? 0.3 : 0 }}
+              >
+                <span className="flex items-center">
+                  <span className="text-pink-400">if</span>
+                  <span className="text-white"> (</span>
+                  <span className="text-yellow-300">problem</span>
+                  <span className="text-white">.</span>
+                  <span className="text-green-400">isSolved</span>
+                  <span className="text-white">) {'{'}</span>
+                  
+                </span>
+              </motion.div>
+              
+              <motion.div 
+                className="pl-8" 
+                initial={{ opacity: shouldAnimate ? 0 : 1 }} 
+                animate={{ opacity: 1 }} 
+                transition={{ delay: shouldAnimate ? 1.2 : 0, duration: shouldAnimate ? 0.3 : 0 }}
+              >
+                <span className="text-blue-400">return</span>
+                <span className="text-cyan-300"> celebrate</span>
+                <span className="text-white">();</span>
+              </motion.div>
+              
+              <motion.div 
+                className="pl-4" 
+                initial={{ opacity: shouldAnimate ? 0 : 1 }} 
+                animate={{ opacity: 1 }} 
+                transition={{ delay: shouldAnimate ? 1.4 : 0, duration: shouldAnimate ? 0.3 : 0 }}
+              >
+                <span className="text-white">{'}'}</span>
+              </motion.div>
+              
+              <motion.div 
+                className="pl-4 flex" 
+                initial={{ opacity: shouldAnimate ? 0 : 1 }} 
+                animate={{ opacity: 1 }} 
+                transition={{ delay: shouldAnimate ? 1.6 : 0, duration: shouldAnimate ? 0.3 : 0 }}
+              >
+                <span className="text-blue-400">return</span>
+                <span className="text-cyan-300"> keepLearning</span>
+                <span className="text-white">();</span>
+              </motion.div>
+              
+              <motion.div 
+                initial={{ opacity: shouldAnimate ? 0 : 1 }} 
+                animate={{ opacity: 1 }} 
+                transition={{ delay: shouldAnimate ? 1.8 : 0, duration: shouldAnimate ? 0.3 : 0 }}
+              >
+                <span className="text-white">{'}'}</span>
+                <motion.span 
+                  className="inline-block w-2 h-4 ml-1 -mb-1 bg-primary/90" 
+                  variants={cursorVariants}
+                  animate="blink"
+                />
+              </motion.div>
+            </div>
+          </code>
+        </pre>
+        
+        {/* Moving glow effect */}
+        <motion.div 
+          className="absolute -inset-0.5 rounded-lg bg-gradient-to-r from-blue-500/20 via-primary/20 to-cyan-500/20 blur z-[-1]"
+          animate={{ 
+            backgroundPosition: ["0% 0%", "100% 100%"],
+          }}
+          transition={{ 
+            duration: 8, 
+            repeat: Infinity,
+            repeatType: "reverse" 
+          }}
+          style={{ backgroundSize: "200% 200%" }}
+        />
+      </div>
+    </motion.div>
+  );
+};
 const HeroSection = () => {
   const navigate = useNavigate();
   const { user, isSignedIn } = useUser();
+  const [hasSeenHero, setHasSeenHero] = useState(() => {
+    return sessionStorage.getItem("hasSeenHeroSection") === "true";
+  });
+
+  useEffect(() => {
+    if (!hasSeenHero) {
+      sessionStorage.setItem("hasSeenHeroSection", "true");
+      setHasSeenHero(true);
+    }
+  }, []);
 
   // Function to capitalize first letter only
   const capitalizeFirstLetter = (str) => {
@@ -65,22 +224,22 @@ const HeroSection = () => {
   } : {};
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center max-h-screen overflow-hidden ">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       <NeonCircles />
 
       <div className="container px-8 mx-auto z-10">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className={`text-4xl sm:text-5xl md:text-6xl font-bold mb-6 ${
-            !isAndroid ? "animate-fade-in [animation-delay:300ms]" : ""
+            !isAndroid && !hasSeenHero ? "animate-fade-in [animation-delay:300ms]" : ""
           }`}>
             {isSignedIn ? (
-              <>Welcome back <span className="text-gradient">{capitalizeFirstLetter(user.firstName)}</span></>
+              <>Welcome back <span className="text-gradient">{capitalizeFirstLetter(user.firstName)}.</span></>
             ) : (
               <>Welcome to the <span className="text-gradient">Coder's Club</span></>
             )}
           </h1>
           <p className={`text-lg md:text-xl mb-8 text-muted-foreground ${
-            !isAndroid ? "animate-fade-in [animation-delay:200ms]" : ""
+            !isAndroid && !hasSeenHero ? "animate-fade-in [animation-delay:200ms]" : ""
           }`}>
             {isSignedIn ? (
               <>
@@ -94,35 +253,50 @@ const HeroSection = () => {
               </>
             )}
           </p>
-          <div className={`flex flex-col sm:flex-row gap-4 justify-center items-center ${
-            !isAndroid ? "animate-fade-in [animation-delay:400ms]" : ""
+          <div className={`flex flex-col sm:flex-row gap-4 justify-center items-center  ${
+            !isAndroid && !hasSeenHero ? "animate-fade-in [animation-delay:400ms]" : ""
           }`}>
-            <MotionWrapper
-              variants={buttonVariants}
-              initial={!isAndroid && "initial"}
-              whileHover={!isAndroid && "hover"}
-              whileTap={!isAndroid && "tap"}
-              className="glass-card bg-hero-gradient text-white hover:shadow-lg hover:shadow-primary/25 transition-all relative overflow-hidden group px-6 py-3 rounded-lg font-medium"
-              onClick={() => navigate('/notes')}
-            >
-              <span className="relative z-10">Start Learning</span>
-              <span className="relative z-10 inline-block ml-2">
-                <ArrowRight className="h-4 w-4" />
-              </span>
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            </MotionWrapper>
+           <MotionWrapper
+            variants={buttonVariants}
+            initial={!isAndroid && "initial"}
+            whileHover={!isAndroid && "hover"}
+            whileTap={!isAndroid && "tap"}
+            className="glass-card cursor-pointer relative overflow-hidden group 
+              px-6 py-3 rounded-lg font-medium 
+              bg-gradient-to-br from-blue-600/30 to-blue-400/20
+              border border-blue-500/30 hover:border-blue-400/60
+              hover:shadow-[0_0_25px_rgba(59,130,246,0.5)]
+              transition-all duration-300"
+            onClick={() => navigate('/notes')}
+          >
+            <ShineBorder shineColor={["#3B82F6", "#06B6D4", "#2563EB"]} />
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-gradient-to-r from-blue-500/20 to-cyan-400/20 transition-opacity duration-300"></div>
+            <span className="relative z-10 flex items-center gap-2 text-white group-hover:tracking-wide transition-all duration-300">
+              Start Learning
+              <ArrowRight className="h-4 w-4 transform group-hover:translate-x-1 transition-transform duration-300" />
+            </span>
+          </MotionWrapper>
 
-            <MotionWrapper
-              variants={!isAndroid && buttonVariants}
-              initial="initial"
-              whileHover="hover"
-              whileTap="tap"
-              className="glass-card hover:shadow-lg transition-all relative overflow-hidden group px-6 py-3 rounded-lg border border-primary/20 font-medium"
-              onClick={() => window.open('https://chat.whatsapp.com/GXJ7PDV8ZKhH0KSiVTVK7g', '_blank')}
-            >
-              <span className="relative z-10">Join Our Community</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            </MotionWrapper>
+          <MotionWrapper
+            variants={!isAndroid && buttonVariants}
+            initial="initial"
+            whileHover="hover"
+            whileTap="tap"
+            className="glass-card cursor-pointer relative overflow-hidden group
+              px-6 py-3 rounded-lg font-medium
+              bg-gradient-to-br from-primary/20 to-purple-500/10
+              border border-primary/30 hover:border-primary/60
+              hover:shadow-[0_0_25px_rgba(168,85,247,0.4)]
+              transition-all duration-300"
+            onClick={() => window.open('https://chat.whatsapp.com/GXJ7PDV8ZKhH0KSiVTVK7g', '_blank')}
+          >
+            <ShineBorder shineColor={["#8B5CF6", "#D946EF", "#7C3AED"]} />
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-gradient-to-r from-primary/20 to-purple-500/20 transition-opacity duration-300"></div>
+            <span className="relative z-10 text-white group-hover:tracking-wide transition-all duration-300">
+              Join Our Community
+            </span>
+          </MotionWrapper>
+
           </div>
         </div>
       </div>
@@ -131,7 +305,7 @@ const HeroSection = () => {
 
       {/* Scroll Indicator - Use CSS animation for Android */}
       <div className={`
-        absolute bottom-10 left-1/2 transform -translate-x-1/2
+        absolute bottom-10 left-1/2 transform -translate-x-1/2 z-30
         ${isAndroid ? 'animate-bounce' : ''}
       `}>
         {!isAndroid ? (
@@ -149,6 +323,9 @@ const HeroSection = () => {
           <ArrowDown className="h-6 w-6 text-primary/60" />
         )}
       </div>
+
+      {/* Bottom black gradient shadow for seamless look */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent to-[#09090b] z-0" />
     </section>
   );
 };

@@ -66,7 +66,7 @@ const NoteCard = ({ note, isMyNote = false, savedInit = false, onNoteSaved = () 
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} whileHover={{ y: -5 }} className="space-y-6 w-full">
       <Card className="flex flex-col h-full transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/10 border border-blue-500/10 bg-gradient-to-b from-white/5 to-transparent backdrop-blur-sm">
-        {loadingDeleteNote && <BarLoader className="mt-4 w-full" color="hsl(var(--primary))" />}
+        {loadingDeleteNote && <BarLoader className="mt-4 bg-gradient-to-r from-blue-400 to-cyan-400" width="100%" />}
         <CardHeader className="space-y-4 p-4 sm:p-6">
           <div className="flex flex-col gap-4">
             <div className="flex flex-row items-center justify-between">
@@ -80,13 +80,6 @@ const NoteCard = ({ note, isMyNote = false, savedInit = false, onNoteSaved = () 
                   <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
                     <Button variant="ghost" size="icon" onClick={handleDeleteNote}>
                       <Trash2Icon className="h-4 w-4 text-red-500 hover:text-red-400 transition-colors" />
-                    </Button>
-                  </motion.div>
-                )}
-                {isAdmin && (
-                  <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
-                    <Button variant="ghost" size="icon" onClick={handleEditClick}>
-                      <PenBox className="h-4 w-4 text-blue-500 hover:text-blue-400 transition-colors" />
                     </Button>
                   </motion.div>
                 )}
@@ -126,6 +119,19 @@ const NoteCard = ({ note, isMyNote = false, savedInit = false, onNoteSaved = () 
               </Button>
             </Link>
 
+          <div className="flex items-center gap-2">
+              {isAdmin && (
+                <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 p-0 bg-blue-500/5 hover:bg-blue-500/10"
+                    onClick={handleEditClick}
+                  >
+                    <PenBox className="h-4 w-4 text-blue-500 hover:text-blue-400 transition-colors" />
+                  </Button>
+                </motion.div>
+              )}
             {!isMyNote && (
               <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
                 <Button variant="ghost" className="h-8 w-8 p-0 bg-blue-500/5 hover:bg-blue-500/10" onClick={handleSaveNote} disabled={loadingSavedNotes}>
@@ -133,6 +139,7 @@ const NoteCard = ({ note, isMyNote = false, savedInit = false, onNoteSaved = () 
                 </Button>
               </motion.div>
             )}
+          </div>
           </div>
         </CardFooter>
       </Card>

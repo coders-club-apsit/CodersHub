@@ -15,6 +15,7 @@ import {
   Award,
   AwardIcon,
   LucideAward,
+  Users,
 } from "lucide-react";
 import { SignedIn, SignedOut, SignIn, UserButton } from "@clerk/clerk-react";
 import { PenBox, NotebookPen, Save } from "lucide-react";
@@ -34,6 +35,15 @@ import { Link } from "react-router-dom";
 import { SignOutButton } from "@clerk/clerk-react";
 import { FaAward } from "react-icons/fa";
 
+const routes = [
+  { path: "/", icon: HouseIcon, label: "Home" },
+  { path: "/notes", icon: Book, label: "Notes" },
+  { path: "/resources", icon: LinkIcon, label: "Resources" },
+  // { path: "/events", icon: Calendar, label: "Events" },
+  { path: "/educators", icon: Users, label: "Educators", color: "text-violet-500" },
+  { path: "/about-us", icon: Info, label: "About us" },
+
+];
 
 export function Sidebar() {
   const { state } = useSidebar();
@@ -70,111 +80,72 @@ export function Sidebar() {
   return (
     <ShadSidebar className="bg-card">
       <SidebarHeader className="bg-opacity-50 bg-black">
-        <h2 className="text-xl font-bold text-primary p-4">Dashboard</h2>
+        <h2 className="text-2xl sm:text-xl font-bold text-primary p-3">Dashboard</h2>
       </SidebarHeader>
-      <SidebarContent className="bg-opacity-50 bg-black ">
+      <SidebarContent className="bg-black/10 space-y-4">
         <SignedIn>
-         
-
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild>
-                <Link to="/">
-                  <Button
-                    variant="ghost"
-                    className={`w-full justify-start rounded-lg ${
-                      isActive("/") ? "bg-accent text-primary" : "text-foreground"
-                    } hover:text-primary hover:bg-accent`}
-                  >
-                    <HouseIcon className="mr-2 h-4 w-4" />
-                    Home
-                  </Button>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild>
-                <Link to="/notes">
-                  <Button
-                    variant="ghost"
-                    className={`w-full justify-start ${
-                      isActive("/notes") ? "bg-accent text-primary" : "text-foreground"
-                    } hover:text-primary hover:bg-accent`}
-                  >
-                    <Book className="mr-2 h-4 w-4" />
-                    Notes
-                  </Button>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild>
-                <Link to="/resources">
-                  <Button
-                    variant="ghost"
-                    className={`w-full justify-start ${
-                      isActive("/resources") ? "bg-accent text-primary" : "text-foreground"
-                    } hover:text-primary hover:bg-accent`}
-                  >
-                    <LinkIcon className="mr-2 h-4 w-4" />
-                    Resources
-                  </Button>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild>
-                <Link to="/about-us">
-                  <Button
-                    variant="ghost"
-                    className={`w-full justify-start ${
-                      isActive("/about-us") ? "bg-accent text-primary" : "text-foreground"
-                    } hover:text-primary hover:bg-accent`}
-                  >
-                    <Info className="mr-2 h-4 w-4" />
-                    About us
-                  </Button>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
+        <SidebarMenu className="space-y-2 p-2">
+            {routes.map(({ path, icon: Icon, label }) => (
+              <SidebarMenuItem key={path}>
+                <SidebarMenuButton asChild>
+                  <Link to={path}>
+                    <Button
+                      variant="ghost"
+                      className={`w-full justify-start rounded-lg text-base font-medium
+                        transition-all duration-200 ease-in-out
+                        ${isActive(path) 
+                          ? "bg-primary/10 text-primary shadow-sm" 
+                          : "text-foreground hover:bg-primary/5 hover:text-primary"
+                        }
+                      `}
+                    >
+                      <Icon className="mr-3 h-5 w-5 transition-transform group-hover:scale-110" />
+                      {label}
+                    </Button>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
           </SidebarMenu>
         </SignedIn>
 
         
       </SidebarContent>
-      <SidebarFooter>
-      {isAdmin && (
-            <>
-              <Link to="/add-notes">
-                <Button
-                  variant="ghost"
-                  className="w-full justify-start text-foreground hover:text-primary hover:bg-accent"
-                >
-                  <PenBox className="mr-2 h-4 w-4" />
-                  Add Notes
-                </Button>
-              </Link>
-              <Link to="/add-resources">
-                <Button
-                  variant="ghost"
-                  className="w-full justify-start text-foreground hover:text-primary hover:bg-accent"
-                >
-                  <LinkIcon className="mr-2 h-4 w-4" />
-                  Add Resources
-                </Button>
-              </Link>
-              
-            </>
+      <SidebarFooter className="border-t border-primary/10 bg-black/20 space-y-2 p-2">
+        <SignedIn>
+          {isAdmin && (
+            <div className="space-y-3 mb-2">
+              {[
+                { path: "/add-notes", icon: PenBox, label: "Add Notes" },
+                { path: "/add-resources", icon: LinkIcon, label: "Add Resources" },
+              ].map(({ path, icon: Icon, label }) => (
+                <Link key={path} to={path}>
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start text-base font-medium
+                      text-foreground hover:text-primary hover:bg-primary/5
+                      transition-all duration-200 ease-in-out"
+                  >
+                    <Icon className="mr-3 h-5 w-5 transition-transform group-hover:scale-110" />
+                    {label}
+                  </Button>
+                </Link>
+              ))}
+            </div>
           )}
-        <SignOutButton>
-          <Button
-            variant="ghost"
-            className="w-full justify-start text-foreground hover:text-primary hover:bg-accent"
-          >
-            <LogOut className="mr-2 h-4 w-4" />
-            Logout
-          </Button>
-        </SignOutButton>
+
+          <SignOutButton>
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-base font-medium
+                text-foreground hover:text-red-500 hover:bg-red-500/5
+                transition-all duration-200 ease-in-out group"
+            >
+              <LogOut className="mr-3 h-5 w-5 transition-transform group-hover:scale-110" />
+              Logout
+            </Button>
+          </SignOutButton>
+        </SignedIn>
       </SidebarFooter>
     </ShadSidebar>
   );

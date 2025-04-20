@@ -1,7 +1,7 @@
 import Header from '@/components/header';
 import DotPattern from '@/components/ui/dot-pattern';
 import React, { useEffect } from 'react';
-import { Outlet, useMatches, useNavigate } from 'react-router-dom';
+import { Outlet, useMatches, useNavigate, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import Footer from '@/components/Footer';
 import Spline from '@splinetool/react-spline';
@@ -14,6 +14,10 @@ import {onFCP} from 'web-vitals';
 const AppLayout = () => {
   const matches = useMatches();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // List of routes where you don't want the footer
+  const hideFooterRoutes = ["/aboutus", "/about-us"];
 
   // Initialize session timeout
   useSessionTimeout();
@@ -34,19 +38,21 @@ const AppLayout = () => {
 
   return (
     <>
-      <main className=" mx-auto min-h-screen overflow-hidden">
+      <main className=" overflow-hidden">
         <Outlet />
       </main>
       <DotPattern
         className={cn(
-          '-z-50 [mask-image:radial-gradient(250px_circle_at_center,white,transparent)] lg:[mask-image:radial-gradient(350px_circle_at_center,white,transparent)]'
+          '-z-50 [mask-image:radial-gradient(300px_circle_at_center,white,transparent)] lg:[mask-image:radial-gradient(350px_circle_at_center,white,transparent)]'
         )}
       />
       <SpeedInsights/>
       <Analytics />
-      <div className="mt-12">
-        <Footer />
-      </div>
+      {!hideFooterRoutes.includes(location.pathname) && (
+        <div className="mt-12">
+          <Footer />
+        </div>
+      )}
     </>
   );
 };

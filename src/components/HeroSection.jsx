@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { isAndroid } from "react-device-detect";
 import { useUser } from "@clerk/clerk-react";
+import { ShineBorder } from "./magicui/shine-border";
 
 const NeonCircles = () => (
   <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
@@ -116,6 +117,7 @@ const HeroSection = () => {
               className="glass-card bg-hero-gradient cursor-pointer hover:shadow-2xl hover:shadow-primary/40 transition-all duration-300 ease-in-out relative overflow-hidden group px-8 py-4 rounded-2xl font-semibold backdrop-blur-lg"
               onClick={() => navigate('/notes')}
             >
+              <ShineBorder shineColor={["#A07CFE", "#FE8FB5", "#FFBE7B"]} />
               <span className="relative z-10 flex items-center gap-2 text-white">
                 Start Learning
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -131,6 +133,7 @@ const HeroSection = () => {
               className="glass-card cursor-pointer relative overflow-hidden group px-8 py-4 rounded-2xl border border-primary/30 font-semibold hover:shadow-2xl transition-all duration-300 ease-in-out backdrop-blur-lg"
               onClick={() => window.open('https://chat.whatsapp.com/GXJ7PDV8ZKhH0KSiVTVK7g', '_blank')}
             >
+              <ShineBorder shineColor={["#A07CFE", "#FE8FB5", "#FFBE7B"]} />
               <span className="relative z-10 text-white">Join Our Community</span>
               <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-blue-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </MotionWrapper>

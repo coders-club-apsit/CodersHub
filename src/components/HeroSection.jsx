@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { ArrowDown, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
@@ -28,6 +28,13 @@ const MotionWrapper = ({ children, ...props }) => {
 };
 
 const CodeBlock = () => {
+  // Use ref to track if animation has already run
+  const animationPlayedRef = useRef(false);
+  // Determine if we should animate on mount
+  const [shouldAnimate, setShouldAnimate] = useState(() => {
+    return !sessionStorage.getItem("codeBlockAnimated");
+  });
+  
   // Define animation variants
   const containerVariants = {
     initial: { opacity: 0, y: 20 },
@@ -35,6 +42,11 @@ const CodeBlock = () => {
       opacity: 1, 
       y: 0,
       transition: { duration: 0.7, delay: 0.5 }
+    },
+    alreadySeen: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0 }
     }
   };
 
@@ -62,11 +74,19 @@ const CodeBlock = () => {
     }
   };
 
+  // Set animation as played after first render
+  useEffect(() => {
+    if (shouldAnimate && !animationPlayedRef.current) {
+      animationPlayedRef.current = true;
+      sessionStorage.setItem("codeBlockAnimated", "true");
+    }
+  }, [shouldAnimate]);
+
   return (
     <motion.div 
       className="absolute bottom-20 right-10 hidden lg:block"
       variants={containerVariants}
-      initial="initial"
+      initial={shouldAnimate ? "initial" : "alreadySeen"}
       animate="animate"
     >
       <div className="relative group">
@@ -78,9 +98,9 @@ const CodeBlock = () => {
           <code className="text-primary/90 font-mono">
             <div className="flex flex-col">
               <motion.div className="flex"
-                initial={{ opacity: 0 }} 
+                initial={{ opacity: shouldAnimate ? 0 : 1 }} 
                 animate={{ opacity: 1 }} 
-                transition={{ delay: 0.8, duration: 0.3 }}
+                transition={{ delay: shouldAnimate ? 0.8 : 0, duration: shouldAnimate ? 0.3 : 0 }}
               >
                 <span className="text-blue-400">function</span>
                 <span className="text-white"> solve(</span>
@@ -90,9 +110,9 @@ const CodeBlock = () => {
               
               <motion.div 
                 className="relative pl-4 my-1" 
-                initial={{ opacity: 0 }} 
+                initial={{ opacity: shouldAnimate ? 0 : 1 }} 
                 animate={{ opacity: 1 }} 
-                transition={{ delay: 1.0, duration: 0.3 }}
+                transition={{ delay: shouldAnimate ? 1.0 : 0, duration: shouldAnimate ? 0.3 : 0 }}
               >
                 <span className="flex items-center">
                   <span className="text-pink-400">if</span>
@@ -107,9 +127,9 @@ const CodeBlock = () => {
               
               <motion.div 
                 className="pl-8" 
-                initial={{ opacity: 0 }} 
+                initial={{ opacity: shouldAnimate ? 0 : 1 }} 
                 animate={{ opacity: 1 }} 
-                transition={{ delay: 1.2, duration: 0.3 }}
+                transition={{ delay: shouldAnimate ? 1.2 : 0, duration: shouldAnimate ? 0.3 : 0 }}
               >
                 <span className="text-blue-400">return</span>
                 <span className="text-cyan-300"> celebrate</span>
@@ -118,18 +138,18 @@ const CodeBlock = () => {
               
               <motion.div 
                 className="pl-4" 
-                initial={{ opacity: 0 }} 
+                initial={{ opacity: shouldAnimate ? 0 : 1 }} 
                 animate={{ opacity: 1 }} 
-                transition={{ delay: 1.4, duration: 0.3 }}
+                transition={{ delay: shouldAnimate ? 1.4 : 0, duration: shouldAnimate ? 0.3 : 0 }}
               >
                 <span className="text-white">{'}'}</span>
               </motion.div>
               
               <motion.div 
                 className="pl-4 flex" 
-                initial={{ opacity: 0 }} 
+                initial={{ opacity: shouldAnimate ? 0 : 1 }} 
                 animate={{ opacity: 1 }} 
-                transition={{ delay: 1.6, duration: 0.3 }}
+                transition={{ delay: shouldAnimate ? 1.6 : 0, duration: shouldAnimate ? 0.3 : 0 }}
               >
                 <span className="text-blue-400">return</span>
                 <span className="text-cyan-300"> keepLearning</span>
@@ -137,9 +157,9 @@ const CodeBlock = () => {
               </motion.div>
               
               <motion.div 
-                initial={{ opacity: 0 }} 
+                initial={{ opacity: shouldAnimate ? 0 : 1 }} 
                 animate={{ opacity: 1 }} 
-                transition={{ delay: 1.8, duration: 0.3 }}
+                transition={{ delay: shouldAnimate ? 1.8 : 0, duration: shouldAnimate ? 0.3 : 0 }}
               >
                 <span className="text-white">{'}'}</span>
                 <motion.span 

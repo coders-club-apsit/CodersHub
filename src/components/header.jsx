@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Button } from './ui/button';
 import { SignedIn, SignedOut, UserButton, SignIn } from '@clerk/clerk-react';
@@ -11,6 +11,12 @@ const Header = () => {
     const [search, setSearch] = useSearchParams();
     const [showSignIn, setShowSignIn] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+    
+    // Track if initial animation has played
+    const animationPlayedRef = useRef(false);
+    const [shouldAnimate, setShouldAnimate] = useState(() => {
+        return !sessionStorage.getItem("headerAnimated");
+    });
 
     // Track scroll position for changing header appearance
     useEffect(() => {
@@ -24,6 +30,14 @@ const Header = () => {
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, [scrolled]);
+
+    // Set animation as played after first render
+    useEffect(() => {
+        if (shouldAnimate && !animationPlayedRef.current) {
+            animationPlayedRef.current = true;
+            sessionStorage.setItem("headerAnimated", "true");
+        }
+    }, [shouldAnimate]);
 
     const handleOverlayClick = (e) => {
         if (e.target === e.currentTarget) {
@@ -46,9 +60,9 @@ const Header = () => {
                     ? "bg-background/90 backdrop-blur-md shadow-lg border-b border-blue-500/10" 
                     : "bg-transparent border-b border-transparent"
                 }`}
-                initial={{ y: -100 }}
+                initial={shouldAnimate ? { y: -100 } : { y: 0 }}
                 animate={{ y: 0 }}
-                transition={{ duration: 0.4, ease: "easeOut" }}
+                transition={{ duration: shouldAnimate ? 0.4 : 0, ease: "easeOut" }}
             >
                 <div className="mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between items-center h-20">
@@ -73,6 +87,12 @@ const Header = () => {
                                 <motion.div
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
+                                    initial={shouldAnimate ? { opacity: 0, x: 20 } : { opacity: 1, x: 0 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ 
+                                        duration: shouldAnimate ? 0.3 : 0,
+                                        delay: shouldAnimate ? 0.2 : 0 
+                                    }}
                                 >
                                     <Button 
                                         variant="outline" 
@@ -91,28 +111,36 @@ const Header = () => {
                             </SignedOut>
 
                             <SignedIn>
-                                
-                                <UserButton
-                                    appearance={{
-                                        elements: {
-                                            avatarBox: 'w-10 h-10 ring-2 ring-blue-500/20 hover:ring-blue-500/40 transition-all duration-300',
-                                            userButtonPopover: 'backdrop-blur-md bg-background/80 border border-blue-500/10 shadow-lg',
-                                        },
+                                <motion.div
+                                    initial={shouldAnimate ? { opacity: 0 } : { opacity: 1 }}
+                                    animate={{ opacity: 1 }}
+                                    transition={{ 
+                                        duration: shouldAnimate ? 0.3 : 0,
+                                        delay: shouldAnimate ? 0.2 : 0 
                                     }}
                                 >
-                                    <UserButton.MenuItems>
-                                        <UserButton.Link
-                                            label="Saved Notes"
-                                            labelIcon={<Book size={15} />}
-                                            href="/saved-notes"
-                                        />
-                                        <UserButton.Link
-                                            label="Saved Resources"
-                                            labelIcon={<Link2 size={15} />}
-                                            href="/saved-resources"
-                                        />
-                                    </UserButton.MenuItems>
-                                </UserButton>
+                                    <UserButton
+                                        appearance={{
+                                            elements: {
+                                                avatarBox: 'w-10 h-10 ring-2 ring-blue-500/20 hover:ring-blue-500/40 transition-all duration-300',
+                                                userButtonPopover: 'backdrop-blur-md bg-background/80 border border-blue-500/10 shadow-lg',
+                                            },
+                                        }}
+                                    >
+                                        <UserButton.MenuItems>
+                                            <UserButton.Link
+                                                label="Saved Notes"
+                                                labelIcon={<Book size={15} />}
+                                                href="/saved-notes"
+                                            />
+                                            <UserButton.Link
+                                                label="Saved Resources"
+                                                labelIcon={<Link2 size={15} />}
+                                                href="/saved-resources"
+                                            />
+                                        </UserButton.MenuItems>
+                                    </UserButton>
+                                </motion.div>
                             </SignedIn>
                         </div>
                     </div>

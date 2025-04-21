@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { isAndroid } from "react-device-detect";
 import { useUser } from "@clerk/clerk-react";
 import { ShineBorder } from "./magicui/shine-border";
+import { getDailyNugget } from "../data/codeNuggets";
 
 const NeonCircles = () => (
   <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
@@ -189,6 +190,7 @@ const CodeBlock = () => {
     </motion.div>
   );
 };
+
 const HeroSection = () => {
   const navigate = useNavigate();
   const { user, isSignedIn } = useUser();
@@ -196,11 +198,19 @@ const HeroSection = () => {
     return sessionStorage.getItem("hasSeenHeroSection") === "true";
   });
 
+  const [dailyNugget, setDailyNugget] = useState("");
+  const [showNugget, setShowNugget] = useState(true);
+
   useEffect(() => {
     if (!hasSeenHero) {
       sessionStorage.setItem("hasSeenHeroSection", "true");
       setHasSeenHero(true);
     }
+  }, []);
+
+  useEffect(() => {
+    // Get the daily nugget from our data module
+    setDailyNugget(getDailyNugget());
   }, []);
 
   // Function to capitalize first letter only
@@ -253,6 +263,7 @@ const HeroSection = () => {
               </>
             )}
           </p>
+
           <div className={`flex flex-col sm:flex-row gap-4 justify-center items-center  ${
             !isAndroid && !hasSeenHero ? "animate-fade-in [animation-delay:400ms]" : ""
           }`}>
@@ -326,6 +337,62 @@ const HeroSection = () => {
 
       {/* Bottom black gradient shadow for seamless look */}
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent to-[#09090b] z-0" />
+
+      {showNugget && (
+        <motion.div 
+          className="hidden sm:block absolute right-50 top-24 z-50 max-w-[80vw]"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.8 }}
+          transition={{ duration: 0.3 }}
+        >
+          <div className="group relative">
+            {/* Glow effect */}
+            <div className="absolute -inset-1.5 rounded-full bg-gradient-to-r from-cyan-500/40 via-primary/40 to-fuchsia-500/40 blur-sm opacity-50 lg:opacity-70 group-hover:opacity-100 transition-opacity duration-300" />
+            
+            {/* Desktop version (pill style with ellipsis) */}
+            <div className="flex relative items-center gap-2 bg-gradient-to-br from-black/90 to-black/80 backdrop-blur-lg py-2 pl-2 pr-4 rounded-full border border-primary/30 shadow-lg hover:shadow-primary/20 transition-shadow duration-300">
+              <div className="h-6 w-6 rounded-full bg-gradient-to-br from-blue-500 via-primary to-fuchsia-500 flex items-center justify-center animate-pulse">
+                <span className="text-white text-xs">💡</span>
+              </div>
+              
+              <div className="max-w-[80vw] overflow-hidden">
+                <p className="text-xs text-white whitespace-nowrap overflow-hidden text-ellipsis">
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-primary font-medium">Daily Code Nugget:</span> {dailyNugget}
+                </p>
+              </div>
+
+              <button 
+                className="absolute -top-1.5 -right-1.5 text-gray-400 hover:text-white bg-black/90 hover:bg-gradient-to-br hover:from-blue-500/20 hover:to-primary/20 rounded-full w-5 h-5 flex items-center justify-center border border-primary/40 hover:border-primary/60 transition-all duration-200"
+                onClick={() => setShowNugget(false)}
+                aria-label="Close"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+            
+            {/* Animated shine effect */}
+            <motion.div 
+              className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              style={{
+                background: "linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent)",
+                backgroundSize: "200% 100%",
+              }}
+              animate={{
+                backgroundPosition: ["200% 0", "-200% 0"],
+              }}
+              transition={{
+                duration: 1.5,
+                repeat: Infinity,
+                repeatType: "loop",
+              }}
+            />
+          </div>
+        </motion.div>
+      )}
     </section>
   );
 };

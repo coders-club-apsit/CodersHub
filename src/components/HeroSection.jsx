@@ -216,9 +216,6 @@ const HeroSection = () => {
     // Get the daily nugget from our data module
     setDailyNugget(getDailyNugget());
     
-    // Check if user has dismissed the nugget in this session
-    const hasUserDismissed = sessionStorage.getItem("nuggetDismissed") === "true";
-    setShowNugget(!hasUserDismissed);
   }, []);
 
   useEffect(() => {
@@ -417,7 +414,6 @@ const HeroSection = () => {
                 className="absolute -top-1.5 -right-1.5 text-gray-400 hover:text-white bg-black/90 hover:bg-gradient-to-br hover:from-blue-500/20 hover:to-primary/20 rounded-full w-5 h-5 flex items-center justify-center border border-primary/40 hover:border-primary/60 transition-all duration-200"
                 onClick={() => {
                   setShowNugget(false);
-                  sessionStorage.setItem("nuggetDismissed", "true");
                 }}
                 aria-label="Close"
               >

@@ -35,7 +35,7 @@ const ScrollToTop = () => {
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
           onClick={scrollToTop}
-          className="fixed bottom-8 right-8 z-50 p-3 rounded-full bg-primary/10 border border-primary/20 backdrop-blur-sm hover:bg-primary/20 hover:border-primary/30 transition-all duration-300 group"
+          className="z-50 p-3 rounded-full bg-primary/10 border border-primary/20 backdrop-blur-sm hover:bg-primary/20 hover:border-primary/30 transition-all duration-300 group"
         >
           <ChevronUp className="w-5 h-5 text-primary group-hover:text-primary/80" />
         </motion.button>

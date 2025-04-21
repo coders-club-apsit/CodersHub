@@ -67,30 +67,59 @@
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
-  /* Customize scrollbar for Webkit browsers */
+  /* Enhanced scrollbar styles */
+  /* Customize scrollbar for Webkit browsers (Chrome, Safari, Edge) */
   ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-transparent;
+    @apply bg-transparent dark:bg-black/20 rounded-full;
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-transparent hover:bg-primary/30 rounded-full transition-colors;
+    @apply bg-primary/20 hover:bg-primary/40 rounded-full transition-all duration-300 border border-transparent backdrop-blur-sm;
   }
 
-  /* Customize scrollbar for Firefox */
+  ::-webkit-scrollbar-corner {
+    @apply bg-transparent;
+  }
+
+  /* Scrollbar hover effects */
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-primary/50 shadow-[0_0_8px_rgba(var(--primary)/0.4)];
+  }
+
+  /* Custom scrollbar for Firefox */
   * {
     scrollbar-width: thin;
-    scrollbar-color: hsl(var(--primary) / 0.2) transparent;
+    scrollbar-color: hsl(var(--primary) / 0.3) transparent;
   }
+
+  /* For code blocks and pre elements with more visible scrollbars */
+  pre::-webkit-scrollbar,
+  code::-webkit-scrollbar,
+  .code-block::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  pre::-webkit-scrollbar-thumb,
+  code::-webkit-scrollbar-thumb,
+  .code-block::-webkit-scrollbar-thumb {
+    @apply bg-primary/30 hover:bg-primary/60 rounded-full border-none;
+  }
+
+  pre::-webkit-scrollbar-track,
+  code::-webkit-scrollbar-track,
+  .code-block::-webkit-scrollbar-track {
+    @apply bg-black/10 dark:bg-white/5 rounded-full;
+  }
+
   .theme {
     --animate-shine: shine var(--duration) infinite linear;
-
   }
-
 }
 
 @layer base {
@@ -111,33 +140,7 @@
   body {
     @apply overflow-y-scroll;
   }
-
-  /* Consistent scrollbar styling */
-  ::-webkit-scrollbar {
-    width: 10px;
-  }
-
-  ::-webkit-scrollbar-track {
-    @apply bg-background/50;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    @apply bg-primary/10 rounded-full hover:bg-primary/20 transition-colors;
-  }
 }
-
-/* @layer base {
-  .prose-invert {
-    --tw-prose-body: theme('colors.gray.300');
-    --tw-prose-headings: theme('colors.white');
-    --tw-prose-links: theme('colors.primary.500');
-    --tw-prose-bold: theme('colors.white');
-    --tw-prose-bullets: theme('colors.gray.500');
-    --tw-prose-quotes: theme('colors.gray.200');
-    --tw-prose-quote-borders: theme('colors.primary.700');
-
-  }
-} */
 
 @layer utilities {
   .glass {

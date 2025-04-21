@@ -380,7 +380,7 @@ const HeroSection = () => {
         >
           <div className="group relative">
             {/* Glow effect */}
-            <div className="absolute -inset-1.5 rounded-full bg-gradient-to-r from-cyan-500/40 via-primary/40 to-fuchsia-500/40 blur-sm opacity-50 lg:opacity-70 group-hover:opacity-100 transition-opacity duration-300" />
+            <div className="absolute -inset-1.5 rounded-full bg-gradient-to-r from-cyan-500/40 via-primary/40 to-fuchsia-500/40 blur-md opacity-50 lg:opacity-70 group-hover:opacity-100 transition-opacity duration-300" />
             
             {/* Desktop version (pill style with ellipsis) */}
             <div className="flex relative items-center gap-2 bg-gradient-to-br from-black/90 to-black/80 backdrop-blur-lg py-2 pl-2 pr-4 rounded-full border border-primary/30 shadow-lg hover:shadow-primary/20 transition-shadow duration-300">

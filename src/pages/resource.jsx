@@ -51,6 +51,70 @@ const ResourcesPage = () => {
     }
   }, [user]);
 
+  useEffect(() => {
+    // Fix for header anchor links being hidden under navbar
+    const handleHashLinkClick = () => {
+      if (window.location.hash) {
+        // Delay execution slightly to ensure the browser has time to find the element
+        setTimeout(() => {
+          const id = window.location.hash.substring(1);
+          const element = document.getElementById(id);
+          
+          if (element) {
+            // Calculate proper scroll position with offset for the navbar
+            const navbarHeight = 100; // This should match your navbar height plus some padding
+            const elementPosition = element.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - navbarHeight;
+            
+            // Smooth scroll to the adjusted position
+            window.scrollTo({
+              top: offsetPosition,
+              behavior: "smooth",
+            });
+          }
+        }, 100);
+      }
+    };
+    
+    // Run once on mount (for direct URL access with hash)
+    handleHashLinkClick();
+    
+    // Add event listener for clicks on anchor links
+    const handleAnchorClick = (e) => {
+      const target = e.target.closest('a');
+      if (target && target.hash && target.hash.startsWith('#') && target.getAttribute('href').startsWith('#')) {
+        e.preventDefault();
+        
+        // Update the URL without scrolling (browser default behavior)
+        history.pushState(null, null, target.hash);
+        
+        // Get the element
+        const id = target.hash.substring(1);
+        const element = document.getElementById(id);
+        
+        if (element) {
+          // Calculate proper scroll position with offset for the navbar
+          const navbarHeight = 100; // Adjust as needed
+          const elementPosition = element.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.pageYOffset - navbarHeight;
+          
+          // Smooth scroll to the element
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth",
+          });
+        }
+      }
+    };
+    
+    document.addEventListener('click', handleAnchorClick);
+    
+    // Clean up
+    return () => {
+      document.removeEventListener('click', handleAnchorClick);
+    };
+  }, []);
+
   const { data: resources, isLoading: loadingResources } = useQuery({
     queryKey: ["resource", id],
     queryFn: async () => {
@@ -84,7 +148,6 @@ const ResourcesPage = () => {
                 ${indexCollapsed ? "p-0" : "p-4"}
               `}
             >
-
               <button
                 className={`
                   absolute top-6 -right-5 z-30
@@ -111,21 +174,26 @@ const ResourcesPage = () => {
                   <ChevronLeft size={22} className="text-primary" />
                 )}
               </button>
+              
               {!indexCollapsed && (
-                <div className="mt-2">
+                <div className="mt-2 flex flex-col h-full">
                   <h2 className="text-lg font-semibold mb-3 text-primary">Index</h2>
-                  <ul className="space-y-2">
-                    {resourceIndex.map((item, i) => (
-                      <li key={item.href}>
-                        <a
-                          href={item.href}
-                          className="text-sm text-muted-foreground hover:text-primary transition-colors"
-                        >
-                          {i + 1}. {item.label}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
+                  
+                  {/* Scrollable container with custom scrollbar */}
+                  <div className="overflow-y-auto pr-2 max-h-[calc(100vh-200px)] sidebar-scrollbar">
+                    <ul className="space-y-2">
+                      {resourceIndex.map((item, i) => (
+                        <li key={item.href}>
+                          <a
+                            href={item.href}
+                            className="text-sm text-muted-foreground hover:text-primary transition-colors block py-1"
+                          >
+                            {i + 1}. {item.label}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
               )}
             </div>
@@ -215,18 +283,19 @@ const ResourcesPage = () => {
           </motion.div>
         </div>
       </div>
-
+      <div className="fixed bottom-4 right-8 z-50 flex flex-col gap-4 items-center">
       {isAdmin && (
         <Link
-          to={`/resource/edit/${id}`}
-          className="fixed bottom-24 right-8 z-50 flex items-center gap-2 px-3 py-3 rounded-full bg-primary text-white shadow-lg hover:bg-primary/90 transition-all text-base font-semibold"
-          title="Edit Note"
+        to={`/resource/edit/${id}`}
+          className="flex items-center gap-2 px-3 py-3 rounded-full bg-primary text-white shadow-lg hover:bg-primary/90 transition-all text-base font-semibold"
+          title="Edit Resource"
           style={{ boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.37)" }}
         >
           <PenBox className="w-5 h-5" />
         </Link>
       )}
       <ScrollToTop />
+      </div>
     </>
   );
 };

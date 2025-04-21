@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
-import { ArrowDown, ArrowRight } from "lucide-react";
+import { ArrowDown, ArrowRight, Lightbulb } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { isAndroid } from "react-device-detect";
 import { useUser } from "@clerk/clerk-react";
@@ -203,6 +203,7 @@ const HeroSection = () => {
   const [scrollY, setScrollY] = useState(0);
   const [nuggetPosition, setNuggetPosition] = useState("absolute");
   const nuggetRef = useRef(null);
+  const [showMobileNugget, setShowMobileNugget] = useState(false);
 
   useEffect(() => {
     if (!hasSeenHero) {
@@ -214,6 +215,10 @@ const HeroSection = () => {
   useEffect(() => {
     // Get the daily nugget from our data module
     setDailyNugget(getDailyNugget());
+    
+    // Check if user has dismissed the nugget in this session
+    const hasUserDismissed = sessionStorage.getItem("nuggetDismissed") === "true";
+    setShowNugget(!hasUserDismissed);
   }, []);
 
   useEffect(() => {
@@ -359,6 +364,19 @@ const HeroSection = () => {
       {/* Bottom black gradient shadow for seamless look */}
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent to-[#09090b] z-0" />
 
+      {/* Mobile Toggle Button - Fixed position with improved touch area */}
+      <motion.button
+        className="sm:hidden fixed bottom-8 right-4 z-50 bg-gradient-to-br from-blue-500 via-primary to-fuchsia-500 p-3 rounded-full shadow-lg border border-primary/30 touch-manipulation"
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        whileTap={{ scale: 0.9 }}
+        onClick={() => setShowMobileNugget(prev => !prev)}
+        aria-label="Toggle Code Nugget"
+      >
+        <Lightbulb className="h-5 w-5 text-white" />
+      </motion.button>
+
+      {/* Desktop version - Hidden on mobile, follows scroll behavior */}
       {showNugget && (
         <motion.div 
           ref={nuggetRef}
@@ -372,7 +390,6 @@ const HeroSection = () => {
           exit={{ opacity: 0, scale: 0.8 }}
           transition={{ 
             duration: 0.3,
-            // Only animate once when first mounted
             type: "spring", 
             stiffness: 260, 
             damping: 20 
@@ -385,7 +402,7 @@ const HeroSection = () => {
             {/* Desktop version (pill style with ellipsis) */}
             <div className="flex relative items-center gap-2 bg-gradient-to-br from-black/90 to-black/80 backdrop-blur-lg py-2 pl-2 pr-4 rounded-full border border-primary/30 shadow-lg hover:shadow-primary/20 transition-shadow duration-300">
               <div className="h-6 w-6 rounded-full bg-gradient-to-br from-blue-500 via-primary to-fuchsia-500 flex items-center justify-center animate-pulse">
-                <span className="text-white text-xs">💡</span>
+              <Lightbulb className="h-4 w-4 text-white" />
               </div>
               
               <div className={`${nuggetPosition === "fixed" ? "max-w-[80vw]" : "max-w-[80vw]"} overflow-hidden`}>
@@ -430,6 +447,92 @@ const HeroSection = () => {
           </div>
         </motion.div>
       )}
+
+      {/* Mobile Nugget - Optimized chat bubble with better touch handling */}
+      <AnimatePresence mode="wait">
+        {showMobileNugget && (
+          <>
+            {/* Invisible backdrop with improved touch handling */}
+            <motion.div
+              className="sm:hidden fixed inset-0 z-40 bg-transparent touch-none"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={() => setShowMobileNugget(false)}
+              aria-label="Close nugget"
+            />
+            
+            <motion.div 
+              className="sm:hidden fixed z-50 touch-manipulation"
+              style={{ 
+                bottom: "70px",
+                right: "16px",
+                maxWidth: "calc(100vw - 32px)",
+                width: "320px"
+              }}
+              initial={{ opacity: 0, scale: 0.5, y: 25 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              transition={{ 
+                type: "spring",
+                damping: 25,
+                stiffness: 350,
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="group relative">
+                {/* Chat bubble pointer arrow */}
+                <div className="absolute w-4 h-4 bg-gradient-to-br from-black/90 to-black/80 border-r border-b border-primary/30 transform rotate-45 -bottom-2 right-6"></div>
+                
+                {/* Optimized glow effect - reduced blur for better performance */}
+                <div className="absolute -inset-1 rounded-xl bg-gradient-to-r from-cyan-500/30 via-primary/30 to-fuchsia-500/30 blur opacity-70 transition-opacity duration-300" />
+                
+                {/* Content container with simplified gradient */}
+                <div className="flex flex-col relative bg-gradient-to-b from-black/90 to-black/80 backdrop-blur-md p-3 rounded-xl border border-primary/30 shadow-lg">
+                  {/* Header with simplified animation */}
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="h-6 w-6 rounded-full bg-gradient-to-br from-blue-500 via-primary to-fuchsia-500 flex items-center justify-center">
+                      <Lightbulb className="h-4 w-4 text-white" />
+                    </div>
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-primary font-medium text-sm">
+                      Daily Code Nugget
+                    </span>
+                  </div>
+                  
+                  {/* Content with optimized scrolling */}
+                  <p className="text-xs text-white/90 max-h-[25vh] overflow-y-auto pr-1 overscroll-contain will-change-scroll">
+                    {dailyNugget}
+                  </p>
+                  
+                  {/* Tap to dismiss hint */}
+                  <p className="text-xs text-white/50 text-center mt-2 italic">
+                    Tap anywhere to dismiss
+                  </p>
+                </div>
+                
+                {/* Simplified shine animation for better performance */}
+                <motion.div 
+                  className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  style={{
+                    background: "linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent)",
+                    backgroundSize: "200% 100%",
+                  }}
+                  animate={{
+                    backgroundPosition: ["100% 0", "-100% 0"],
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    repeatType: "loop",
+                    ease: "linear"
+                  }}
+                />
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </section>
   );
 };

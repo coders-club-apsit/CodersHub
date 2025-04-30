@@ -24,6 +24,9 @@ import EditResources from "./pages/editresources";
 import PrivacyPolicyModal from "./components/PrivacyPolicyModal";
 // import Events from "./pages/events";
 import Educators from "./pages/educators";
+import DomainList from "./pages/domain-list";
+import ProjectsList from "./pages/project-list";
+import ProjectDetail from "./pages/projects";
 
 const App = () => {
   const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
@@ -162,6 +165,30 @@ const App = () => {
           element: (
             <ProtectedRoute>
               <Educators /> 
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "/project-domains",
+          element: (
+            <ProtectedRoute>
+              <DomainList />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "/projects/domain/:id",
+          element: (
+            <ProtectedRoute>
+              <ProjectsList />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "/projects/:id",
+          element: (
+            <ProtectedRoute>
+              <ProjectDetail />
             </ProtectedRoute>
           ),
         },

@@ -1,0 +1,136 @@
+[
+  {
+    "id": "linear-regression-house-prices",
+    "title": "Linear Regression - House Price Prediction",
+    "category": "Machine Learning",
+    "description": "Predict house prices using Linear Regression based on features such as area, number of bedrooms, and location.",
+    "thumbnail": "https://tse3.mm.bing.net/th?id=OIP.jtM285Is-cdlz3CCKOpvMAHaFj&pid=Api&P=0&h=220",
+    "tags": ["Python", "Machine Learning", "Linear Regression", "Data Science"],
+    "steps": [
+      {
+        "title": "Step 1: Problem Statement",
+        "content": "Given historical data about house features and their prices, predict the price of a house using a supervised machine learning model - Linear Regression."
+      },
+      {
+        "title": "Step 2: Dataset Collection",
+        "content": "We used the Kaggle 'House Prices - Advanced Regression Techniques' dataset.",
+        "resources": [
+          {
+            "label": "Kaggle Dataset",
+            "url": "https://www.kaggle.com/c/house-prices-advanced-regression-techniques/data"
+          }
+        ]
+      },
+      {
+        "title": "Step 3: Data Preprocessing",
+        "content": "Handle missing values, encode categorical variables, and normalize features.",
+        "code": {
+          "language": "python",
+          "snippet": "df.fillna(df.mean(), inplace=True)\ndf = pd.get_dummies(df)\nscaler = StandardScaler()\ndf_scaled = scaler.fit_transform(df)"
+        }
+      },
+      {
+        "title": "Step 4: Model Training",
+        "content": "Train the model using scikit-learn's LinearRegression.",
+        "code": {
+          "language": "python",
+          "snippet": "from sklearn.linear_model import LinearRegression\nmodel = LinearRegression()\nmodel.fit(X_train, y_train)"
+        }
+      },
+      {
+        "title": "Step 5: Evaluation",
+        "content": "Evaluate using metrics like Mean Squared Error (MSE) and R² Score.",
+        "code": {
+          "language": "python",
+          "snippet": "from sklearn.metrics import mean_squared_error, r2_score\npredictions = model.predict(X_test)\nprint(mean_squared_error(y_test, predictions))\nprint(r2_score(y_test, predictions))"
+        }
+      },
+      {
+        "title": "Step 6: Conclusion",
+        "content": "Linear Regression gives a good baseline model for house price prediction. Further improvement can be done using advanced regression models."
+      }
+    ],
+    "references": [
+      {
+        "label": "Scikit-learn Linear Regression Docs",
+        "url": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html"
+      },
+      {
+        "label": "Pandas Documentation",
+        "url": "https://pandas.pydata.org/docs/"
+      },
+      {
+        "label": "Kaggle Notebooks - House Price",
+        "url": "https://www.kaggle.com/code"
+      }
+    ],
+    "githubRepo": "https://github.com/yourusername/house-price-linear-regression",
+    "liveDemo": null,
+    "createdAt": "2025-04-29"
+  },
+  {
+    "id": "logistic-regression-cancer-detection",
+    "title": "Logistic Regression - Cancer Detection",
+    "category": "Machine Learning",
+    "description": "Build a classification model using Logistic Regression to predict whether a tumor is benign or malignant.",
+    "thumbnail": "https://tse2.mm.bing.net/th?id=OIP.fGTe_eZxF2k96c-dxsZpngHaFz&pid=Api&P=0&h=220",
+    "tags": ["Python", "Machine Learning", "Logistic Regression", "Classification"],
+    "steps": [
+      {
+        "title": "Step 1: Problem Statement",
+        "content": "Classify tumors into benign or malignant categories using Logistic Regression based on patient diagnostic data."
+      },
+      {
+        "title": "Step 2: Dataset Collection",
+        "content": "Used the Breast Cancer Wisconsin Diagnostic dataset available from scikit-learn.",
+        "resources": [
+          {
+            "label": "UCI Machine Learning Repository",
+            "url": "https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+%28Diagnostic%29"
+          }
+        ]
+      },
+      {
+        "title": "Step 3: Data Preprocessing",
+        "content": "Handle missing values, normalize the dataset, and split into training and test sets.",
+        "code": {
+          "language": "python",
+          "snippet": "from sklearn.datasets import load_breast_cancer\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.model_selection import train_test_split\n\ncancer = load_breast_cancer()\nX = cancer.data\ny = cancer.target\n\nscaler = StandardScaler()\nX_scaled = scaler.fit_transform(X)\n\nX_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)"
+        }
+      },
+      {
+        "title": "Step 4: Model Training",
+        "content": "Train the model using scikit-learn's LogisticRegression.",
+        "code": {
+          "language": "python",
+          "snippet": "from sklearn.linear_model import LogisticRegression\nmodel = LogisticRegression()\nmodel.fit(X_train, y_train)"
+        }
+      },
+      {
+        "title": "Step 5: Evaluation",
+        "content": "Evaluate using metrics such as Accuracy, Precision, Recall, and F1 Score.",
+        "code": {
+          "language": "python",
+          "snippet": "from sklearn.metrics import classification_report, accuracy_score\npredictions = model.predict(X_test)\nprint(accuracy_score(y_test, predictions))\nprint(classification_report(y_test, predictions))"
+        }
+      },
+      {
+        "title": "Step 6: Conclusion",
+        "content": "Logistic Regression provides a strong baseline for binary classification tasks like cancer detection. Model accuracy and interpretability make it suitable for medical applications."
+      }
+    ],
+    "references": [
+      {
+        "label": "Scikit-learn Logistic Regression Docs",
+        "url": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html"
+      },
+      {
+        "label": "Breast Cancer Dataset Info",
+        "url": "https://scikit-learn.org/stable/datasets/toy_dataset.html#breast-cancer-dataset"
+      }
+    ],
+    "githubRepo": "https://github.com/yourusername/cancer-detection-logistic-regression",
+    "liveDemo": null,
+    "createdAt": "2025-04-29"
+  }
+]

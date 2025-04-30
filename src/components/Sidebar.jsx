@@ -15,7 +15,7 @@ import {
   Award,
   AwardIcon,
   LucideAward,
-  Calendar,
+  Users,
 } from "lucide-react";
 import { SignedIn, SignedOut, SignIn, UserButton } from "@clerk/clerk-react";
 import { PenBox, NotebookPen, Save } from "lucide-react";
@@ -35,6 +35,15 @@ import { Link } from "react-router-dom";
 import { SignOutButton } from "@clerk/clerk-react";
 import { FaAward } from "react-icons/fa";
 
+const routes = [
+  { path: "/", icon: HouseIcon, label: "Home" },
+  { path: "/notes", icon: Book, label: "Notes" },
+  { path: "/resources", icon: LinkIcon, label: "Resources" },
+  { path: "/project-domains", icon: LucideAward, label: "Projects" },
+  // { path: "/events", icon: Calendar, label: "Events" },
+  { path: "/educators", icon: Users, label: "Educators", color: "text-violet-500" },
+  { path: "/about-us", icon: Info, label: "About us" },
+];
 
 export function Sidebar() {
   const { state } = useSidebar();
@@ -76,14 +85,7 @@ export function Sidebar() {
       <SidebarContent className="bg-black/10 space-y-4">
         <SignedIn>
         <SidebarMenu className="space-y-2 p-2">
-            {[
-              { path: "/", icon: HouseIcon, label: "Home" },
-              { path: "/notes", icon: Book, label: "Notes" },
-              { path: "/resources", icon: LinkIcon, label: "Resources" },
-              { path: "/events", icon: Calendar, label: "Events" },
-              { path: "/about-us", icon: Info, label: "About us" },
-              
-            ].map(({ path, icon: Icon, label }) => (
+            {routes.map(({ path, icon: Icon, label }) => (
               <SidebarMenuItem key={path}>
                 <SidebarMenuButton asChild>
                   <Link to={path}>
@@ -110,40 +112,43 @@ export function Sidebar() {
         
       </SidebarContent>
       <SidebarFooter className="border-t border-primary/10 bg-black/20 space-y-2 p-2">
-      {isAdmin && (
-          <div className="space-y-3 mb-2">
-            {[
-              { path: "/add-notes", icon: PenBox, label: "Add Notes" },
-              { path: "/add-resources", icon: LinkIcon, label: "Add Resources" },
-            ].map(({ path, icon: Icon, label }) => (
-              <Link key={path} to={path}>
-                <Button
-                  variant="ghost"
-                  className="w-full justify-start text-base font-medium
-                    text-foreground hover:text-primary hover:bg-primary/5
-                    transition-all duration-200 ease-in-out"
-                >
-                  <Icon className="mr-3 h-5 w-5 transition-transform group-hover:scale-110" />
-                  {label}
-                </Button>
-              </Link>
-            ))}
-            <SignOutButton>
-          <Button
-            variant="ghost"
-            className="w-full justify-start text-base font-medium
-              text-foreground hover:text-red-500 hover:bg-red-500/5
-              transition-all duration-200 ease-in-out group"
-          >
-            <LogOut className="mr-3 h-5 w-5 transition-transform group-hover:scale-110" />
-            Logout
-          </Button>
-        </SignOutButton>
-          </div>
-        )}
+        <SignedIn>
+          {isAdmin && (
+            <div className="space-y-3 mb-2">
+              {[
+                { path: "/add-notes", icon: PenBox, label: "Add Notes" },
+                { path: "/add-resources", icon: LinkIcon, label: "Add Resources" },
+              ].map(({ path, icon: Icon, label }) => (
+                <Link key={path} to={path}>
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start text-base font-medium
+                      text-foreground hover:text-primary hover:bg-primary/5
+                      transition-all duration-200 ease-in-out"
+                  >
+                    <Icon className="mr-3 h-5 w-5 transition-transform group-hover:scale-110" />
+                    {label}
+                  </Button>
+                </Link>
+              ))}
+            </div>
+          )}
 
-        
+          <SignOutButton>
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-base font-medium
+                text-foreground hover:text-red-500 hover:bg-red-500/5
+                transition-all duration-200 ease-in-out group"
+            >
+              <LogOut className="mr-3 h-5 w-5 transition-transform group-hover:scale-110" />
+              Logout
+            </Button>
+          </SignOutButton>
+        </SignedIn>
       </SidebarFooter>
     </ShadSidebar>
   );
 }
+
+export default Sidebar;

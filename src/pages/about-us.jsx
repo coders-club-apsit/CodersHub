@@ -1,13 +1,11 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@clerk/clerk-react";
 import supabaseClient from "@/utils/supabase";
-import { SidebarProvider } from "@/components/ui/sidebar";
-import { Sidebar } from "@/components/Sidebar";
-import { SideHeader } from "@/components/sidebarhead";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXTwitter, faGithub } from "@fortawesome/free-brands-svg-icons";
 import { LucideLinkedin } from "lucide-react";
 import { motion } from "framer-motion";
+import Header from "@/components/header";
 import TeamMemberSkeleton from "@/components/TeamMemberSkeleton";
 const teamMembers = [
   {
@@ -186,13 +184,9 @@ export default function AboutUs() {
     fetchImages();
   }, [getToken]);
   
-  return (
-    <SidebarProvider>
-      <div className="flex w-full flex-col md:flex-row">
-        <Sidebar />
-        <div className="flex-1 bg-gradient-to-b from-background via-background/95 to-background relative">
-          <SideHeader />
-
+  return (    
+  <div className="relative min-h-screen overflow-hidden " style={{minWidth: "100vw"}}>
+      <Header />
           {/* Background elements */}
           <div className="absolute inset-0 overflow-hidden -z-10">
             <div className="absolute inset-0 bg-grid-white/5 bg-[size:40px_40px]" />
@@ -363,7 +357,5 @@ export default function AboutUs() {
             </motion.div>
           </motion.div>
         </div>
-      </div>
-    </SidebarProvider>
   );
 }

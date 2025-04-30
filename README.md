@@ -1,4 +1,4 @@
-# Coder's Club Website
+# Coder's Hub
 
 Welcome to the official repository of the **Coder's Club** Website! This platform is designed and maintained by the student community of APSIT under the Department of Computer Engineering.
 
@@ -15,22 +15,6 @@ We conduct:
 
 ---
 
-## 🌐 Website Features
-- 🔐 **Authentication**: Login system using college email IDs (e.g., `@apsit.edu.in`)
-- 📜 **Documentation**: A Notion-style documentation system for every session
-- 💻 **Online Compiler**: Supports multiple languages with real-time code execution
-- 🏆 **Contest Portal**: Host and participate in internal coding competitions
-- 📊 **Analytics**: Visualize participation and progress metrics
-
-
----
-
-
-## 🔒 Privacy & License
-This project abides by our [Privacy Policy](./PRIVACY.md) and is licensed under the MIT License.
-
----
-
 ## 📬 Contact Us
 - 📧 Email: codersclub@apsit.edu.in
 - 📸 Instagram: [@codersclub_apsit](https://instagram.com/codersclub_apsit)
@@ -40,4 +24,3 @@ This project abides by our [Privacy Policy](./PRIVACY.md) and is licensed under 
 ---
 
 > _“Code, Collaborate, Conquer!”_ — Coder's Club
-

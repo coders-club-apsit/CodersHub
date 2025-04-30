@@ -1,0 +1,12 @@
+[
+    {
+        "id": "machine-learning",
+        "name": "Machine Learning",
+        "description": "Machine Learning is a field of AI that focuses on building systems that learn from data."
+    },
+    {
+        "id": "web-development",
+        "name": "Web Development",
+        "description": "Web development is the process of building websites and web applications."
+    }
+]

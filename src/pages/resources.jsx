@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useQuery } from "@tanstack/react-query";
 import { getTopics } from "@/api/api-topics";
 import { getResources } from "@/api/api-resources";
+import ScrollToTop from "@/components/ScrollToTop";
 
 const ResourcesListing = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -44,7 +45,7 @@ const ResourcesListing = () => {
 
   return (
     <SidebarProvider>
-      <div className="flex h-screen bg-background text-foreground overflow-hidden w-full">
+      <div className="flex h-screen w-full flex-col md:flex-row">
         <Sidebar />
         <div className="flex flex-col flex-1 overflow-auto">
           <SideHeader searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
@@ -110,6 +111,7 @@ const ResourcesListing = () => {
             )}
           </main>
         </div>
+        <ScrollToTop />
       </div>
     </SidebarProvider>
   );

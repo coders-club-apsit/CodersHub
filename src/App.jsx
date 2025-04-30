@@ -3,6 +3,7 @@ import "./App.css";
 import AppLayout from "./layout/app-layout";
 import LandingPage from "./pages/landingpage";
 import AboutUs from "./pages/aboutus";
+import About from "./pages/about-us";
 import { ThemeProvider } from "@/components/theme-provider";
 import Notes from "./pages/notes";
 import ProtectedRoute from "./components/protected-route";
@@ -21,7 +22,11 @@ import ResourcesPage from "./pages/resource";
 import { useState, useEffect, useCallback, useMemo } from "react";
 import EditResources from "./pages/editresources";
 import PrivacyPolicyModal from "./components/PrivacyPolicyModal";
-import Events from "./pages/events";
+// import Events from "./pages/events";
+import Educators from "./pages/educators";
+import DomainList from "./pages/domain-list";
+import ProjectsList from "./pages/project-list";
+import ProjectDetail from "./pages/projects";
 
 const App = () => {
   const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
@@ -45,6 +50,10 @@ const App = () => {
               path: "/",
               element: <LandingPage />,
             },
+            {
+              path: "/aboutus",
+              element: <About />,
+            },
           ],
         },
         {
@@ -53,7 +62,11 @@ const App = () => {
         },
         {
           path: "/note/edit/:noteId",
-          element: <EditNotes />,
+          element: (
+            <ProtectedRoute adminOnly>
+              <EditNotes />
+            </ProtectedRoute>
+          ),
         },
         {
           path: "/about-us",
@@ -97,12 +110,16 @@ const App = () => {
         },
         {
           path: "/resource/edit/:resourceId",
-          element: <EditResources />,
+          element: (
+            <ProtectedRoute adminOnly>
+              <EditResources />
+            </ProtectedRoute>
+          ),
         },
         {
           path: "/add-notes",
           element: (
-            <ProtectedRoute>
+            <ProtectedRoute adminOnly>
               <AddNotes />
             </ProtectedRoute>
           ),
@@ -110,7 +127,7 @@ const App = () => {
         {
           path: "/add-resources",
           element: (
-            <ProtectedRoute>
+            <ProtectedRoute adminOnly>
               <AddResoures />
             </ProtectedRoute>
           ),
@@ -134,14 +151,6 @@ const App = () => {
             return null;
           },
           element: null,
-        },
-        {
-          path: "/events",
-          element: (
-            <ProtectedRoute>
-              <Events />
-            </ProtectedRoute>
-          ),
         },
       ]),
     [handlePrivacyPolicyOpen]

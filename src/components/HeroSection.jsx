@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { isAndroid } from "react-device-detect";
 import { useUser } from "@clerk/clerk-react";
 import { ShineBorder } from "./magicui/shine-border";
-import { getDailyNugget } from "../data/codeNuggets";
+import { getDailyNugget as getWeeklyNugget } from "../data/codeNuggets";
 
 const NeonCircles = () => (
   <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
@@ -85,7 +85,7 @@ const CodeBlock = () => {
 
   return (
     <motion.div 
-      className="absolute bottom-20 right-10 hidden lg:block"
+      className="absolute bottom-20 left-10 hidden lg:block"
       variants={containerVariants}
       initial={shouldAnimate ? "initial" : "alreadySeen"}
       animate="animate"
@@ -203,6 +203,7 @@ const HeroSection = () => {
   const [scrollY, setScrollY] = useState(0);
   const [nuggetPosition, setNuggetPosition] = useState("absolute");
   const nuggetRef = useRef(null);
+  const [showDesktopNugget, setShowDesktopNugget] = useState(true);
   const [showMobileNugget, setShowMobileNugget] = useState(false);
 
   useEffect(() => {
@@ -214,7 +215,7 @@ const HeroSection = () => {
 
   useEffect(() => {
     // Get the daily nugget from our data module
-    setDailyNugget(getDailyNugget());
+    setDailyNugget(getWeeklyNugget());
     
   }, []);
 
@@ -361,6 +362,19 @@ const HeroSection = () => {
       {/* Bottom black gradient shadow for seamless look */}
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent to-[#09090b] z-0" />
 
+      {/* Desktop Toggle Button */}
+      <motion.button
+        className="hidden sm:flex fixed bottom-8 right-4 z-50 bg-gradient-to-br from-blue-500 via-primary to-fuchsia-500 p-3 rounded-full shadow-lg border border-primary/30"
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        onClick={() => setShowDesktopNugget(prev => !prev)}
+        aria-label="Toggle Code Nugget"
+      >
+        <Lightbulb className="h-5 w-5 text-white" />
+      </motion.button>
+
       {/* Mobile Toggle Button - Fixed position with improved touch area */}
       <motion.button
         className="sm:hidden fixed bottom-8 right-4 z-50 bg-gradient-to-br from-blue-500 via-primary to-fuchsia-500 p-3 rounded-full shadow-lg border border-primary/30 touch-manipulation"
@@ -373,60 +387,64 @@ const HeroSection = () => {
         <Lightbulb className="h-5 w-5 text-white" />
       </motion.button>
 
-      {/* Desktop version - Hidden on mobile, follows scroll behavior */}
-      {showNugget && (
+      {/* Desktop version - Fixed above toggle button */}
+      {showDesktopNugget && (
         <motion.div 
           ref={nuggetRef}
-          className={`hidden sm:block z-50 max-w-[80vw] ${
-            nuggetPosition === "fixed" 
-              ? "fixed top-5 right-50" 
-              : "absolute right-50 top-24"
-          }`}
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.8 }}
+          className="hidden sm:flex fixed bottom-24 right-4 z-50"
+          style={{ 
+            maxWidth: "calc(100vw - 32px)",
+            width: "320px"
+          }}
+          initial={{ opacity: 0, scale: 0.8, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.8, y: 20 }}
           transition={{ 
-            duration: 0.3,
-            type: "spring", 
-            stiffness: 260, 
-            damping: 20 
+            type: "spring",
+            damping: 25,
+            stiffness: 350
           }}
         >
           <div className="group relative">
-            {/* Glow effect */}
-            <div className="absolute -inset-1.5 rounded-full bg-gradient-to-r from-cyan-500/40 via-primary/40 to-fuchsia-500/40 blur-md opacity-50 lg:opacity-70 group-hover:opacity-100 transition-opacity duration-300" />
+            {/* Chat bubble pointer arrow */}
+            <div className="absolute w-4 h-4 bg-gradient-to-br from-black/90 to-black/80 border-r border-b border-primary/30 transform rotate-45 -bottom-2 right-6"></div>
             
-            {/* Desktop version (pill style with ellipsis) */}
-            <div className="flex relative items-center gap-2 bg-gradient-to-br from-black/90 to-black/80 backdrop-blur-lg py-2 pl-2 pr-4 rounded-full border border-primary/30 shadow-lg hover:shadow-primary/20 transition-shadow duration-300">
-              <div className="h-6 w-6 rounded-full bg-gradient-to-br from-blue-500 via-primary to-fuchsia-500 flex items-center justify-center animate-pulse">
-              <Lightbulb className="h-4 w-4 text-white" />
+            {/* Glow effect */}
+            <div className="absolute -inset-1 rounded-xl bg-gradient-to-r from-cyan-500/30 via-primary/30 to-fuchsia-500/30 blur opacity-70 group-hover:opacity-100 transition-opacity duration-300" />
+            
+            {/* Content container */}
+            <div className="flex flex-col relative bg-gradient-to-b from-black/90 to-black/80 backdrop-blur-md p-3 rounded-xl border border-primary/30 shadow-lg">
+              {/* Header */}
+              <div className="flex items-center gap-2 mb-2">
+                <div className="h-6 w-6 rounded-full bg-gradient-to-br from-blue-500 via-primary to-fuchsia-500 flex items-center justify-center">
+                  <Lightbulb className="h-4 w-4 text-white" />
+                </div>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-primary font-medium text-sm">
+                  Weekly Code Nugget
+                </span>
               </div>
               
-              <div className={`${nuggetPosition === "fixed" ? "max-w-[80vw]" : "max-w-[80vw]"} overflow-hidden`}>
-                <p className="text-xs text-white whitespace-nowrap overflow-hidden text-ellipsis">
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-primary font-medium">
-                    {nuggetPosition === "fixed" ? "Daily Code Nugget:" : "Daily Code Nugget:"}
-                  </span> {dailyNugget}
-                </p>
-              </div>
+              {/* Content */}
+              <p className="text-xs text-white/90 max-h-[25vh] overflow-y-auto pr-1 overscroll-contain will-change-scroll">
+                {dailyNugget}
+              </p>
 
+              {/* Close button */}
               <button 
-                className="absolute -top-1.5 -right-1.5 text-gray-400 hover:text-white bg-black/90 hover:bg-gradient-to-br hover:from-blue-500/20 hover:to-primary/20 rounded-full w-5 h-5 flex items-center justify-center border border-primary/40 hover:border-primary/60 transition-all duration-200"
-                onClick={() => {
-                  setShowNugget(false);
-                }}
+                className="absolute -top-2 -right-2 text-gray-400 hover:text-white bg-black/90 hover:bg-gradient-to-br hover:from-blue-500/20 hover:to-primary/20 rounded-full w-6 h-6 flex items-center justify-center border border-primary/40 hover:border-primary/60 transition-all duration-200"
+                onClick={() => setShowDesktopNugget(false)}
                 aria-label="Close"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="18" y1="6" x2="6" y2="18"></line>
                   <line x1="6" y1="6" x2="18" y2="18"></line>
                 </svg>
               </button>
             </div>
             
-            {/* Animated shine effect */}
+            {/* Shine effect */}
             <motion.div 
-              className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
               style={{
                 background: "linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent)",
                 backgroundSize: "200% 100%",

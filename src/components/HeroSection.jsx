@@ -194,6 +194,15 @@ const CodeBlock = () => {
 const HeroSection = () => {
   const navigate = useNavigate();
   const { user, isSignedIn } = useUser();
+
+  // Helper function - moved to top of component
+  const getWeekNumber = (date) => {
+    const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
+    const pastDaysOfYear = (date - firstDayOfYear) / 86400000;
+    return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
+  };
+
+  // State definitions
   const [hasSeenHero, setHasSeenHero] = useState(() => {
     return sessionStorage.getItem("hasSeenHeroSection") === "true";
   });
@@ -203,8 +212,12 @@ const HeroSection = () => {
   const [scrollY, setScrollY] = useState(0);
   const [nuggetPosition, setNuggetPosition] = useState("absolute");
   const nuggetRef = useRef(null);
-  const [showDesktopNugget, setShowDesktopNugget] = useState(true);
+  const [showDesktopNugget, setShowDesktopNugget] = useState(false); // Changed from true to false
   const [showMobileNugget, setShowMobileNugget] = useState(false);
+  const [hasSeenWeeklyNugget, setHasSeenWeeklyNugget] = useState(() => {
+    const currentWeek = getWeekNumber(new Date());
+    return localStorage.getItem(`weeklyNugget_${currentWeek}`) === "seen";
+  });
 
   useEffect(() => {
     if (!hasSeenHero) {
@@ -364,27 +377,69 @@ const HeroSection = () => {
 
       {/* Desktop Toggle Button */}
       <motion.button
-        className="hidden sm:flex fixed bottom-8 right-4 z-50 bg-gradient-to-br from-blue-500 via-primary to-fuchsia-500 p-3 rounded-full shadow-lg border border-primary/30"
+        className="hidden sm:flex fixed bottom-8 right-4 z-[100] bg-gradient-to-br from-blue-500 via-primary to-fuchsia-500 p-3 rounded-full shadow-lg border border-primary/30 relative"
+        style={{ position: 'fixed', transform: 'translateZ(0)' }}  // Force hardware acceleration
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        onClick={() => setShowDesktopNugget(prev => !prev)}
+        onClick={() => {
+          setShowDesktopNugget(prev => !prev);
+          if (!hasSeenWeeklyNugget) {
+            setHasSeenWeeklyNugget(true);
+            const currentWeek = getWeekNumber(new Date());
+            localStorage.setItem(`weeklyNugget_${currentWeek}`, "seen");
+          }
+        }}
         aria-label="Toggle Code Nugget"
       >
         <Lightbulb className="h-5 w-5 text-white" />
+        {!hasSeenWeeklyNugget && (
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"
+          >
+            <motion.div
+              className="absolute inset-0 bg-red-500 rounded-full"
+              animate={{ scale: [1, 1.5, 1] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            />
+          </motion.div>
+        )}
       </motion.button>
 
-      {/* Mobile Toggle Button - Fixed position with improved touch area */}
+      {/* Mobile Toggle Button */}
       <motion.button
-        className="sm:hidden fixed bottom-8 right-4 z-50 bg-gradient-to-br from-blue-500 via-primary to-fuchsia-500 p-3 rounded-full shadow-lg border border-primary/30 touch-manipulation"
+        className="sm:hidden fixed bottom-8 right-4 z-[100] bg-gradient-to-br from-blue-500 via-primary to-fuchsia-500 p-3 rounded-full shadow-lg border border-primary/30 touch-manipulation relative"
+        style={{ position: 'fixed', transform: 'translateZ(0)' }}  // Force hardware acceleration
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         whileTap={{ scale: 0.9 }}
-        onClick={() => setShowMobileNugget(prev => !prev)}
+        onClick={() => {
+          setShowMobileNugget(prev => !prev);
+          if (!hasSeenWeeklyNugget) {
+            setHasSeenWeeklyNugget(true);
+            const currentWeek = getWeekNumber(new Date());
+            localStorage.setItem(`weeklyNugget_${currentWeek}`, "seen");
+          }
+        }}
         aria-label="Toggle Code Nugget"
       >
         <Lightbulb className="h-5 w-5 text-white" />
+        {!hasSeenWeeklyNugget && (
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"
+          >
+            <motion.div
+              className="absolute inset-0 bg-red-500 rounded-full"
+              animate={{ scale: [1, 1.5, 1] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            />
+          </motion.div>
+        )}
       </motion.button>
 
       {/* Desktop version - Fixed above toggle button */}
@@ -503,7 +558,7 @@ const HeroSection = () => {
                 <div className="absolute -inset-1 rounded-xl bg-gradient-to-r from-cyan-500/30 via-primary/30 to-fuchsia-500/30 blur opacity-70 transition-opacity duration-300" />
                 
                 {/* Content container with simplified gradient */}
-                <div className="flex flex-col relative bg-gradient-to-b from-black/90 to-black/80 backdrop-blur-md p-3 rounded-xl border border-primary/30 shadow-lg">
+                <div className="flex flex-col relative bg-gradient-to-b from-black/90 to-black/80 backdrop-blur-md p-3 rounded-xl border border-primary/30 mb-4 shadow-lg">
                   {/* Header with simplified animation */}
                   <div className="flex items-center gap-2 mb-2">
                     <div className="h-6 w-6 rounded-full bg-gradient-to-br from-blue-500 via-primary to-fuchsia-500 flex items-center justify-center">

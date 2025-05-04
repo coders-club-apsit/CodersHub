@@ -270,6 +270,21 @@ const HeroSection = () => {
     },
   } : {};
 
+  // Add useEffect to handle click outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (nuggetRef.current && !nuggetRef.current.contains(event.target) && 
+          showDesktopNugget && !event.target.closest('button')) {
+        setShowDesktopNugget(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showDesktopNugget]);
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       <NeonCircles />
@@ -443,79 +458,70 @@ const HeroSection = () => {
       </motion.button>
 
       {/* Desktop version - Fixed above toggle button */}
-      {showDesktopNugget && (
-        <motion.div 
-          ref={nuggetRef}
-          className="hidden sm:flex fixed bottom-24 right-4 z-50"
-          style={{ 
-            maxWidth: "calc(100vw - 32px)",
-            width: "320px"
-          }}
-          initial={{ opacity: 0, scale: 0.8, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.8, y: 20 }}
-          transition={{ 
-            type: "spring",
-            damping: 25,
-            stiffness: 350
-          }}
-        >
-          <div className="group relative">
-            {/* Chat bubble pointer arrow */}
-            <div className="absolute w-4 h-4 bg-gradient-to-br from-black/90 to-black/80 border-r border-b border-primary/30 transform rotate-45 -bottom-2 right-6"></div>
-            
-            {/* Glow effect */}
-            <div className="absolute -inset-1 rounded-xl bg-gradient-to-r from-cyan-500/30 via-primary/30 to-fuchsia-500/30 blur opacity-70 group-hover:opacity-100 transition-opacity duration-300" />
-            
-            {/* Content container */}
-            <div className="flex flex-col relative bg-gradient-to-b from-black/90 to-black/80 backdrop-blur-md p-3 rounded-xl border border-primary/30 shadow-lg">
-              {/* Header */}
-              <div className="flex items-center gap-2 mb-2">
-                <div className="h-6 w-6 rounded-full bg-gradient-to-br from-blue-500 via-primary to-fuchsia-500 flex items-center justify-center">
-                  <Lightbulb className="h-4 w-4 text-white" />
+      <AnimatePresence>
+        {showDesktopNugget && (
+          <motion.div 
+            ref={nuggetRef}
+            className="hidden sm:flex fixed bottom-24 right-4 z-50"
+            style={{ 
+              maxWidth: "calc(100vw - 32px)",
+              width: "320px"
+            }}
+            initial={{ opacity: 0, scale: 0.8, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.8, y: 20 }}
+            transition={{ 
+              type: "spring",
+              damping: 25,
+              stiffness: 350
+            }}
+          >
+            <div className="group relative">
+              {/* Chat bubble pointer arrow */}
+              <div className="absolute w-4 h-4 bg-gradient-to-br from-black/90 to-black/80 border-r border-b border-primary/30 transform rotate-45 -bottom-2 right-6"></div>
+              
+              {/* Glow effect */}
+              <div className="absolute -inset-1 rounded-xl bg-gradient-to-r from-cyan-500/30 via-primary/30 to-fuchsia-500/30 blur opacity-70 group-hover:opacity-100 transition-opacity duration-300" />
+              
+              {/* Content container */}
+              <div className="flex flex-col relative bg-gradient-to-b from-black/90 to-black/80 backdrop-blur-md p-3 rounded-xl border border-primary/30 shadow-lg">
+                {/* Header */}
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="h-6 w-6 rounded-full bg-gradient-to-br from-blue-500 via-primary to-fuchsia-500 flex items-center justify-center">
+                    <Lightbulb className="h-4 w-4 text-white" />
+                  </div>
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-primary font-medium text-sm">
+                    Weekly Code Nugget
+                  </span>
                 </div>
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-primary font-medium text-sm">
-                  Weekly Code Nugget
-                </span>
+                
+                {/* Content */}
+                <p className="text-xs text-white/90 max-h-[25vh] overflow-y-auto pr-1 overscroll-contain will-change-scroll">
+                  {dailyNugget}
+                </p>
+
               </div>
               
-              {/* Content */}
-              <p className="text-xs text-white/90 max-h-[25vh] overflow-y-auto pr-1 overscroll-contain will-change-scroll">
-                {dailyNugget}
-              </p>
-
-              {/* Close button */}
-              <button 
-                className="absolute -top-2 -right-2 text-gray-400 hover:text-white bg-black/90 hover:bg-gradient-to-br hover:from-blue-500/20 hover:to-primary/20 rounded-full w-6 h-6 flex items-center justify-center border border-primary/40 hover:border-primary/60 transition-all duration-200"
-                onClick={() => setShowDesktopNugget(false)}
-                aria-label="Close"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="18" y1="6" x2="6" y2="18"></line>
-                  <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
-              </button>
+              {/* Shine effect */}
+              <motion.div 
+                className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                style={{
+                  background: "linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent)",
+                  backgroundSize: "200% 100%",
+                }}
+                animate={{
+                  backgroundPosition: ["200% 0", "-200% 0"],
+                }}
+                transition={{
+                  duration: 1.5,
+                  repeat: Infinity,
+                  repeatType: "loop",
+                }}
+              />
             </div>
-            
-            {/* Shine effect */}
-            <motion.div 
-              className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-              style={{
-                background: "linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent)",
-                backgroundSize: "200% 100%",
-              }}
-              animate={{
-                backgroundPosition: ["200% 0", "-200% 0"],
-              }}
-              transition={{
-                duration: 1.5,
-                repeat: Infinity,
-                repeatType: "loop",
-              }}
-            />
-          </div>
-        </motion.div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Mobile Nugget - Optimized chat bubble with better touch handling */}
       <AnimatePresence mode="wait">
@@ -565,7 +571,7 @@ const HeroSection = () => {
                       <Lightbulb className="h-4 w-4 text-white" />
                     </div>
                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-primary font-medium text-sm">
-                      Daily Code Nugget
+                      Weekly Code Nugget
                     </span>
                   </div>
                   

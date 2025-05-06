@@ -168,7 +168,7 @@ const App = () => {
           ),
         },
         {
-          path: "/Blog",
+          path: "/blog",
           element: (
             <ProtectedRoute>
               <Blog/>
@@ -176,7 +176,7 @@ const App = () => {
           ),
         },
         {
-          path: "/Mainblog/:id",
+          path: "/mainblog/:id",
           element: (
             <ProtectedRoute>
               <MainBlog/>

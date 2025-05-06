@@ -24,6 +24,8 @@ import EditResources from "./pages/editresources";
 import PrivacyPolicyModal from "./components/PrivacyPolicyModal";
 // import Events from "./pages/events";
 import Educators from "./pages/educators";
+import Blog from "./components/Blog";
+import MainBlog from "./components/MainBlog";
 
 const App = () => {
   const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
@@ -165,6 +167,23 @@ const App = () => {
             </ProtectedRoute>
           ),
         },
+        {
+          path: "/Blog",
+          element: (
+            <ProtectedRoute>
+              <Blog/>
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "/Mainblog/:id",
+          element: (
+            <ProtectedRoute>
+              <MainBlog/>
+            </ProtectedRoute>
+          ),
+        },
+        
       ]),
     [handlePrivacyPolicyOpen]
   );

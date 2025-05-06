@@ -261,7 +261,8 @@ const getRandomNugget = () => {
 // Get a date-based nugget from a specific category
 const getDailyNugget = (category = null) => {
   const today = new Date();
-  const seed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
+  const weekNumber = getWeekNumber(today); // Get the week number
+  const seed = today.getFullYear() * 100 + weekNumber; // Create seed from year and week
   
   if (category && categorizedNuggets[category]) {
     const categoryNuggets = categorizedNuggets[category];
@@ -269,9 +270,16 @@ const getDailyNugget = (category = null) => {
     return categoryNuggets[nuggetIndex];
   }
   
-  // Return from general list if no category specified or category doesn't exist
+  // Return from general list if no category specified
   const nuggetIndex = seed % codeNuggets.length;
   return codeNuggets[nuggetIndex];
+};
+
+// Helper function to get week number
+const getWeekNumber = (date) => {
+  const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
+  const pastDaysOfYear = (date - firstDayOfYear) / 86400000;
+  return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
 };
 
 // Get a random nugget from a specific category
@@ -297,5 +305,5 @@ export {
   getDailyNugget,
   getRandomNuggetByCategory,
   getNuggetCategories 
-};
+ };
 export default codeNuggets;

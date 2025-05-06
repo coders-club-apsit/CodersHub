@@ -43,6 +43,10 @@ const routes = [
   // { path: "/events", icon: Calendar, label: "Events" },
   { path: "/educators", icon: Users, label: "Our Educators", color: "text-violet-500" },
   // { path: "/about-us", icon: Info, label: "About us" },
+  { path: "/educators", icon: Users, label: "Educators", color: "text-violet-500" },
+  { path: "/about-us", icon: Info, label: "About us" },
+  { path: "/Blog", icon: Cog, label: "Blog" },
+
 
 ];
 

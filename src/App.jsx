@@ -27,6 +27,8 @@ import Educators from "./pages/educators";
 import DomainList from "./pages/domain-list";
 import ProjectsList from "./pages/project-list";
 import ProjectDetail from "./pages/projects";
+import Blog from "./components/Blog";
+import MainBlog from "./components/MainBlog";
 
 const App = () => {
   const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);

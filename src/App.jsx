@@ -171,15 +171,7 @@ const App = () => {
           ),
         },
         {
-          path: "/project-domains",
-          element: (
-            <ProtectedRoute>
-              <DomainList />
-            </ProtectedRoute>
-          ),
-        },
-        {
-          path: "/projects/domain/:id",
+          path: "/blog",
           element: (
             <ProtectedRoute>
               <ProjectsList />
@@ -187,7 +179,7 @@ const App = () => {
           ),
         },
         {
-          path: "/projects/:id",
+          path: "/mainblog/:id",
           element: (
             <ProtectedRoute>
               <ProjectDetail />

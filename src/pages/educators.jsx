@@ -27,7 +27,7 @@ const educators = [
     github: "AvanishVadke",
     whatsapp: "919920938235",
     twitter: "AvanisHCodes_", 
-    expertise: ["Web Development", "React", "Node.js"]
+    expertise: ["MERN", "Android Dev", "Backend (SQL/PostgreSQL/Firebase)"]
   },
   {
     name: "Parth Das",

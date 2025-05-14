@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![Coder's Club Logo](public/logo.png)
+![Coder's Club Logo](public/cc3.png)
 
 [![Website Status](https://img.shields.io/website?url=https%3A%2F%2Fcodersclub.apsit.edu.in&style=for-the-badge)](https://codersclub.apsit.edu.in)
 [![Made with React](https://img.shields.io/badge/Made%20with-React-61DAFB?style=for-the-badge&logo=react)](https://reactjs.org/)

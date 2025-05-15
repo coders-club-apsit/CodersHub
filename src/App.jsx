@@ -24,6 +24,7 @@ import EditResources from "./pages/editresources";
 import PrivacyPolicyModal from "./components/PrivacyPolicyModal";
 // import Events from "./pages/events";
 import Educators from "./pages/educators";
+import NotFound from "./pages/not-found"; // Import the NotFound component
 
 
 const App = () => {
@@ -47,6 +48,10 @@ const App = () => {
             {
               path: "/",
               element: <LandingPage />,
+            },
+            {
+              path: "*",
+              element: <NotFound />,
             },
             {
               path: "/aboutus",
@@ -166,7 +171,7 @@ const App = () => {
             </ProtectedRoute>
           ),
         },
-      ]),
+              ]),
     [handlePrivacyPolicyOpen]
   );
 

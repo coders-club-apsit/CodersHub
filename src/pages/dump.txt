@@ -1,0 +1,1304 @@
+# SQL Intermediate Cheat Sheet
+
+# By Zahid Hamdule (Content Head)
+
+![SQL Logo](https://upload.wikimedia.org/wikipedia/commons/8/87/Sql_data_base_with_logo.png)
+
+---
+
+# Table of Contents
+- [DDL vs DML in SQL](#ddl-vs-dml-in-sql)
+- [DDL - Data Definition Language](#-ddl---data-definition-language)
+  - [CREATE](#-create)
+  - [ALTER](#-alter)
+  - [DROP](#-drop)
+  - [TRUNCATE](#-truncate)
+- [DML - Data Manipulation Language](#-dml---data-manipulation-language)
+  - [INSERT](#-insert)
+  - [SELECT](#-select)
+  - [UPDATE](#-update)
+  - [DELETE](#-delete)
+
+---
+
+## DDL vs DML in SQL
+
+SQL is divided into different categories, and two of the most important are:
+- **DDL**: Data Definition Language — for defining and managing database structures.
+- **DML**: Data Manipulation Language — for managing data within those structures.
+
+---
+
+## DDL - Data Definition Language
+
+| Command | Description |
+|---------|-------------|
+| `CREATE` | Create a new table or database |
+| `ALTER` | Modify existing table structure |
+| `DROP`  | Delete a table or database |
+| `TRUNCATE` | Delete all rows in a table quickly (cannot be rolled back) |
+
+---
+
+### CREATE
+
+**Syntax:**
+```sql
+CREATE TABLE Students (
+  ID INT PRIMARY KEY,
+  Name VARCHAR(100),
+  Age INT,
+  City VARCHAR(100)
+);
+```
+
+> 🏫 *Think of this as laying the foundation for a new classroom where each student will be a row.*
+
+🧾 **After Execution:**
+| ID | Name | Age | City |
+|----|------|-----|------|
+|    |      |     |      |
+
+---
+
+### ALTER
+
+📌 **Use:** Modify a table’s structure
+
+```sql
+ALTER TABLE Students
+ADD Email VARCHAR(100);
+```
+✅ Adds a new column `Email` to the `Students` table.
+
+```sql
+ALTER TABLE Students
+MODIFY Age INT NOT NULL;
+```
+✅ Modifies `Age` column to not allow NULL values.
+
+```sql
+ALTER TABLE Students
+DROP COLUMN City;
+```
+✅ Removes the `City` column.
+
+> 🛠️ *ALTER is like renovating your classroom: adding new desks (columns) or removing old ones!*
+
+🧾 **After Execution:**
+| ID | Name | Age | Email |
+|----|------|-----|-------|
+|    |      |     |       |
+
+---
+
+### DROP
+
+📌 **Use:** Deletes entire table or database
+
+```sql
+DROP TABLE Students;
+```
+✅ This will completely delete the `Students` table and its data.
+
+> ❌ *DROP is like demolishing a classroom — everything is gone, even the structure.*
+
+🧾 **After Execution:**
+🚫 Table `Students` no longer exists.
+
+---
+
+### TRUNCATE
+
+📌 **Use:** Quickly deletes all rows from a table but keeps the structure.
+
+```sql
+CREATE TABLE Students (
+  ID INT PRIMARY KEY,
+  Name VARCHAR(100),
+  Age INT,
+  City VARCHAR(100)
+);
+
+INSERT INTO Students VALUES
+(1, 'Alice', 21, 'New York'),
+(2, 'Bob', 22, 'Chicago');
+
+TRUNCATE TABLE Students;
+```
+✅ Deletes all student records but keeps the `Students` table structure.
+
+> 🧹 *TRUNCATE is like cleaning the classroom thoroughly while keeping the furniture and walls intact.*
+
+🧾 **After Execution:**
+| ID | Name | Age | City |
+|----|------|-----|------|
+|    |      |     |      |
+
+---
+
+## DML - Data Manipulation Language
+
+| Command | Description |
+|---------|-------------|
+| `INSERT` | Add new data into a table |
+| `UPDATE` | Modify existing data |
+| `DELETE` | Remove existing data |
+| `SELECT` | Retrieve data |
+
+📋 **Initial Table: `Students`**
+```sql
+CREATE TABLE Students (
+  ID INT PRIMARY KEY,
+  Name VARCHAR(100),
+  Age INT,
+  City VARCHAR(100)
+);
+```
+
+---
+
+### INSERT
+
+```sql
+INSERT INTO Students (ID, Name, Age, City)
+VALUES (1, 'Alice', 21, 'New York');
+```
+
+> ➕ Adds Alice's record to the Students table.
+
+🧾 **After Execution:**
+| ID | Name  | Age | City     |
+|----|-------|-----|----------|
+| 1  | Alice | 21  | New York |
+
+---
+
+### SELECT
+
+```sql
+SELECT * FROM Students;
+```
+✅ Displays all records from the Students table.
+
+🧾 **Output:**
+| ID | Name  | Age | City     |
+|----|-------|-----|----------|
+| 1  | Alice | 21  | New York |
+
+```sql
+SELECT Name, Age FROM Students WHERE City = 'New York';
+```
+✅ Shows names and ages of students from New York.
+
+🧾 **Output:**
+| Name  | Age |
+|-------|-----|
+| Alice | 21  |
+
+---
+
+### UPDATE
+
+```sql
+UPDATE Students
+SET City = 'Los Angeles'
+WHERE ID = 1;
+```
+✅ Changes Alice's city to Los Angeles.
+
+> 📝 Like correcting a student's address in your record book.
+
+🧾 **After Execution:**
+| ID | Name  | Age | City         |
+|----|-------|-----|--------------|
+| 1  | Alice | 21  | Los Angeles  |
+
+---
+
+### DELETE
+
+```sql
+DELETE FROM Students WHERE ID = 1;
+```
+✅ Removes Alice’s record from the Students table.
+
+> 🗑️ Like erasing a student's data from the system.
+
+🧾 **After Execution:**
+| ID | Name | Age | City |
+|----|------|-----|------|
+|    |      |     |      |
+
+---
+
+# SQL Aggregate Functions, GROUP BY & HAVING
+
+# Table of Contents
+- [Introduction to Aggregate Functions](#introduction-to-aggregate-functions)
+- [Types of Aggregate Functions](#types-of-aggregate-functions)
+- [GROUP BY Clause](#group-by-clause)
+- [HAVING Clause](#having-clause)
+- [Real-life Example Scenario](#real-life-example-scenario)
+
+---
+
+## Introduction to Aggregate Functions
+
+> Aggregate functions perform a calculation on a set of values and return a single value.
+
+These are useful when we want to calculate:
+- Total salary of employees
+- Average marks of students
+- Number of orders placed by a customer, etc.
+
+> Real-life Analogy: Imagine you're the teacher of a class. You want to know the **average score** of the class or the **total number of students** who scored above 90. Aggregate functions help you find that from a big pile of results!
+
+---
+
+## Types of Aggregate Functions
+
+| Function | Description |
+|----------|-------------|
+| `COUNT()` | Returns number of rows |
+| `SUM()` | Returns the sum of values |
+| `AVG()` | Returns the average value |
+| `MIN()` | Returns the minimum value |
+| `MAX()` | Returns the maximum value |
+
+---
+
+### COUNT()
+
+```sql
+SELECT COUNT(*) FROM Students;
+```
+🧾 **Output:**
+> Total number of students: `10`
+
+---
+
+### SUM()
+
+```sql
+SELECT SUM(Marks) FROM Students;
+```
+🧾 **Output:**
+> Total marks scored by students: `880`
+
+---
+
+### AVG()
+
+```sql
+SELECT AVG(Marks) FROM Students;
+```
+🧾 **Output:**
+> Average marks: `88`
+
+---
+
+### MIN() and MAX()
+
+```sql
+SELECT MIN(Marks), MAX(Marks) FROM Students;
+```
+🧾 **Output:**
+| MIN(Marks) | MAX(Marks) |
+|------------|------------|
+| 65         | 98         |
+
+> Helpful when identifying top and bottom scorers!
+
+---
+
+## GROUP BY Clause
+
+> Groups rows that have the same values into summary rows.
+
+```sql
+SELECT City, COUNT(*)
+FROM Students
+GROUP BY City;
+```
+
+🧾 **Output:**
+| City       | COUNT(*) |
+|------------|----------|
+| Mumbai     | 4        |
+| Bangalore  | 3        |
+| Delhi      | 3        |
+
+> Think of it like grouping students by city to see how many come from each city.
+
+---
+
+## HAVING Clause
+
+> HAVING is used to filter records *after* GROUP BY is applied (unlike WHERE which is used before).
+
+```sql
+SELECT City, COUNT(*)
+FROM Students
+GROUP BY City
+HAVING COUNT(*) > 3;
+```
+🧾 **Output:**
+| City   | COUNT(*) |
+|--------|----------|
+| Mumbai | 4        |
+
+> Only shows cities having more than 3 students.
+
+---
+
+## Real-life Example Scenario
+
+Let’s assume we have a table `Orders`:
+
+| OrderID | CustomerName | City      | Amount |
+|---------|---------------|-----------|--------|
+| 1       | Alice         | Mumbai    | 250    |
+| 2       | Bob           | Delhi     | 450    |
+| 3       | Charlie       | Mumbai    | 300    |
+| 4       | David         | Bangalore | 400    |
+| 5       | Eve           | Mumbai    | 150    |
+
+🧩 **Query:**
+```sql
+SELECT City, SUM(Amount)
+FROM Orders
+GROUP BY City
+HAVING SUM(Amount) > 600;
+```
+🧾 **Output:**
+| City   | SUM(Amount) |
+|--------|--------------|
+| Mumbai | 700          |
+
+> This shows cities where total purchase amount exceeds ₹600. Super useful in sales analysis!
+
+---
+
+# SQL JOINS and VIEWS
+
+# Table of Contents
+- [What are JOINS in SQL?](#what-are-joins-in-sql)
+  - [INNER JOIN](#inner-join)
+  - [LEFT JOIN](#left-join)
+  - [RIGHT JOIN](#right-join)
+  - [FULL OUTER JOIN](#full-outer-join)
+- [Real-Life Analogy of JOINS](#real-life-analogy-of-joins)
+- [Example Tables Used](#example-tables-used)
+- [Visualizations of Join Outputs](#visualizations-of-join-outputs)
+- [What are VIEWS in SQL?](#what-are-views-in-sql)
+  - [Creating and Using Views](#creating-and-using-views)
+
+---
+
+## What are JOINS in SQL?
+
+> Joins are used to combine rows from two or more tables based on a related column between them.
+
+**Use Case:** When your data is distributed across multiple tables and you want to fetch meaningful results by linking them.
+
+---
+
+## INNER JOIN
+
+Returns only the rows where there is a match in both tables.
+
+```sql
+SELECT Students.Name, Courses.CourseName
+FROM Students
+INNER JOIN Courses ON Students.CourseID = Courses.CourseID;
+```
+
+**Output: Only students who are enrolled in a course.**
+
+---
+
+## LEFT JOIN
+
+Returns all rows from the left table and matched rows from the right table. If no match, NULLs are returned.
+
+```sql
+SELECT Students.Name, Courses.CourseName
+FROM Students
+LEFT JOIN Courses ON Students.CourseID = Courses.CourseID;
+```
+
+**Output: All students, including those not enrolled in a course.**
+
+---
+
+## RIGHT JOIN
+
+Returns all rows from the right table and matched rows from the left table.
+
+```sql
+SELECT Students.Name, Courses.CourseName
+FROM Students
+RIGHT JOIN Courses ON Students.CourseID = Courses.CourseID;
+```
+
+**Output: All courses, including those that have no students enrolled.**
+
+---
+
+## FULL OUTER JOIN
+
+Combines results of both LEFT and RIGHT joins. Shows all rows from both tables, with NULLs where there is no match.
+
+```sql
+SELECT Students.Name, Courses.CourseName
+FROM Students
+FULL OUTER JOIN Courses ON Students.CourseID = Courses.CourseID;
+```
+
+**Output: All students and all courses, matched where possible.**
+
+---
+
+## Real-Life Analogy of JOINS
+
+Imagine `Students` as people attending events, and `Courses` as the list of events:
+- **INNER JOIN**: Only those who attended events.
+- **LEFT JOIN**: Everyone invited (Students), even if they didn't attend.
+- **RIGHT JOIN**: All events listed, even if no one attended.
+- **FULL OUTER JOIN**: Every invitee and every event, regardless of attendance.
+
+---
+
+## Example Tables Used
+
+### Students Table
+| StudentID | Name     | CourseID |
+|-----------|----------|----------|
+| 1         | Alice    | 101      |
+| 2         | Bob      | NULL     |
+| 3         | Charlie  | 102      |
+
+### Courses Table
+| CourseID | CourseName     |
+|----------|----------------|
+| 101      | Mathematics    |
+| 102      | Science        |
+| 103      | History        |
+
+---
+
+## Visualizations of JOIN Outputs
+
+| JOIN Type     | Resulting Rows                                                                 |
+|---------------|----------------------------------------------------------------------------------|
+| INNER JOIN    | Alice - Mathematics<br>Charlie - Science                                        |
+| LEFT JOIN     | Alice - Mathematics<br>Bob - NULL<br>Charlie - Science                         |
+| RIGHT JOIN    | Alice - Mathematics<br>Charlie - Science<br>NULL - History                     |
+| FULL OUTER    | Alice - Mathematics<br>Bob - NULL<br>Charlie - Science<br>NULL - History       |
+
+---
+
+## What are VIEWS in SQL?
+
+> A **View** is a virtual table based on the result-set of a SQL query.
+
+### Why use VIEWS?
+- Simplify complex queries
+- Enhance security by exposing only selected columns
+- Act as reusable queries
+
+### Creating a View
+```sql
+CREATE VIEW StudentCourseView AS
+SELECT Students.Name, Courses.CourseName
+FROM Students
+INNER JOIN Courses ON Students.CourseID = Courses.CourseID;
+```
+
+### Using the View
+```sql
+SELECT * FROM StudentCourseView;
+```
+
+**Result:**
+| Name    | CourseName   |
+|---------|--------------|
+| Alice   | Mathematics  |
+| Charlie | Science      |
+
+> Views are like windows showing only the portion of the database you want others to see.
+
+---
+
+# SQL String & Set Operations
+
+# Table of Contents
+- [String Functions in SQL](#string-functions-in-sql)
+  - [CONCAT](#concat)
+  - [UPPER & LOWER](#upper--lower)
+  - [LENGTH](#length)
+  - [SUBSTRING](#substring)
+  - [TRIM, LTRIM, RTRIM](#trim-ltrim-rtrim)
+  - [REPLACE](#replace)
+- [Set Operations in SQL](#set-operations-in-sql)
+  - [UNION](#union)
+  - [UNION ALL](#union-all)
+  - [INTERSECT](#intersect)
+  - [EXCEPT / MINUS](#except--minus)
+
+---
+
+## String Functions in SQL
+
+These functions help you manipulate string values inside SQL queries — similar to how you'd manipulate text in real life.
+
+---
+
+### CONCAT
+```sql
+SELECT CONCAT('Zahid', ' ', 'Hamdule') AS FullName;
+```
+🧾 **Output:**
+| FullName        |
+|-----------------|
+| Zahid Hamdule   |
+
+---
+
+### UPPER & LOWER
+```sql
+SELECT UPPER('sql Tutorial') AS Uppercase, LOWER('SQL TUTORIAL') AS Lowercase;
+```
+🧾 **Output:**
+| Uppercase    | Lowercase     |
+|--------------|----------------|
+| SQL TUTORIAL | sql tutorial   |
+
+---
+
+### LENGTH
+```sql
+SELECT LENGTH('Zahid') AS NameLength;
+```
+🧾 **Output:**
+| NameLength |
+|-------------|
+| 5           |
+
+---
+
+### SUBSTRING
+```sql
+SELECT SUBSTRING('ZahidHamdule', 6, 7) AS LastName;
+```
+🧾 **Output:**
+| LastName |
+|-----------|
+| Hamdule   |
+
+---
+
+### TRIM, LTRIM, RTRIM
+```sql
+SELECT TRIM('  Zahid  ') AS Trimmed, LTRIM('  Zahid') AS LeftTrim, RTRIM('Zahid  ') AS RightTrim;
+```
+🧾 **Output:**
+| Trimmed | LeftTrim | RightTrim |
+|---------|----------|------------|
+| Zahid   | Zahid    | Zahid      |
+
+---
+
+### REPLACE
+```sql
+SELECT REPLACE('I love Java', 'Java', 'SQL') AS NewSentence;
+```
+🧾 **Output:**
+| NewSentence  |
+|---------------|
+| I love SQL    |
+
+---
+
+## Set Operations in SQL
+
+Set operations combine results from two or more SELECT statements. Useful in filtering, merging, or comparing datasets.
+
+📋 **Tables:**
+### Students_2023
+| Name    |
+|---------|
+| Zahid   |
+| Ayesha  |
+| Ravi    |
+
+### Students_2024
+| Name    |
+|---------|
+| Ayesha  |
+| Ravi    |
+| Mohan   |
+
+---
+
+### UNION
+Returns **distinct** records from both queries.
+```sql
+SELECT Name FROM Students_2023
+UNION
+SELECT Name FROM Students_2024;
+```
+🧾 **Output:**
+| Name   |
+|--------|
+| Zahid  |
+| Ayesha |
+| Ravi   |
+| Mohan  |
+
+---
+
+### UNION ALL
+Returns **all records** including duplicates.
+```sql
+SELECT Name FROM Students_2023
+UNION ALL
+SELECT Name FROM Students_2024;
+```
+🧾 **Output:**
+| Name   |
+|--------|
+| Zahid  |
+| Ayesha |
+| Ravi   |
+| Ayesha |
+| Ravi   |
+| Mohan  |
+
+---
+
+### INTERSECT
+Returns only common records.
+```sql
+SELECT Name FROM Students_2023
+INTERSECT
+SELECT Name FROM Students_2024;
+```
+🧾 **Output:**
+| Name   |
+|--------|
+| Ayesha |
+| Ravi   |
+
+---
+
+### EXCEPT / MINUS
+Returns rows from the first query that aren't in the second.
+```sql
+SELECT Name FROM Students_2023
+EXCEPT
+SELECT Name FROM Students_2024;
+```
+🧾 **Output:**
+| Name  |
+|-------|
+| Zahid |
+
+> **Note:** Some databases use `MINUS` instead of `EXCEPT` (e.g., Oracle)
+
+---
+
+# Triggers and Nested Queries in SQL
+
+# Table of Contents
+- [What are Triggers in SQL?](#what-are-triggers-in-sql)
+  - [Real-Life Analogy](#real-life-analogy-for-triggers)
+  - [Syntax and Example](#syntax-and-example-for-triggers)
+- [Nested Queries](#nested-queries)
+  - [Single Row Subqueries](#single-row-subqueries)
+  - [Multiple Row Subqueries](#multiple-row-subqueries)
+  - [Correlated Subqueries](#correlated-subqueries)
+
+---
+
+## What are Triggers in SQL?
+
+> A **Trigger** is a set of instructions in SQL that automatically executes in response to specific events on a particular table or view.
+
+**Key Use-Cases:**
+- Automatically logging changes in a table
+- Enforcing complex business rules
+- Maintaining audit trails
+
+### Real-Life Analogy for Triggers
+Imagine a **security camera** in a store:
+- The camera (trigger) activates when someone walks in (event: INSERT).
+- It records footage (action) automatically without needing a person to manually press "record."
+
+### Syntax and Example for Triggers
+
+```sql
+CREATE TRIGGER log_student_insert
+AFTER INSERT ON Students
+FOR EACH ROW
+BEGIN
+   INSERT INTO StudentLog(Name, Action)
+   VALUES (NEW.Name, 'Inserted');
+END;
+```
+
+**Explanation:**
+- This trigger fires **after a new record is inserted** into the `Students` table.
+- It adds a log entry into the `StudentLog` table.
+
+**Table Schema:**
+```sql
+CREATE TABLE StudentLog (
+   Name VARCHAR(50),
+   Action VARCHAR(50)
+);
+```
+
+**What Happens:**
+```sql
+INSERT INTO Students(Name, CourseID) VALUES ('David', 102);
+```
+This will automatically insert:
+```
+David | Inserted
+```
+into the `StudentLog` table.
+
+---
+
+## Nested Queries
+
+> A **Nested Query** (also called a subquery) is a query within another query. It allows us to perform complex filtering, comparisons, and data extraction.
+
+---
+
+### Single Row Subqueries
+These return **a single value**.
+
+```sql
+SELECT Name FROM Students
+WHERE CourseID = (SELECT CourseID FROM Courses WHERE CourseName = 'Science');
+```
+**Result:** Returns names of students enrolled in the course 'Science'.
+
+---
+
+### Multiple Row Subqueries
+These return **multiple values**, often used with `IN`, `ANY`, or `ALL`.
+
+```sql
+SELECT Name FROM Students
+WHERE CourseID IN (SELECT CourseID FROM Courses WHERE CourseName LIKE '%Math%');
+```
+**Result:** Returns students in any course that has 'Math' in its name.
+
+---
+
+### Correlated Subqueries
+These are evaluated **row-by-row** and reference columns from the outer query.
+
+```sql
+SELECT Name FROM Students S
+WHERE EXISTS (
+    SELECT 1 FROM Courses C WHERE C.CourseID = S.CourseID AND C.CourseName = 'Mathematics'
+);
+```
+**Result:** Returns names of students whose `CourseName` is Mathematics.
+
+---
+
+**Nested Query in SELECT Clause Example:**
+```sql
+SELECT Name,
+       (SELECT CourseName FROM Courses WHERE CourseID = Students.CourseID) AS Course
+FROM Students;
+```
+**Result:** Lists students along with their course names using a nested query inside `SELECT`.
+
+---
+
+# Top 20+ SQL Queries Asked in Interviews (With Explanations)
+
+## What to Expect?
+> These SQL queries cover real interview scenarios, ranging from simple SELECTs to complex JOINs, GROUP BY, and subqueries. Each query includes:
+> - **Use-case**
+> - **Query**
+> - **Sample Tables & Output**
+> - **Explanation**
+
+---
+
+## 1. Retrieve all employees from the Employees table.
+
+### Use-case:
+> Basic data retrieval from a table.
+
+```sql
+SELECT * FROM Employees;
+```
+
+### Sample Table - Employees
+| EmpID | Name   | Department | Salary |
+|-------|--------|------------|--------|
+| 1     | Alice  | HR         | 50000  |
+| 2     | Bob    | IT         | 70000  |
+
+### Output:
+| EmpID | Name   | Department | Salary |
+|-------|--------|------------|--------|
+| 1     | Alice  | HR         | 50000  |
+| 2     | Bob    | IT         | 70000  |
+
+**Explanation:**
+> `SELECT *` retrieves all columns and rows from the Employees table.
+
+---
+
+## 2. Get names of employees earning more than ₹60,000.
+
+```sql
+SELECT Name FROM Employees
+WHERE Salary > 60000;
+```
+
+### Output:
+| Name  |
+|-------|
+| Bob   |
+
+**Explanation:**
+> The `WHERE` clause filters rows based on the condition.
+
+---
+
+## 3. Find the highest salary in the Employees table.
+
+```sql
+SELECT MAX(Salary) AS HighestSalary FROM Employees;
+```
+
+### Output:
+| HighestSalary |
+|----------------|
+| 70000         |
+
+**Explanation:**
+> `MAX()` is an aggregate function to find the maximum value in a column.
+
+---
+
+## 4. Get the average salary of employees in each department.
+
+```sql
+SELECT Department, AVG(Salary) AS AverageSalary
+FROM Employees
+GROUP BY Department;
+```
+
+### Sample Table - Employees
+| EmpID | Name   | Department | Salary |
+|-------|--------|------------|--------|
+| 1     | Alice  | HR         | 50000  |
+| 2     | Bob    | IT         | 70000  |
+| 3     | Carol  | IT         | 80000  |
+| 4     | Dave   | HR         | 60000  |
+
+### Output:
+| Department | AverageSalary |
+|------------|----------------|
+| HR         | 55000         |
+| IT         | 75000         |
+
+**Explanation:**
+> `GROUP BY` groups records by department, and `AVG()` calculates average salary within each group.
+
+---
+
+## 5. Find employees whose salary is above the average salary.
+
+```sql
+SELECT Name, Salary FROM Employees
+WHERE Salary > (SELECT AVG(Salary) FROM Employees);
+```
+
+### Output:
+| Name  | Salary |
+|-------|--------|
+| Bob   | 70000  |
+| Carol | 80000  |
+
+**Explanation:**
+> A subquery is used to find the average salary. The outer query then selects employees with salaries above that value.
+
+---
+
+## 6. List employees who don’t belong to the IT department.
+
+```sql
+SELECT * FROM Employees
+WHERE Department != 'IT';
+```
+
+### Output:
+| EmpID | Name  | Department | Salary |
+|-------|-------|------------|--------|
+| 1     | Alice | HR         | 50000  |
+| 4     | Dave  | HR         | 60000  |
+
+**Explanation:**
+> Filters out rows where the department is IT.
+
+---
+
+## 7. Get the number of employees in each department.
+
+### Use-case:
+> Grouping data by department to count employees.
+
+```sql
+SELECT Department, COUNT(*) AS TotalEmployees
+FROM Employees
+GROUP BY Department;
+```
+
+### Sample Table - Employees
+| EmpID | Name   | Department | Salary |
+|-------|--------|------------|--------|
+| 1     | Alice  | HR         | 50000  |
+| 2     | Bob    | IT         | 70000  |
+| 3     | Carol  | HR         | 60000  |
+
+### Output:
+| Department | TotalEmployees |
+|------------|----------------|
+| HR         | 2              |
+| IT         | 1              |
+
+**Explanation:**
+> The `GROUP BY` clause is used to aggregate data per department.
+
+---
+
+## 8. Get the second highest salary from the Employees table.
+
+```sql
+SELECT MAX(Salary) AS SecondHighest
+FROM Employees
+WHERE Salary < (SELECT MAX(Salary) FROM Employees);
+```
+
+### Output:
+| SecondHighest |
+|----------------|
+| 70000         |
+
+**Explanation:**
+> We use a subquery to find the maximum salary and filter it out from the main query to find the second highest.
+
+---
+
+## 9. Retrieve employees with the same department as 'Alice'.
+
+```sql
+SELECT * FROM Employees
+WHERE Department = (
+    SELECT Department FROM Employees
+    WHERE Name = 'Alice'
+);
+```
+
+### Output:
+| EmpID | Name   | Department | Salary |
+|-------|--------|------------|--------|
+| 1     | Alice  | HR         | 50000  |
+| 4     | Dave   | HR         | 60000  |
+
+**Explanation:**
+> This query retrieves the department of Alice and finds all employees in that department.
+
+---
+
+## 10. Find departments with more than one employee.
+
+```sql
+SELECT Department, COUNT(*) AS EmpCount
+FROM Employees
+GROUP BY Department
+HAVING COUNT(*) > 1;
+```
+
+### Sample Table - Employees
+| EmpID | Name   | Department | Salary | JoinDate  |
+|-------|--------|------------|--------|------------|
+| 1     | Alice  | HR         | 50000  | 2023-01-10 |
+| 2     | Bob    | IT         | 60000  | 2023-02-11 |
+| 3     | Carol  | HR         | 55000  | 2023-03-15 |
+| 4     | David  | IT         | 65000  | 2023-04-20 |
+
+### Output:
+| Department | EmpCount |
+|------------|----------|
+| HR         | 2        |
+| IT         | 2        |
+
+**Explanation:**
+> We group employees by department and use `HAVING` to return only those groups with more than one member.
+
+---
+
+## 11. Find employees who joined in the last 30 days.
+
+```sql
+SELECT Name FROM Employees
+WHERE JoinDate >= CURRENT_DATE - INTERVAL 30 DAY;
+```
+
+### Sample Table - Employees
+| EmpID | Name   | JoinDate  |
+|-------|--------|-----------|
+| 1     | Alice  | 2024-03-10 |
+| 2     | Bob    | 2024-04-01 |
+| 3     | Carol  | 2024-04-15 |
+
+### Output (Assuming current date = 2024-04-18):
+| Name   |
+|--------|
+| Bob    |
+| Carol  |
+
+**Explanation:**
+> We filter out employees whose joining date is within the last 30 days using `CURRENT_DATE` and date arithmetic.
+
+---
+
+## 12. Get employees who do not belong to any department.
+
+```sql
+SELECT Name FROM Employees
+WHERE Department IS NULL;
+```
+
+### Sample Table - Employees
+| EmpID | Name   | Department |
+|-------|--------|------------|
+| 1     | Alice  | HR         |
+| 2     | Bob    | NULL       |
+| 3     | Carol  | IT         |
+
+### Output:
+| Name   |
+|--------|
+| Bob    |
+
+**Explanation:**
+> This query returns all employees where the department is not assigned (i.e., `NULL`).
+
+---
+
+## 13. List the second highest salary in the company.
+
+```sql
+SELECT MAX(Salary) AS SecondHighest
+FROM Employees
+WHERE Salary < (SELECT MAX(Salary) FROM Employees);
+```
+
+### Sample Table - Employees
+| EmpID | Name   | Salary |
+|-------|--------|--------|
+| 1     | Alice  | 50000  |
+| 2     | Bob    | 70000  |
+| 3     | Carol  | 65000  |
+
+### Output:
+| SecondHighest |
+|----------------|
+| 65000          |
+
+**Explanation:**
+> We first get the highest salary using a subquery. Then use the main query to get the maximum salary less than the highest — effectively giving us the second highest salary.
+
+---
+
+## 14. Retrieve employees with duplicate names.
+
+```sql
+SELECT Name
+FROM Employees
+GROUP BY Name
+HAVING COUNT(*) > 1;
+```
+
+### Sample Table - Employees
+| EmpID | Name   |
+|-------|--------|
+| 1     | Alice  |
+| 2     | Bob    |
+| 3     | Alice  |
+| 4     | Carol  |
+
+### Output:
+| Name   |
+|--------|
+| Alice  |
+
+**Explanation:**
+> We use `GROUP BY` to group identical names and `HAVING COUNT(*) > 1` to filter only names that appear more than once.
+
+---
+
+## 15. Show all departments and the total salary paid to each.
+
+```sql
+SELECT Department, SUM(Salary) AS TotalSalary
+FROM Employees
+GROUP BY Department;
+```
+
+### Sample Table - Employees
+| EmpID | Name   | Department | Salary |
+|-------|--------|------------|--------|
+| 1     | Alice  | HR         | 50000  |
+| 2     | Bob    | IT         | 60000  |
+| 3     | Carol  | IT         | 70000  |
+
+### Output:
+| Department | TotalSalary |
+|------------|--------------|
+| HR         | 50000        |
+| IT         | 130000       |
+
+---
+
+## 16. Fetch employees whose name starts with 'A' and ends with 'n'.
+
+```sql
+SELECT Name FROM Employees
+WHERE Name LIKE 'A%n';
+```
+
+### Sample Table - Employees
+| EmpID | Name    |
+|-------|---------|
+| 1     | Aaron   |
+| 2     | Alan    |
+| 3     | Adam    |
+| 4     | Angela  |
+
+### Output:
+| Name  |
+|-------|
+| Aaron |
+| Alan  |
+
+**Explanation:**
+> The `LIKE 'A%n'` pattern matches names that start with A and end with n, where `%` represents any characters in between.
+
+---
+
+## 17. Get common records between two tables.
+
+```sql
+SELECT * FROM Employees
+INTERSECT
+SELECT * FROM FormerEmployees;
+```
+
+**Explanation:**
+> The `INTERSECT` operator returns rows that exist in both queries/tables.
+
+---
+
+## 18. Find employees earning more than the average salary.
+
+```sql
+SELECT Name FROM Employees
+WHERE Salary > (SELECT AVG(Salary) FROM Employees);
+```
+
+**Explanation:**
+> Compares each employee’s salary with the average salary and filters out higher earners.
+
+---
+
+## 19. Count employees per joining year.
+
+```sql
+SELECT YEAR(JoinDate) AS JoinYear, COUNT(*) AS TotalEmployees
+FROM Employees
+GROUP BY YEAR(JoinDate);
+```
+
+### Sample Table - Employees
+| EmpID | Name   | JoinDate  |
+|-------|--------|-----------|
+| 1     | Alice  | 2022-03-15 |
+| 2     | Bob    | 2023-04-01 |
+| 3     | Carol  | 2023-06-20 |
+| 4     | David  | 2024-01-05 |
+
+### Output:
+| JoinYear | TotalEmployees |
+|----------|----------------|
+| 2022     | 1              |
+| 2023     | 2              |
+| 2024     | 1              |
+
+---
+
+# Conclusion
+
+## Wrapping Up the SQL Intermediate Journey
+
+Congratulations! 🎉 You've just completed the **Intermediate SQL** section, where you explored real-world use cases and interview-level problems that go beyond the basics of querying.
+
+---
+
+## Key Takeaways:
+
+- Gained hands-on experience with **JOINs**, **GROUP BY**, **HAVING**, and **Aggregate Functions**.
+- Solved real interview queries using **Subqueries**, **Set Operations**, and **Conditional Filters**.
+- Understood the power of **Nested Queries** and real-case scenarios in analytics.
+- Saw how SQL is used in industry to retrieve **meaningful insights** from raw data.
+
+> *This section helps you transition from beginner to confident SQL problem-solver with real-world patterns and logic building.*
+
+---
+
+## Real-Life Analogy
+
+> Imagine SQL as the **brain of a data analyst**:
+>
+> - Tables = Raw Data
+> - Queries = Analytical Thinking
+> - JOINs = Connecting the dots across departments
+> - Aggregates = Summarizing KPIs
+> - Subqueries = Digging deeper before concluding
+
+SQL helps derive meaning from chaos — just like analyzing a business dashboard.
+
+---
+
+## What's Next?
+
+This is just the middle step!
+
+➡️ In the next notes draft — **SQL Advanced Cheat Sheet** — we will dive into:
+- Window Functions (RANK, ROW_NUMBER, etc.)
+- CTEs and Recursive Queries
+- Performance Tuning & Indexing
+- Case-based Interview Scenarios for Data Analysis Roles
+
+> Keep exploring, keep querying, and get closer to **SQL mastery**!
+
+---
+
+<div style="text-align:center; margin-top:30px; color:#6272A4;">
+© Coder's Club | Created by <strong>Zahid Hamdule (Content Head)</strong>
+</div>

@@ -51,6 +51,8 @@ const NotePage = () => {
     enabled: isLoaded,
   });
 
+  
+
   const [mode, setMode] = useState(() => localStorage.getItem('readingMode') || 'compact');
 
   useEffect(() => {
@@ -205,10 +207,11 @@ const NotePage = () => {
           </motion.div>
         </div>
       </div>
+      <div className="fixed bottom-4 right-8 z-50 flex flex-col gap-4 items-center">
       {isAdmin && (
         <Link
           to={`/note/edit/${id}`}
-          className="fixed bottom-24 right-8 z-50 flex items-center gap-2 px-3 py-3 rounded-full bg-primary text-white shadow-lg hover:bg-primary/90 transition-all text-base font-semibold"
+          className="flex items-center gap-2 px-3 py-3 rounded-full bg-primary text-white shadow-lg hover:bg-primary/90 transition-all text-base font-semibold"
           title="Edit Note"
           style={{ boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.37)" }}
         >
@@ -216,6 +219,7 @@ const NotePage = () => {
         </Link>
       )}
       <ScrollToTop />
+      </div>
     </>
   );
 };

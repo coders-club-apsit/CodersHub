@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
-import { ArrowDown, ArrowRight } from "lucide-react";
+import { ArrowDown, ArrowRight, Lightbulb } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { isAndroid } from "react-device-detect";
 import { useUser } from "@clerk/clerk-react";
 import { ShineBorder } from "./magicui/shine-border";
+import { getDailyNugget as getWeeklyNugget } from "../data/codeNuggets";
 
 const NeonCircles = () => (
   <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
@@ -84,7 +85,7 @@ const CodeBlock = () => {
 
   return (
     <motion.div 
-      className="absolute bottom-20 right-10 hidden lg:block"
+      className="absolute bottom-20 left-10 hidden lg:block"
       variants={containerVariants}
       initial={shouldAnimate ? "initial" : "alreadySeen"}
       animate="animate"
@@ -189,11 +190,33 @@ const CodeBlock = () => {
     </motion.div>
   );
 };
+
 const HeroSection = () => {
   const navigate = useNavigate();
   const { user, isSignedIn } = useUser();
+
+  // Helper function - moved to top of component
+  const getWeekNumber = (date) => {
+    const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
+    const pastDaysOfYear = (date - firstDayOfYear) / 86400000;
+    return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
+  };
+
+  // State definitions
   const [hasSeenHero, setHasSeenHero] = useState(() => {
     return sessionStorage.getItem("hasSeenHeroSection") === "true";
+  });
+
+  const [dailyNugget, setDailyNugget] = useState("");
+  const [showNugget, setShowNugget] = useState(true);
+  const [scrollY, setScrollY] = useState(0);
+  const [nuggetPosition, setNuggetPosition] = useState("absolute");
+  const nuggetRef = useRef(null);
+  const [showDesktopNugget, setShowDesktopNugget] = useState(false); // Changed from true to false
+  const [showMobileNugget, setShowMobileNugget] = useState(false);
+  const [hasSeenWeeklyNugget, setHasSeenWeeklyNugget] = useState(() => {
+    const currentWeek = getWeekNumber(new Date());
+    return localStorage.getItem(`weeklyNugget_${currentWeek}`) === "seen";
   });
 
   useEffect(() => {
@@ -201,6 +224,30 @@ const HeroSection = () => {
       sessionStorage.setItem("hasSeenHeroSection", "true");
       setHasSeenHero(true);
     }
+  }, []);
+
+  useEffect(() => {
+    // Get the daily nugget from our data module
+    setDailyNugget(getWeeklyNugget());
+    
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+      
+      // When scroll position reaches the threshold, change position to fixed
+      if (window.scrollY > 75) { // Adjust this threshold as needed
+        setNuggetPosition("fixed");
+      } else {
+        setNuggetPosition("absolute");
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
   // Function to capitalize first letter only
@@ -222,6 +269,21 @@ const HeroSection = () => {
       transition: { duration: 0.3, repeat: Infinity, repeatType: "reverse" },
     },
   } : {};
+
+  // Add useEffect to handle click outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (nuggetRef.current && !nuggetRef.current.contains(event.target) && 
+          showDesktopNugget && !event.target.closest('button')) {
+        setShowDesktopNugget(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showDesktopNugget]);
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
@@ -253,6 +315,7 @@ const HeroSection = () => {
               </>
             )}
           </p>
+
           <div className={`flex flex-col sm:flex-row gap-4 justify-center items-center  ${
             !isAndroid && !hasSeenHero ? "animate-fade-in [animation-delay:400ms]" : ""
           }`}>
@@ -326,6 +389,225 @@ const HeroSection = () => {
 
       {/* Bottom black gradient shadow for seamless look */}
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent to-[#09090b] z-0" />
+
+      {/* Desktop Toggle Button */}
+      <motion.button
+        className="hidden sm:flex fixed bottom-8 right-4 z-[100] bg-gradient-to-br from-blue-500 via-primary to-fuchsia-500 p-3 rounded-full shadow-lg border border-primary/30 relative"
+        style={{ position: 'fixed', transform: 'translateZ(0)' }}  // Force hardware acceleration
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        onClick={() => {
+          setShowDesktopNugget(prev => !prev);
+          if (!hasSeenWeeklyNugget) {
+            setHasSeenWeeklyNugget(true);
+            const currentWeek = getWeekNumber(new Date());
+            localStorage.setItem(`weeklyNugget_${currentWeek}`, "seen");
+          }
+        }}
+        aria-label="Toggle Code Nugget"
+      >
+        <Lightbulb className="h-5 w-5 text-white" />
+        {!hasSeenWeeklyNugget && (
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"
+          >
+            <motion.div
+              className="absolute inset-0 bg-red-500 rounded-full"
+              animate={{ scale: [1, 1.5, 1] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            />
+          </motion.div>
+        )}
+      </motion.button>
+
+      {/* Mobile Toggle Button */}
+      <motion.button
+        className="sm:hidden fixed bottom-8 right-4 z-[100] bg-gradient-to-br from-blue-500 via-primary to-fuchsia-500 p-3 rounded-full shadow-lg border border-primary/30 touch-manipulation relative"
+        style={{ position: 'fixed', transform: 'translateZ(0)' }}  // Force hardware acceleration
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        whileTap={{ scale: 0.9 }}
+        onClick={() => {
+          setShowMobileNugget(prev => !prev);
+          if (!hasSeenWeeklyNugget) {
+            setHasSeenWeeklyNugget(true);
+            const currentWeek = getWeekNumber(new Date());
+            localStorage.setItem(`weeklyNugget_${currentWeek}`, "seen");
+          }
+        }}
+        aria-label="Toggle Code Nugget"
+      >
+        <Lightbulb className="h-5 w-5 text-white" />
+        {!hasSeenWeeklyNugget && (
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"
+          >
+            <motion.div
+              className="absolute inset-0 bg-red-500 rounded-full"
+              animate={{ scale: [1, 1.5, 1] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            />
+          </motion.div>
+        )}
+      </motion.button>
+
+      {/* Desktop version - Fixed above toggle button */}
+      <AnimatePresence>
+        {showDesktopNugget && (
+          <motion.div 
+            ref={nuggetRef}
+            className="hidden sm:flex fixed bottom-24 right-4 z-50"
+            style={{ 
+              maxWidth: "calc(100vw - 32px)",
+              width: "320px"
+            }}
+            initial={{ opacity: 0, scale: 0.8, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.8, y: 20 }}
+            transition={{ 
+              type: "spring",
+              damping: 25,
+              stiffness: 350
+            }}
+          >
+            <div className="group relative">
+              {/* Chat bubble pointer arrow */}
+              <div className="absolute w-4 h-4 bg-gradient-to-br from-black/90 to-black/80 border-r border-b border-primary/30 transform rotate-45 -bottom-2 right-6"></div>
+              
+              {/* Glow effect */}
+              <div className="absolute -inset-1 rounded-xl bg-gradient-to-r from-cyan-500/30 via-primary/30 to-fuchsia-500/30 blur opacity-70 group-hover:opacity-100 transition-opacity duration-300" />
+              
+              {/* Content container */}
+              <div className="flex flex-col relative bg-gradient-to-b from-black/90 to-black/80 backdrop-blur-md p-3 rounded-xl border border-primary/30 shadow-lg">
+                {/* Header */}
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="h-6 w-6 rounded-full bg-gradient-to-br from-blue-500 via-primary to-fuchsia-500 flex items-center justify-center">
+                    <Lightbulb className="h-4 w-4 text-white" />
+                  </div>
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-primary font-medium text-sm">
+                    Weekly Code Nugget
+                  </span>
+                </div>
+                
+                {/* Content */}
+                <p className="text-xs text-white/90 max-h-[25vh] overflow-y-auto pr-1 overscroll-contain will-change-scroll">
+                  {dailyNugget}
+                </p>
+
+              </div>
+              
+              {/* Shine effect */}
+              <motion.div 
+                className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                style={{
+                  background: "linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent)",
+                  backgroundSize: "200% 100%",
+                }}
+                animate={{
+                  backgroundPosition: ["200% 0", "-200% 0"],
+                }}
+                transition={{
+                  duration: 1.5,
+                  repeat: Infinity,
+                  repeatType: "loop",
+                }}
+              />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Mobile Nugget - Optimized chat bubble with better touch handling */}
+      <AnimatePresence mode="wait">
+        {showMobileNugget && (
+          <>
+            {/* Invisible backdrop with improved touch handling */}
+            <motion.div
+              className="sm:hidden fixed inset-0 z-40 bg-transparent touch-none"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={() => setShowMobileNugget(false)}
+              aria-label="Close nugget"
+            />
+            
+            <motion.div 
+              className="sm:hidden fixed z-50 touch-manipulation"
+              style={{ 
+                bottom: "70px",
+                right: "16px",
+                maxWidth: "calc(100vw - 32px)",
+                width: "320px"
+              }}
+              initial={{ opacity: 0, scale: 0.5, y: 25 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              transition={{ 
+                type: "spring",
+                damping: 25,
+                stiffness: 350,
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="group relative">
+                {/* Chat bubble pointer arrow */}
+                <div className="absolute w-4 h-4 bg-gradient-to-br from-black/90 to-black/80 border-r border-b border-primary/30 transform rotate-45 -bottom-2 right-6"></div>
+                
+                {/* Optimized glow effect - reduced blur for better performance */}
+                <div className="absolute -inset-1 rounded-xl bg-gradient-to-r from-cyan-500/30 via-primary/30 to-fuchsia-500/30 blur opacity-70 transition-opacity duration-300" />
+                
+                {/* Content container with simplified gradient */}
+                <div className="flex flex-col relative bg-gradient-to-b from-black/90 to-black/80 backdrop-blur-md p-3 rounded-xl border border-primary/30 mb-4 shadow-lg">
+                  {/* Header with simplified animation */}
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="h-6 w-6 rounded-full bg-gradient-to-br from-blue-500 via-primary to-fuchsia-500 flex items-center justify-center">
+                      <Lightbulb className="h-4 w-4 text-white" />
+                    </div>
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-primary font-medium text-sm">
+                      Weekly Code Nugget
+                    </span>
+                  </div>
+                  
+                  {/* Content with optimized scrolling */}
+                  <p className="text-xs text-white/90 max-h-[25vh] overflow-y-auto pr-1 overscroll-contain will-change-scroll">
+                    {dailyNugget}
+                  </p>
+                  
+                  {/* Tap to dismiss hint */}
+                  <p className="text-xs text-white/50 text-center mt-2 italic">
+                    Tap anywhere to dismiss
+                  </p>
+                </div>
+                
+                {/* Simplified shine animation for better performance */}
+                <motion.div 
+                  className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  style={{
+                    background: "linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent)",
+                    backgroundSize: "200% 100%",
+                  }}
+                  animate={{
+                    backgroundPosition: ["100% 0", "-100% 0"],
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    repeatType: "loop",
+                    ease: "linear"
+                  }}
+                />
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </section>
   );
 };

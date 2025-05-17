@@ -131,6 +131,17 @@ export function Sidebar() {
                   </Button>
                 </Link>
               ))}
+              <Link key="/admin/users" to="/admin/users">
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start text-base font-medium
+                    text-foreground hover:text-primary hover:bg-primary/5
+                    transition-all duration-200 ease-in-out"
+                >
+                  <Users className="mr-3 h-5 w-5 transition-transform group-hover:scale-110" />
+                  Manage Users
+                </Button>
+              </Link>
             </div>
           )}
 

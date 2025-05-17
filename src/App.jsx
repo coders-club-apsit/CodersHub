@@ -25,7 +25,7 @@ import PrivacyPolicyModal from "./components/PrivacyPolicyModal";
 // import Events from "./pages/events";
 import Educators from "./pages/educators";
 import NotFound from "./pages/not-found"; // Import the NotFound component
-
+import UsersAdmin from "./pages/admin/users";
 
 const App = () => {
   const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
@@ -168,6 +168,14 @@ const App = () => {
           element: (
             <ProtectedRoute>
               <Educators /> 
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "/admin/users",
+          element: (
+            <ProtectedRoute adminOnly>
+              <UsersAdmin />
             </ProtectedRoute>
           ),
         },

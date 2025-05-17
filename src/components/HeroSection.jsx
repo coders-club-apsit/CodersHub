@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { ArrowDown, ArrowRight, Lightbulb } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
@@ -7,6 +7,18 @@ import { isAndroid } from "react-device-detect";
 import { useUser } from "@clerk/clerk-react";
 import { ShineBorder } from "./magicui/shine-border";
 import { getDailyNugget as getWeeklyNugget } from "../data/codeNuggets";
+
+// Add this analytics tracking helper function
+const trackEvent = (eventName, eventParams = {}) => {
+  if (window.gtag) {
+    window.gtag('event', eventName, {
+      ...eventParams,
+      timestamp: new Date().toISOString(),
+    });
+  } else {
+    console.log(`Analytics event (gtag not loaded): ${eventName}`, eventParams);
+  }
+};
 
 const NeonCircles = () => (
   <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
@@ -393,12 +405,20 @@ const HeroSection = () => {
       {/* Desktop Toggle Button */}
       <motion.button
         className="hidden sm:flex fixed bottom-8 right-4 z-[100] bg-gradient-to-br from-blue-500 via-primary to-fuchsia-500 p-3 rounded-full shadow-lg border border-primary/30 relative"
-        style={{ position: 'fixed', transform: 'translateZ(0)' }}  // Force hardware acceleration
+        style={{ position: 'fixed', transform: 'translateZ(0)' }}
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => {
+          // Track the event
+          trackEvent('code_nugget_clicked', { 
+            device: 'desktop',
+            nugget_state: showDesktopNugget ? 'closed' : 'opened',
+            is_new: !hasSeenWeeklyNugget
+          });
+          
+          // Original logic
           setShowDesktopNugget(prev => !prev);
           if (!hasSeenWeeklyNugget) {
             setHasSeenWeeklyNugget(true);
@@ -427,11 +447,19 @@ const HeroSection = () => {
       {/* Mobile Toggle Button */}
       <motion.button
         className="sm:hidden fixed bottom-8 right-4 z-[100] bg-gradient-to-br from-blue-500 via-primary to-fuchsia-500 p-3 rounded-full shadow-lg border border-primary/30 touch-manipulation relative"
-        style={{ position: 'fixed', transform: 'translateZ(0)' }}  // Force hardware acceleration
+        style={{ position: 'fixed', transform: 'translateZ(0)' }}
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         whileTap={{ scale: 0.9 }}
         onClick={() => {
+          // Track the event
+          trackEvent('code_nugget_clicked', { 
+            device: 'mobile',
+            nugget_state: showMobileNugget ? 'closed' : 'opened',
+            is_new: !hasSeenWeeklyNugget
+          });
+          
+          // Original logic
           setShowMobileNugget(prev => !prev);
           if (!hasSeenWeeklyNugget) {
             setHasSeenWeeklyNugget(true);

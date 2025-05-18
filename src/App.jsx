@@ -2,7 +2,6 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./App.css";
 import AppLayout from "./layout/app-layout";
 import LandingPage from "./pages/landingpage";
-import AboutUs from "./pages/aboutus";
 import About from "./pages/about-us";
 import { ThemeProvider } from "@/components/theme-provider";
 import Notes from "./pages/notes";
@@ -67,14 +66,6 @@ const App = () => {
           element: (
             <ProtectedRoute adminOnly>
               <EditNotes />
-            </ProtectedRoute>
-          ),
-        },
-        {
-          path: "/about-us",
-          element: (
-            <ProtectedRoute>
-              <AboutUs />
             </ProtectedRoute>
           ),
         },

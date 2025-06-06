@@ -216,6 +216,10 @@
     }
   }
 
+  .calendar-custom{
+    user-select: none;
+  }
+
   /* Calendar Custom Styles */
   .fc-theme-custom {
     --fc-border-color: rgba(59, 130, 246, 0.1);
@@ -584,4 +588,22 @@
       padding-left: 15px;
     }
   }
+}
+
+/* Calendar Core Styles */
+.fc {
+  @apply select-none; 
+}
+
+/* Prevent text selection for specific calendar elements */
+.fc-event-title,
+.fc-event-time,
+.fc-toolbar-title,
+.fc-col-header-cell-cushion,
+.fc-daygrid-day-number {
+  @apply select-none;
+}
+
+.fc .fc-button {
+  @apply select-none;
 }

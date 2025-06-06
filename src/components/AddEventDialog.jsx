@@ -173,7 +173,7 @@ export default function AddEventDialog({ isOpen, onClose, onSubmit }) {
         <Palette className="w-4 h-4" />
         Event Color
       </label>
-      <div className="flex flex-wrap gap-2 justify-center">
+      <div className="flex flex-wrap gap-2 ">
         {Object.entries(ETIQUETTE_COLORS).map(([key, color]) => (
           <motion.button
             key={key}
@@ -208,7 +208,8 @@ export default function AddEventDialog({ isOpen, onClose, onSubmit }) {
       </p>
     </div>
   );return (
-    <Dialog open={isOpen} onOpenChange={onClose}>      <DialogContent 
+    <Dialog open={isOpen} onOpenChange={onClose}>      
+    <DialogContent 
         className="max-w-2xl p-0 bg-black/95 backdrop-blur-xl border-gray-800/50 max-h-[90vh] overflow-hidden"
         style={{
           borderColor: isDefaultTheme ? 'rgba(107, 114, 128, 0.5)' : `${selectedColor}60`,
@@ -271,22 +272,25 @@ export default function AddEventDialog({ isOpen, onClose, onSubmit }) {
             {/* Date & Time */}
             <div className="space-y-4">
               <h3 className="text-lg font-semibold text-white mb-4">Date & Time</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">                {renderField('Start', <Clock className="w-4 h-4" />,                  <Input
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">                
+                {renderField('Start', <Clock className="w-4 h-4" />,                  
+                <Input
                     type="datetime-local"
                     value={formData.start}
                     onChange={e => setFormData({ ...formData, start: e.target.value })}
-                    className={`h-11 text-sm bg-black border-gray-700/50 focus:border-white/60 text-white ${
+                    className={`h-11 w-42 text-sm bg-black border-gray-700/50 focus:border-white/60 text-white ${
                       errors.start ? 'border-red-500' : ''
                     }`}
                     error={errors.start}
                   />
                 )}
 
-                {renderField('End', <Clock className="w-4 h-4" />,                  <Input
+                {renderField('End', <Clock className="w-4 h-4" />,                  
+                <Input
                     type="datetime-local"
                     value={formData.end}
                     onChange={e => setFormData({ ...formData, end: e.target.value })}
-                    className={`h-11 text-sm bg-black border-gray-700/50 focus:border-white/60 text-white ${
+                    className={`h-11 w-42 text-sm bg-black border-gray-700/50 focus:border-white/60 text-white  ${
                       errors.end ? 'border-red-500' : ''
                     }`}
                     error={errors.end}
@@ -341,7 +345,8 @@ export default function AddEventDialog({ isOpen, onClose, onSubmit }) {
                 )}
               </div>
 
-              {renderField('Tags', <Tags className="w-4 h-4" />,                <Input
+              {renderField('Tags', <Tags className="w-4 h-4" />,                
+              <Input
                   value={formData.tags}
                   onChange={e => setFormData({ ...formData, tags: e.target.value })}
                   className="h-11 text-sm bg-black/50 border-gray-700/50 focus:border-white/60 text-white placeholder:text-gray-500"

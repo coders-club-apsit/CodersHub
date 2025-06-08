@@ -117,7 +117,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ### _"Code, Collaborate, Conquer!"_ — Coder's Club
 
-
 Made with ❤️ by CC Devs 
 
 </div>

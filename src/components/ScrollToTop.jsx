@@ -28,7 +28,7 @@ const ScrollToTop = () => {
   return (
     <AnimatePresence>
       {isVisible && (
-        <motion.button
+        <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.8 }}
@@ -38,7 +38,7 @@ const ScrollToTop = () => {
           className="z-50 p-3 rounded-full bg-primary/10 border border-primary/20 backdrop-blur-sm hover:bg-primary/20 hover:border-primary/30 transition-all duration-300 group"
         >
           <ChevronUp className="w-5 h-5 text-primary group-hover:text-primary/80" />
-        </motion.button>
+        </motion.div>
       )}
     </AnimatePresence>
   );

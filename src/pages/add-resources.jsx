@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/select";
 import Header from "@/components/header";
 import AddTopicDrawer from "@/components/add-topic-drawer";
+import { NotificationToggle } from "@/components/NotificationToggle";
 
 // API and Hooks
 import { getTopics } from "@/api/api-topics";
@@ -46,6 +47,8 @@ const AddResources = () => {
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [formData, setFormData] = useState(null);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
+  const [broadcastNotification, setBroadcastNotification] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState("");
   const { isLoaded, user } = useUser();
   const navigate = useNavigate();
 
@@ -93,11 +96,48 @@ const AddResources = () => {
     }
   }, [dataCreateResource, loadingCreateResource]);
 
-  const onSubmit = (data) => {
-    fnCreateResource({
-      ...data,
-      recruiter_id: user.id,
-    });
+  const onSubmit = async (data) => {
+    try {
+      // Create the resource first
+      const resourceResult = await fnCreateResource({
+        ...data,
+        recruiter_id: user.id,
+      });
+
+      if (!resourceResult?.id) {
+        throw new Error('Failed to create resource');
+      }
+
+      // If notification is enabled, send it
+      if (broadcastNotification) {
+        const notificationResult = await createNotification({
+          title: 'New Resource Available',
+          message: notificationMessage || `New resource added: ${data.title}`,
+          type: 'resource_new',
+          metadata: {
+            resource_id: resourceResult.id,
+            topic_id: data.topic_id
+          },
+          created_by: user?.id
+        });
+
+        if (!notificationResult.success) {
+          console.error('Failed to send notification:', notificationResult.error);
+          toast.error('Resource created but notification failed to send');
+          return;
+        }
+
+        toast.success('Resource created and notification sent successfully');
+      } else {
+        toast.success('Resource created successfully');
+      }
+
+      reset();
+      navigate("/resources");
+    } catch (error) {
+      console.error('Error:', error);
+      toast.error(error.message || 'Failed to create resource');
+    }
   };
 
   const handleConfirmSubmit = (data) => {
@@ -291,6 +331,15 @@ const AddResources = () => {
               </Button>
             </motion.div>
           </div>
+
+          <NotificationToggle
+            enabled={broadcastNotification}
+            onEnabledChange={setBroadcastNotification}
+            notificationMessage={notificationMessage}
+            onMessageChange={setNotificationMessage}
+            defaultMessage={`New resource available: ${watch("title")}`}
+            className="border-t border-primary/10 pt-6"
+          />
         </form>
 
         {/* Preview Section */}

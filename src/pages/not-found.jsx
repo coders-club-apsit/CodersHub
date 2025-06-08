@@ -64,7 +64,7 @@ const NotFound = () => {
         </motion.p>
 
         {/* Back Button */}
-        <motion.button
+        <motion.div
           className="glass-card cursor-pointer relative overflow-hidden group 
             px-6 py-3 rounded-lg font-medium 
             bg-gradient-to-br from-blue-600/30 to-blue-400/20
@@ -83,7 +83,7 @@ const NotFound = () => {
             <ArrowLeft className="h-4 w-4" />
             Back to Home
           </span>
-        </motion.button>
+        </motion.div>
         </motion.div>
     </div>
     </>

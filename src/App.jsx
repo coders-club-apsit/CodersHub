@@ -22,8 +22,10 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import EditResources from "./pages/editresources";
 import PrivacyPolicyModal from "./components/PrivacyPolicyModal";
 // import Events from "./pages/events";
+import BroadcastNotificationPage from "@/pages/broadcast-notification";
 import Educators from "./pages/educators";
 import NotFound from "./pages/not-found"; // Import the NotFound component
+import { Toaster } from 'sonner';
 
 const App = () => {
   const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
@@ -135,7 +137,10 @@ const App = () => {
         },
         {
           path: "/saved-resources",
-          element: <SavedResources />,
+          element: (
+            <ProtectedRoute>
+              <SavedResources />
+              </ProtectedRoute> ),
         },
         {
           path: "/privacy-policy",
@@ -161,7 +166,15 @@ const App = () => {
             </ProtectedRoute>
           ),
         },
-              ]),
+        {
+          path: "/broadcast-notification",
+          element: (
+            <ProtectedRoute>
+          <BroadcastNotificationPage />
+            </ProtectedRoute>
+          ),
+        },
+      ]),
     [handlePrivacyPolicyOpen]
   );
 
@@ -172,7 +185,11 @@ const App = () => {
         open={showPrivacyPolicy}
         onOpenChange={handlePrivacyPolicyClose}
       />
-      <ToastContainer />
+      <Toaster 
+        position="bottom-right"
+        theme="dark"
+        richColors
+      />
     </ThemeProvider>
   );
 };

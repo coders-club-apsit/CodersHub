@@ -4,6 +4,7 @@ import { Link2, Search } from 'lucide-react';
 import { Input } from "@/components/ui/input";
 import { SignedIn, UserButton } from '@clerk/clerk-react';
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import NotificationDropdown from './NotificationDropdown';
 import { PenBox, NotebookPen, Save } from 'lucide-react';
 
 export function SideHeader({ searchQuery, setSearchQuery }) {
@@ -17,6 +18,7 @@ export function SideHeader({ searchQuery, setSearchQuery }) {
         <div className="flex items-center space-x-4">
           
           <SignedIn>
+            <NotificationDropdown />
           <UserButton
                     appearance={{
                       elements: {

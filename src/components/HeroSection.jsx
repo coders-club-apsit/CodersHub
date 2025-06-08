@@ -403,7 +403,7 @@ const HeroSection = () => {
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent to-[#09090b] z-0" />
 
       {/* Desktop Toggle Button */}
-      <motion.button
+      <motion.div
         className="hidden sm:flex fixed bottom-8 right-4 z-[100] bg-gradient-to-br from-blue-500 via-primary to-fuchsia-500 p-3 rounded-full shadow-lg border border-primary/30 relative"
         style={{ position: 'fixed', transform: 'translateZ(0)' }}
         initial={{ opacity: 0, scale: 0.8 }}
@@ -442,10 +442,10 @@ const HeroSection = () => {
             />
           </motion.div>
         )}
-      </motion.button>
+      </motion.div>
 
       {/* Mobile Toggle Button */}
-      <motion.button
+      <motion.div
         className="sm:hidden fixed bottom-8 right-4 z-[100] bg-gradient-to-br from-blue-500 via-primary to-fuchsia-500 p-3 rounded-full shadow-lg border border-primary/30 touch-manipulation relative"
         style={{ position: 'fixed', transform: 'translateZ(0)' }}
         initial={{ opacity: 0, scale: 0.8 }}
@@ -483,7 +483,7 @@ const HeroSection = () => {
             />
           </motion.div>
         )}
-      </motion.button>
+      </motion.div>
 
       {/* Desktop version - Fixed above toggle button */}
       <AnimatePresence>

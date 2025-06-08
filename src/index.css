@@ -221,6 +221,17 @@
       background-color: theme('colors.primary.500/30');
     }
   }
+  .toast-success {
+    @apply bg-green-500/10 border-green-500/20 text-green-500;
+  }
+  
+  .toast-error {
+    @apply bg-red-500/10 border-red-500/20 text-red-500;
+  }
+  
+  .toast-loading {
+    @apply bg-blue-500/10 border-blue-500/20 text-blue-500;
+  }
 }
 
 /* Float animation */
@@ -231,6 +242,18 @@
   50% {
     transform: translateY(-20px);
   }
+}
+
+.sonner-toast {
+  --normal-bg: hsl(var(--background));
+  --normal-border: hsl(var(--border));
+  --normal-text: hsl(var(--foreground));
+  --success-bg: hsl(147.8, 83%, 13.9%);
+  --success-border: hsl(147.8, 83%, 34.9%);
+  --success-text: hsl(147.8, 83%, 44.9%);
+  --error-bg: hsl(0, 83%, 13.9%);
+  --error-border: hsl(0, 83%, 34.9%);
+  --error-text: hsl(0, 83%, 44.9%);
 }
 
 /* Additional performance optimizations */

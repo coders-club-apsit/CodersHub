@@ -15,6 +15,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { NotificationToggle } from "@/components/NotificationToggle";
+import { createNotification } from '@/lib/notification-service';
 
 // UI Components
 import { Input } from "@/components/ui/input";
@@ -50,6 +52,8 @@ const AddNotes = () => {
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [formData, setFormData] = useState(null);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
+  const [broadcastNotification, setBroadcastNotification] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState("");
 
   const {
     register,
@@ -95,11 +99,48 @@ const AddNotes = () => {
     }
   }, [dataCreateNote, loadingCreateNote]);
 
-  const onSubmit = (data) => {
-    fnCreateNote({
-      ...data,
-      recruiter_id: user.id,
-    });
+  const onSubmit = async (data) => {
+    try {
+      // Create the note first
+      const noteResult = await fnCreateNote({
+        ...data,
+        recruiter_id: user.id,
+      });
+
+      if (!noteResult?.id) {
+        throw new Error('Failed to create note');
+      }
+
+      // If notification is enabled, send it
+      if (broadcastNotification) {
+        const notificationResult = await createNotification({
+          title: 'New Note Available',
+          message: notificationMessage || `New note added: ${data.title}`,
+          type: 'note_new',
+          metadata: {
+            note_id: noteResult.id,
+            topic_id: data.topic_id
+          },
+          created_by: user?.id
+        });
+
+        if (!notificationResult.success) {
+          console.error('Failed to send notification:', notificationResult.error);
+          toast.error('Note created but notification failed to send');
+          return;
+        }
+
+        toast.success('Note created and notification sent successfully');
+      } else {
+        toast.success('Note created successfully');
+      }
+
+      reset();
+      navigate("/notes");
+    } catch (error) {
+      console.error('Error:', error);
+      toast.error(error.message || 'Failed to create note');
+    }
   };
 
   const handleConfirmSubmit = (data) => {
@@ -241,6 +282,16 @@ const AddNotes = () => {
               <BarLoader className=" bg-gradient-to-r from-blue-400 to-cyan-400" width="100%"  />
             </div>
           )}
+
+          {/* Notification Toggle */}
+          <NotificationToggle
+            enabled={broadcastNotification}
+            onEnabledChange={setBroadcastNotification}
+            notificationMessage={notificationMessage}
+            onMessageChange={setNotificationMessage}
+            defaultMessage={`New note added: ${watch("title")}`}
+            className="border-t border-primary/10 pt-6"
+          />
 
           {/* Submit and Preview Buttons */}
           <div className="flex gap-4">

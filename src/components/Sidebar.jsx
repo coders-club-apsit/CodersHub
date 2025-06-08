@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ADMIN_EMAILS } from "@/config/admin";
 import { useUser } from "@clerk/clerk-react";
+
 import {
   ClapperboardIcon as ChalkboardTeacher,
   Book,
@@ -16,6 +17,8 @@ import {
   AwardIcon,
   LucideAward,
   Users,
+  Bell,
+  Calendar,
 } from "lucide-react";
 import { SignedIn, SignedOut, SignIn, UserButton } from "@clerk/clerk-react";
 import { PenBox, NotebookPen, Save } from "lucide-react";
@@ -116,7 +119,8 @@ export function Sidebar() {
           {isAdmin && (
             <div className="space-y-3 mb-2">
               {[
-                { path: "/add-notes", icon: PenBox, label: "Add Notes" },
+                { path: "/broadcast-notification", icon: Cog, label: "Notications" },
+              { path: "/add-notes", icon: PenBox, label: "Add Notes" },
                 { path: "/add-resources", icon: LinkIcon, label: "Add Resources" },
               ].map(({ path, icon: Icon, label }) => (
                 <Link key={path} to={path}>

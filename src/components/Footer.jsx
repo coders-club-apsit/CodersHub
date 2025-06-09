@@ -32,6 +32,8 @@ const Footer = () => {
     { name: 'Resources', path: '/resources' },
     { name: 'Community', path: 'https://chat.whatsapp.com/GXJ7PDV8ZKhH0KSiVTVK7g', external: true },
     { name: 'About Us', path: '/aboutus' },
+    { name: 'Projects', path: '/projects' },
+    { name: 'Blogs', path: '/blogs' },
     // { name: 'FAQ', path: '#faq' }
   ];
 

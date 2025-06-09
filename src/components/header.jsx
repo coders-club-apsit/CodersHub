@@ -111,6 +111,16 @@ const Header = () => {
                                             labelIcon={<Link2 size={15} />}
                                             href="/saved-resources"
                                         />
+                                        <UserButton.Link
+                                            label="Saved Projects"
+                                            labelIcon={<Link2 size={15} />}
+                                            href="/saved-projects"
+                                        />
+                                        <UserButton.Link
+                                            label="Saved Blogs"
+                                            labelIcon={<Link2 size={15} />}
+                                            href="/saved-blogs"
+                                        />
                                     </UserButton.MenuItems>
                                 </UserButton>
                             </SignedIn>

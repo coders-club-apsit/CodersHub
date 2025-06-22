@@ -87,38 +87,11 @@ const SavedNotes = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      
-      <div className="container px-4 mx-auto pt-20">
-        <div className="flex justify-between items-center mb-8">
-          <Button 
-            variant="ghost" 
-            className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
-            onClick={() => navigate('/')}
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back to Home
-          </Button>
-        </div>
-        
-        <motion.h1 
-          className='gradient-title font-extrabold text-4xl sm:text-5xl md:text-6xl text-center mb-6'
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          Your Saved Notes
-        </motion.h1>
-        
-        <motion.p 
-          className="text-muted-foreground text-center max-w-2xl mx-auto mb-10"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
-        >
-          Access your favorite notes and study materials all in one place.
-        </motion.p>
+    <div>
+      <Header/>
+      <h1 className='gradient-title font-extrabold text-6xl sm:text-7xl text-center pb-8 mt-28'>
+        Your Saved Notes
+      </h1>
 
         {loadingSavedNotes === false && (
           savedNotes?.length ? (

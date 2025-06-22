@@ -137,8 +137,8 @@ const AddResources = () => {
   return (
     <div className="bg-background">
       <Header />
-      <main className="px-4 py-8 mt-16 max-w-5xl mx-auto">
-        <h1 className="gradient-title font-extrabold text-5xl sm:text-7xl text-center pb-8">
+      <main className="container mx-auto px-4 py-8">
+        <h1 className="gradient-title font-extrabold text-5xl sm:text-7xl text-center pb-8 mt-20">
           Post a Resource
         </h1>
 

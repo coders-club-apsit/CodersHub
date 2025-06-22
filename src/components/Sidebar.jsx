@@ -16,6 +16,8 @@ import {
   AwardIcon,
   LucideAward,
   Users,
+  Notebook,
+  Link2,
 } from "lucide-react";
 import { SignedIn, SignedOut, SignIn, UserButton } from "@clerk/clerk-react";
 import { PenBox, NotebookPen, Save } from "lucide-react";
@@ -39,10 +41,11 @@ const routes = [
   { path: "/", icon: HouseIcon, label: "Home" },
   { path: "/notes", icon: Book, label: "Notes" },
   { path: "/resources", icon: LinkIcon, label: "Resources" },
+  { path: "/projects", icon: LucideAward, label: "Projects" },
+  { path: "/blogs", icon: Notebook, label: "Blogs" },
   // { path: "/events", icon: Calendar, label: "Events" },
-  { path: "/educators", icon: Users, label: "Our Educators", color: "text-violet-500" },
-  // { path: "/about-us", icon: Info, label: "About us" },
-
+  { path: "/educators", icon: Users, label: "Educators", color: "text-violet-500" },
+  { path: "/about-us", icon: Info, label: "About us" },
 ];
 
 export function Sidebar() {
@@ -117,7 +120,9 @@ export function Sidebar() {
             <div className="space-y-3 mb-2">
               {[
                 { path: "/add-notes", icon: PenBox, label: "Add Notes" },
-                { path: "/add-resources", icon: LinkIcon, label: "Add Resources" },
+                { path: "/add-resources", icon: Link2, label: "Add Resources" },
+                { path: "/add-projects", icon: LucideAward, label: "Add Projects" },
+                { path: "/add-blogs", icon: Notebook, label: "Add Blogs" },
               ].map(({ path, icon: Icon, label }) => (
                 <Link key={path} to={path}>
                   <Button
@@ -150,3 +155,5 @@ export function Sidebar() {
     </ShadSidebar>
   );
 }
+
+export default Sidebar;

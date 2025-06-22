@@ -111,36 +111,38 @@ const Header = () => {
                             </SignedOut>
 
                             <SignedIn>
-                                <motion.div
-                                    initial={shouldAnimate ? { opacity: 0 } : { opacity: 1 }}
-                                    animate={{ opacity: 1 }}
-                                    transition={{ 
-                                        duration: shouldAnimate ? 0.3 : 0,
-                                        delay: shouldAnimate ? 0.2 : 0 
+                                
+                                <UserButton
+                                    appearance={{
+                                        elements: {
+                                            avatarBox: 'w-10 h-10 ring-2 ring-blue-500/20 hover:ring-blue-500/40 transition-all duration-300',
+                                            userButtonPopover: 'backdrop-blur-md bg-background/80 border border-blue-500/10 shadow-lg',
+                                        },
                                     }}
                                 >
-                                    <UserButton
-                                        appearance={{
-                                            elements: {
-                                                avatarBox: 'w-10 h-10 ring-2 ring-blue-500/20 hover:ring-blue-500/40 transition-all duration-300',
-                                                userButtonPopover: 'backdrop-blur-md bg-background/80 border border-blue-500/10 shadow-lg',
-                                            },
-                                        }}
-                                    >
-                                        <UserButton.MenuItems>
-                                            <UserButton.Link
-                                                label="Saved Notes"
-                                                labelIcon={<Book size={15} />}
-                                                href="/saved-notes"
-                                            />
-                                            <UserButton.Link
-                                                label="Saved Resources"
-                                                labelIcon={<Link2 size={15} />}
-                                                href="/saved-resources"
-                                            />
-                                        </UserButton.MenuItems>
-                                    </UserButton>
-                                </motion.div>
+                                    <UserButton.MenuItems>
+                                        <UserButton.Link
+                                            label="Saved Notes"
+                                            labelIcon={<Book size={15} />}
+                                            href="/saved-notes"
+                                        />
+                                        <UserButton.Link
+                                            label="Saved Resources"
+                                            labelIcon={<Link2 size={15} />}
+                                            href="/saved-resources"
+                                        />
+                                        <UserButton.Link
+                                            label="Saved Projects"
+                                            labelIcon={<Link2 size={15} />}
+                                            href="/saved-projects"
+                                        />
+                                        <UserButton.Link
+                                            label="Saved Blogs"
+                                            labelIcon={<Link2 size={15} />}
+                                            href="/saved-blogs"
+                                        />
+                                    </UserButton.MenuItems>
+                                </UserButton>
                             </SignedIn>
                         </div>
                     </div>

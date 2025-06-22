@@ -6,7 +6,7 @@ import { getSingleNote } from '@/api/api-Notes';
 import { BarLoader } from 'react-spinners';
 import MDEditor from '@uiw/react-md-editor';
 import Header from '@/components/header';
-import { ArrowLeft, Expand, PanelLeftClose, PenBox, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Expand, PanelLeftClose, PenBox, ChevronLeft, ChevronRight,Clock } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { isAndroid } from 'react-device-detect';
 import { useQuery } from '@tanstack/react-query';
@@ -24,6 +24,11 @@ const extractIndex = (content) => {
     matches.push({ label: match[1], href: match[2] });
   }
   return matches;
+};
+const estimateReadingTime = (content) => {
+  if (!content) return 0;
+  const words = content.replace(/[^\w\s]/g, '').split(/\s+/).length;
+  return Math.ceil(words / 200); // Average reading speed: 200 words per minute
 };
 
 const ProjectPage = () => {
@@ -64,6 +69,7 @@ const ProjectPage = () => {
 
   // Memoize index extraction for performance
   const projectIndex = useMemo(() => extractIndex(projects?.content), [projects?.content]);
+  const readingTime = useMemo(() => estimateReadingTime(projects?.content), [projects?.content]);
 
   if (!isLoaded || LoadingProjects) {
     return <BarLoader className=" bg-gradient-to-r from-blue-400 to-cyan-400" width="100%"/>;
@@ -150,25 +156,32 @@ const ProjectPage = () => {
                 <span>Back to Projects</span>
               </Link>
             </motion.div>
-            <div className="hidden md:block">
+            <div className="hidden md:flex items-center gap-4">
+              {readingTime > 0 && (
+                <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300">
+                  <Clock className="w-4 h-4" />
+                  <span className="text-sm font-medium">{readingTime} min read</span>
+                </div>
+              )}
+              
               <motion.div
                 whileTap={!isAndroid && { scale: 0.95 }}
-                whileHover={!isAndroid && { scale: 1.05 }}
+                whileHover={!isAndroid && { scale: 1.02 }}
                 onClick={toggleMode}
                 className={`
-                  cursor-pointer flex items-center gap-2 px-4 py-2 rounded-xl
-                  backdrop-blur-sm border transition-all duration-300
+                  cursor-pointer flex items-center gap-3 px-5 py-2 rounded-xl
+                  backdrop-blur-sm border transition-all duration-300 font-medium shadow-sm hover:shadow-md
                   ${mode === 'compact' 
-                    ? 'bg-blue-500/10 border-blue-500/20 hover:bg-blue-500/20 hover:border-blue-500/30' 
-                    : 'bg-primary/10 border-primary/20 hover:bg-primary/20 hover:border-primary/30'}
+                    ? 'bg-blue-500/10 border-blue-500/20 hover:bg-blue-500/20 hover:border-blue-500/30 text-blue-600 dark:text-blue-400' 
+                    : 'bg-orange-500/10 border-orange-500/20 hover:bg-orange-500/20 hover:border-orange-500/30 text-orange-600 dark:text-orange-400'}
                 `}
               >
                 {mode === 'compact' ? (
-                  <Expand className="w-4 h-4 rotate-90" />
+                  <Expand className="w-5 h-5 rotate-90" />
                 ) : (
-                   <PanelLeftClose className="w-4 h-4" />
+                   <PanelLeftClose className="w-5 h-5" />
                 )}
-                <span className="text-sm font-medium">{mode === 'compact' ? 'Full Width' : 'Compact'}</span>
+                <span className="text-sm">{mode === 'compact' ? 'Expand View' : 'Compact View'}</span>
               </motion.div>
             </div>
           </div>
@@ -206,6 +219,7 @@ const ProjectPage = () => {
           </motion.div>
         </div>
       </div>
+      <div className="fixed bottom-4 right-8 z-50 flex flex-col gap-4 items-center">
       {isAdmin && (
         <Link
           to={`/project/edit/${id}`}
@@ -217,6 +231,7 @@ const ProjectPage = () => {
         </Link>
       )}
       <ScrollToTop />
+      </div>
     </>
   );
 };

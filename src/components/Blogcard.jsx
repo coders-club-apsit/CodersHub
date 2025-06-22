@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
-import { Bookmark, Trash2Icon, PenBox } from "lucide-react";
+import { Bookmark, Trash2Icon, PenBox, Calendar, User } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
 import useFetch from "@/hooks/use-fetch";
@@ -35,8 +35,11 @@ const BlogCard = ({
     data: savedBlogs,
     loading: loadingSavedBlogs,
   } = useFetch(saveBlog, { alreadySaved: saved });
-  const { fn: fnDeleteBlogs, loading: loadingDeleteBlog } =
-    useFetch(deleteBlog);
+  
+  const { 
+    fn: fnDeleteBlogs, 
+    loading: loadingDeleteBlog 
+  } = useFetch(deleteBlog);
 
   useEffect(() => {
     if (savedBlogs !== undefined) setSaved(savedBlogs?.length > 0);
@@ -99,128 +102,156 @@ const BlogCard = ({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      whileHover={{ y: -5 }}
-      className="space-y-6 w-full"
+      whileHover={{ y: -8 }}
+      transition={{ duration: 0.3, ease: "easeInOut" }}
+      className="w-full h-full"
     >
-      <Card className="flex flex-col h-full transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/10 border border-blue-500/10 bg-gradient-to-b from-white/5 to-transparent backdrop-blur-sm">
+      <Card className="group relative flex flex-col h-full overflow-hidden border border-blue-500/20 bg-transparent backdrop-blur-sm transition-all duration-500 hover:border-blue-400/40 hover:shadow-2xl hover:shadow-blue-500/20">
+        
+        {/* Loading indicator */}
         {loadingDeleteBlog && (
-          <BarLoader
-            className="mt-4 bg-gradient-to-r from-blue-400 to-cyan-400"
-            width="100%"
-          />
+          <div className="absolute top-0 left-0 right-0 z-10">
+            <BarLoader 
+              className="bg-gradient-to-r from-blue-400 to-cyan-400" 
+              width="100%" 
+              height={3}
+            />
+          </div>
         )}
 
-        <CardHeader className="space-y-4 p-4 sm:p-6">
-          <div className="flex flex-col gap-4">
-            <div className="flex flex-row items-center justify-between">
+        {/* Card Header */}
+        <CardHeader className="flex-shrink-0 p-6 pb-4">
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex-1 space-y-3">
+              <CardTitle className="text-xl font-bold leading-tight">
+                <span className="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent line-clamp-2 group-hover:from-blue-500 group-hover:to-cyan-500 transition-all duration-300">
+                  {blog.title}
+                </span>
+              </CardTitle>
+              
+              {/* Author and Date Info */}
               <div className="flex flex-col gap-2">
-                <CardTitle className="font-bold text-xl sm:text-2xl lg:text-3xl">
-                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-400 line-clamp-2">
-                    {blog.title}
+                <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
+                  <User className="h-4 w-4 text-blue-500" />
+                  <span className="font-medium">
+                    {blog.author_name?.split(".")[0] || "Unknown Author"}
                   </span>
-                </CardTitle>
-                <p className="text-muted-foreground text-base sm:text-md font-medium">
-                  Created by - {blog.author_name?.split(".")[0]}
-                </p>
-                <p className="text-muted-foreground text-sm ">
-                  Created on - {createdDate}
-                </p>
-              </div>
-              <div className="flex items-center gap-2">
-                {isMyBlog && (
-                  <motion.div
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={handleDeleteBlog}
-                    >
-                      <Trash2Icon className="h-4 w-4 text-red-500 hover:text-red-400 transition-colors" />
-                    </Button>
-                  </motion.div>
-                )}
+                </div>
+                <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
+                  <Calendar className="h-4 w-4 text-blue-400" />
+                  <span>{createdDate}</span>
+                </div>
               </div>
             </div>
-            {blog.last_edited_by && (
+            
+            {/* Action buttons */}
+            <div className="flex items-center gap-1 opacity-60 group-hover:opacity-100 transition-opacity duration-300">
+              {isAdmin && (
+                <motion.div 
+                  whileHover={{ scale: 1.1 }} 
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 w-8 p-0 hover:bg-blue-500/10 hover:text-blue-600"
+                    onClick={handleEditClick}
+                  >
+                    <PenBox className="h-4 w-4" />
+                  </Button>
+                </motion.div>
+              )}
+              
+              {isMyBlog && (
+                <motion.div 
+                  whileHover={{ scale: 1.1 }} 
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    className="h-8 w-8 p-0 hover:bg-red-500/10 hover:text-red-600"
+                    onClick={handleDeleteBlog}
+                  >
+                    <Trash2Icon className="h-4 w-4" />
+                  </Button>
+                </motion.div>
+              )}
+            </div>
+          </div>
+          
+          {/* Last edited badge */}
+          {blog.last_edited_by && (
+            <div className="pt-3">
               <Badge
                 variant="outline"
-                className="text-xs font-normal text-muted-foreground/80 hover:text-muted-foreground transition-colors w-fit"
+                className="text-xs font-medium bg-blue-50/50 text-blue-700 border-blue-200/50 hover:bg-blue-100/50 transition-colors duration-200 dark:bg-blue-950/30 dark:text-blue-300 dark:border-blue-800/50"
               >
                 Last edited by: {blog.last_edited_by}
               </Badge>
-            )}
-          </div>
+            </div>
+          )}
         </CardHeader>
 
-        <CardContent className="flex flex-col gap-4 sm:gap-6 flex-1 p-4 sm:p-6">
+        {/* Card Content */}
+        <CardContent className="flex-1 px-6 py-0 space-y-4">
           <div className="space-y-4">
-            <p className="text-muted-foreground line-clamp-3 text-sm sm:text-base">
+            <div className="h-px bg-gradient-to-r from-transparent via-blue-200 to-transparent dark:via-blue-800" />
+            <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed line-clamp-4">
               {getCleanedContent(blog.content)}
             </p>
-            <hr className="border-blue-500/10" />
           </div>
         </CardContent>
 
-        <CardFooter className="p-4 sm:p-6">
-          <div className="flex flex-col w-full gap-4">
-            <div className="flex items-center justify-between w-full gap-4">
-              <Link to={`/blog/${blog.id}`} className="flex-1">
-                <Button
-                  variant="secondary"
-                  className="w-full bg-gradient-to-r from-blue-500/10 to-cyan-500/10 hover:from-blue-500/20 hover:to-cyan-500/20 transition-all duration-300 text-sm sm:text-base"
+        {/* Card Footer */}
+        <CardFooter className="flex-shrink-0 p-6 pt-4">
+          <div className="flex items-center justify-between w-full gap-3">
+            {/* Read Blog Button */}
+            <Link to={`/blog/${blog.id}`} className="flex-1">
+              <Button
+              variant="secondary" 
+                className="w-full bg-gradient-to-r from-blue-500/10 to-cyan-500/10 hover:from-blue-500/20 hover:to-cyan-500/20 font-medium shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
+                size="default"
+              >
+                <span>Read this Blog</span>
+                <motion.span 
+                  className="ml-2 text-lg"
+                  initial={{ x: 0 }}
+                  whileHover={{ x: 4 }}
+                  transition={{ duration: 0.2 }}
                 >
-                  Read this Blog
-                  <motion.span
-                    className="ml-2"
-                    initial={{ x: 0 }}
-                    whileHover={{ x: 3 }}
-                  >
-                    →
-                  </motion.span>
+                  →
+                </motion.span>
+              </Button>
+            </Link>
+            
+            {/* Save/Bookmark Button */}
+            {!isMyBlog && (
+              <motion.div 
+                whileHover={{ scale: 1.1 }} 
+                whileTap={{ scale: 0.95 }}
+              >
+                <Button 
+                  variant="outline" 
+                  size="default"
+                  className={cn(
+                    "h-10 w-10 p-0 border-2 transition-all duration-300 bg-transparent",
+                    saved 
+                      ? "border-blue-500 hover:bg-blue-50 text-blue-600 dark:hover:bg-blue-950/30" 
+                      : "border-slate-300 hover:border-blue-400 hover:bg-blue-50 hover:text-blue-600 dark:border-slate-600 dark:hover:border-blue-500 dark:hover:bg-blue-950/30"
+                  )}
+                  onClick={handleSaveBlog} 
+                  disabled={loadingSavedBlogs}
+                >
+                  <Bookmark 
+                    className={cn(
+                      "h-5 w-5 transition-all duration-300",
+                      saved ? "fill-current" : ""
+                    )} 
+                  />
                 </Button>
-              </Link>
-              <div className="flex items-center gap-2">
-                {isAdmin && (
-                  <motion.div
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 p-0 bg-blue-500/5 hover:bg-blue-500/10"
-                      onClick={handleEditClick}
-                    >
-                      <PenBox className="h-4 w-4 text-blue-500 hover:text-blue-400 transition-colors" />
-                    </Button>
-                  </motion.div>
-                )}
-                {!isMyBlog && (
-                  <motion.div
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Button
-                      variant="ghost"
-                      className="h-8 w-8 p-0 bg-blue-500/5 hover:bg-blue-500/10"
-                      onClick={handleSaveBlog}
-                      disabled={loadingSavedBlogs}
-                    >
-                      <Bookmark
-                        size={20}
-                        className={cn(
-                          saved
-                            ? "text-blue-500 fill-blue-500"
-                            : "text-muted-foreground hover:text-blue-500"
-                        )}
-                      />
-                    </Button>
-                  </motion.div>
-                )}
-              </div>
-            </div>
+              </motion.div>
+            )}
           </div>
         </CardFooter>
       </Card>

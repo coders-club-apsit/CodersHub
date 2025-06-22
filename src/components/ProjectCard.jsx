@@ -18,14 +18,28 @@ import { Badge } from "./ui/badge";
 import { cn } from "@/lib/utils";
 import { ADMIN_EMAILS } from "@/config/admin";
 
-const ProjectCard = ({ project, isMyProject = false, savedInit = false, onProjectSaved = () => {}, onProjectDeleted = () => {} }) => {
+const ProjectCard = ({ 
+  project, 
+  isMyProject = false, 
+  savedInit = false, 
+  onProjectSaved = () => {}, 
+  onProjectDeleted = () => {} 
+}) => {
   const [saved, setSaved] = useState(savedInit);
   const { user } = useUser();
   const navigate = useNavigate();
   const [isAdmin, setIsAdmin] = useState(false);
 
-  const { fn: fnSavedProjects, data: savedProjects, loading: loadingSavedProjects } = useFetch(saveProject, { alreadySaved: saved });
-  const { fn: fnDeleteProjects, loading: loadingDeleteProject } = useFetch(deleteProject);
+  const { 
+    fn: fnSavedProjects, 
+    data: savedProjects, 
+    loading: loadingSavedProjects 
+  } = useFetch(saveProject, { alreadySaved: saved });
+  
+  const { 
+    fn: fnDeleteProjects, 
+    loading: loadingDeleteProject 
+  } = useFetch(deleteProject);
 
   // Dummy tags for demonstration
   const dummyTags = ["Model", "Regression", "Python"];
@@ -54,12 +68,12 @@ const ProjectCard = ({ project, isMyProject = false, savedInit = false, onProjec
     try {
       e.preventDefault();
       e.stopPropagation();
-      if (window.confirm("Are you sure you want to delete this note?")) {
+      if (window.confirm("Are you sure you want to delete this project?")) {
         const response = await fnDeleteProjects({ project_id: project.id });
         if (response) onProjectDeleted();
       }
     } catch (error) {
-      console.error("Error deleting note:", error);
+      console.error("Error deleting project:", error);
     }
   };
 
@@ -72,119 +86,169 @@ const ProjectCard = ({ project, isMyProject = false, savedInit = false, onProjec
     <motion.div 
       initial={{ opacity: 0, y: 20 }} 
       animate={{ opacity: 1, y: 0 }} 
-      whileHover={{ y: -5 }} 
-      className="space-y-6 w-full"
+      whileHover={{ y: -8 }} 
+      transition={{ duration: 0.3, ease: "easeInOut" }}
+      className="w-full h-full"
     >
-      <Card className="flex flex-col h-full transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/10 border border-blue-500/10 bg-gradient-to-b from-white/5 to-transparent backdrop-blur-sm">
-        {loadingDeleteProject && <BarLoader className="mt-4 bg-gradient-to-r from-blue-400 to-cyan-400" width="100%" />}
+      <Card className="group relative flex flex-col h-full overflow-hidden border border-blue-500/20 ">
         
-        {/* Image Section */}
-        {project.topic && (
-          <motion.div 
-            className="relative group w-full h-48 sm:h-56 md:h-64" 
-            whileHover={{ scale: 1.02 }}
-          >
-            <div className="absolute inset-0 rounded-t-lg -z-10 blur-xl group-hover:blur-2xl transition-all duration-300" />
-            <img 
-              src={project.topic.topic_logo_url} 
-              alt="topic" 
-              className="w-full h-full object-cover rounded-t-lg transition-all duration-300 group-hover:brightness-110" 
-              loading="lazy" 
+        {/* Loading indicator */}
+        {loadingDeleteProject && (
+          <div className="absolute top-0 left-0 right-0 z-10">
+            <BarLoader 
+              className="bg-gradient-to-r from-blue-400 to-cyan-400" 
+              width="100%" 
+              height={3}
             />
-          </motion.div>
+          </div>
+        )}
+        
+        {/* Project Image */}
+        {project.topic && (
+          <div className="relative w-full h-48 overflow-hidden">
+            <motion.div 
+              className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent z-10"
+              initial={{ opacity: 0 }}
+              whileHover={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
+            />
+            <motion.img 
+              src={project.topic.topic_logo_url} 
+              alt={`${project.title} topic`}
+              className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
+              loading="lazy"
+              whileHover={{ scale: 1.05 }}
+            />
+          </div>
         )}
 
-        <CardHeader className="space-y-4 p-4 sm:p-6">
-          <div className="flex flex-col gap-4">
-            <div className="flex flex-row items-center justify-between">
-              <CardTitle className="font-bold text-lg sm:text-xl lg:text-2xl">
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-400 line-clamp-2">
-                  {project.title}
-                </span>
-              </CardTitle>
-              <div className="flex items-center gap-2">
-                {isMyProject && (
-                  <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
-                    <Button variant="ghost" size="icon" onClick={handleDeleteProject}>
-                      <Trash2Icon className="h-4 w-4 text-red-500 hover:text-red-400 transition-colors" />
-                    </Button>
-                  </motion.div>
-                )}
-              </div>
+        {/* Card Header */}
+        <CardHeader className="flex-shrink-0 p-6 pb-4">
+          <div className="flex items-start justify-between gap-4">
+            <CardTitle className="flex-1 text-xl font-bold leading-tight">
+              <span className="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent line-clamp-2 group-hover:from-blue-500 group-hover:to-cyan-500 transition-all duration-300">
+                {project.title}
+              </span>
+            </CardTitle>
+            
+            {/* Action buttons */}
+            <div className="flex items-center gap-1 opacity-60 group-hover:opacity-100 transition-opacity duration-300">
+              {isAdmin && (
+                <motion.div 
+                  whileHover={{ scale: 1.1 }} 
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 w-8 p-0 hover:bg-blue-500/10 hover:text-blue-600"
+                    onClick={handleEditClick}
+                  >
+                    <PenBox className="h-4 w-4" />
+                  </Button>
+                </motion.div>
+              )}
+              
+              {isMyProject && (
+                <motion.div 
+                  whileHover={{ scale: 1.1 }} 
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    className="h-8 w-8 p-0 hover:bg-red-500/10 hover:text-red-600"
+                    onClick={handleDeleteProject}
+                  >
+                    <Trash2Icon className="h-4 w-4" />
+                  </Button>
+                </motion.div>
+              )}
             </div>
-            {/* {project.last_edited_by && (
-              <Badge 
-                variant="outline" 
-                className="text-xs font-normal text-muted-foreground/80 hover:text-muted-foreground transition-colors w-fit"
-              >
-                Last edited by: {project.last_edited_by}
-              </Badge>
-            )} */}
           </div>
         </CardHeader>
 
-        <CardContent className="flex flex-col gap-4 sm:gap-6 flex-1 sm:p-6">
-          <div className="space-y-4">
-            <hr className="border-blue-500/10" />
-            <p className="text-muted-foreground line-clamp-3 text-sm sm:text-base">
-              {project.description?.split(".")[0]}.
+        {/* Card Content */}
+        <CardContent className="flex-1 px-6 py-0 space-y-4">
+          {/* Description */}
+          <div className="space-y-3">
+            <div className="h-px bg-gradient-to-r from-transparent via-blue-200 to-transparent" />
+            <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed line-clamp-3">
+              {project.description ? `${project.description.split(".")[0]}.` : "No description available."}
             </p>
           </div>
-          <div className="flex flex-wrap gap-2">
-            {projectTags.map((tag) => (
+          
+          {/* Tags */}
+          <div className="flex flex-wrap gap-2 pt-2">
+            {projectTags.slice(0, 4).map((tag, index) => (
               <Badge
-                key={tag}
+                key={`${tag}-${index}`}
                 variant="secondary"
-                className="text-xs bg-muted text-muted-foreground px-2 py-1 rounded-md"
+                className="text-xs font-medium bg-blue-50/80 text-blue-700 hover:bg-blue-100/80 border border-blue-200/50 transition-colors duration-200 dark:bg-blue-950/50 dark:text-blue-300 dark:border-blue-800/50"
               >
                 {tag}
               </Badge>
             ))}
+            {projectTags.length > 4 && (
+              <Badge
+                variant="outline"
+                className="text-xs font-medium text-slate-500 border-slate-300 dark:text-slate-400 dark:border-slate-600"
+              >
+                +{projectTags.length - 4} more
+              </Badge>
+            )}
           </div>
         </CardContent>
 
-        <CardFooter className="p-4 sm:p-6">
-          <div className="flex flex-col w-full gap-4">
-            <div className="flex items-center justify-between w-full gap-4">
-              <Link to={`/project/${project.id}`} className="flex-1">
-                <Button 
-                  variant="secondary" 
-                  className="w-full bg-gradient-to-r from-blue-500/10 to-cyan-500/10 hover:from-blue-500/20 hover:to-cyan-500/20 transition-all duration-300 text-sm sm:text-base"
+        {/* Card Footer */}
+        <CardFooter className="flex-shrink-0 p-6 pt-4">
+          <div className="flex items-center justify-between w-full gap-3">
+            {/* View Project Button */}
+            <Link to={`/project/${project.id}`} className="flex-1">
+              <Button
+              variant="secondary" 
+                className="w-full bg-gradient-to-r from-blue-500/10 to-cyan-500/10 hover:from-blue-500/20 hover:to-cyan-500/20 transition-all  text-sm sm:text-base text-white font-medium shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
+                size="default"
+              >
+                <span>View Project</span>
+                <motion.span 
+                  className="ml-2 text-lg"
+                  initial={{ x: 0 }}
+                  whileHover={{ x: 4 }}
+                  transition={{ duration: 0.2 }}
                 >
-                  View project
-                  <motion.span className="ml-2" initial={{ x: 0 }} whileHover={{ x: 3 }}>→</motion.span>
+                  →
+                </motion.span>
+              </Button>
+            </Link>
+            
+            {/* Save/Bookmark Button */}
+            {!isMyProject && (
+              <motion.div 
+                whileHover={{ scale: 1.1 }} 
+                whileTap={{ scale: 0.95 }}
+              >
+                <Button 
+                  variant="outline" 
+                  size="default"
+                  className={cn(
+                    "h-10 w-10 p-0 border-2 transition-all duration-300",
+                    saved 
+                      ? "border-blue-500 bg-blue-50 hover:bg-blue-100 text-blue-600 dark:bg-blue-950/50 dark:hover:bg-blue-900/50" 
+                      : "border-slate-300 hover:border-blue-400 hover:bg-blue-50 hover:text-blue-600 dark:border-slate-600 dark:hover:border-blue-500 dark:hover:bg-blue-950/30"
+                  )}
+                  onClick={handleSaveProject} 
+                  disabled={loadingSavedProjects}
+                >
+                  <Bookmark 
+                    className={cn(
+                      "h-5 w-5 transition-all duration-300",
+                      saved ? "fill-current" : ""
+                    )} 
+                  />
                 </Button>
-              </Link>
-              <div className="flex items-center gap-2">
-                {isAdmin && (
-                  <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 p-0 bg-blue-500/5 hover:bg-blue-500/10"
-                      onClick={handleEditClick}
-                    >
-                      <PenBox className="h-4 w-4 text-blue-500 hover:text-blue-400 transition-colors" />
-                    </Button>
-                  </motion.div>
-                )}
-                {!isMyProject && (
-                  <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
-                    <Button 
-                      variant="ghost" 
-                      className="h-8 w-8 p-0 bg-blue-500/5 hover:bg-blue-500/10" 
-                      onClick={handleSaveProject} 
-                      disabled={loadingSavedProjects}
-                    >
-                      <Bookmark 
-                        size={20} 
-                        className={cn(saved ? "text-blue-500 fill-blue-500" : "text-muted-foreground hover:text-blue-500")} 
-                      />
-                    </Button>
-                  </motion.div>
-                )}
-              </div>
-            </div>
+              </motion.div>
+            )}
           </div>
         </CardFooter>
       </Card>

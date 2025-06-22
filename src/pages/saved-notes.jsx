@@ -132,7 +132,6 @@ const SavedNotes = () => {
           )
         )}
       </div>
-    </div>
   );
 };
 

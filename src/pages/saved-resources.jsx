@@ -133,7 +133,6 @@ useEffect(() => {
             </motion.div>
           )
         )}
-      </div>
     </div>
   );
 };

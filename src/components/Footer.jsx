@@ -31,7 +31,7 @@ const socialLinks = [
     { name: 'Notes', path: '/notes' },
     { name: 'Resources', path: '/resources' },
     { name: 'Community', path: 'https://chat.whatsapp.com/GXJ7PDV8ZKhH0KSiVTVK7g', external: true },
-    { name: 'About Us', path: '/aboutus' },
+    { name: 'About Us', path: '/about-us' },
     { name: 'Projects', path: '/projects' },
     { name: 'Blogs', path: '/blogs' },
     // { name: 'FAQ', path: '#faq' }

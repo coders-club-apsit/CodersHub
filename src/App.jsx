@@ -1,4 +1,5 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import NotFound from "./pages/not-found";
 import "./App.css";
 import AppLayout from "./layout/app-layout";
 import LandingPage from "./pages/landingpage";
@@ -64,7 +65,7 @@ const App = () => {
               element: <NotFound />,
             },
             {
-              path: "/aboutus",
+              path: "/about-us",
               element: <About />,
             },
           ],

@@ -7,505 +7,355 @@ import { LucideLinkedin } from "lucide-react";
 import { motion } from "framer-motion";
 import Header from "@/components/header";
 import TeamMemberSkeleton from "@/components/TeamMemberSkeleton";
-
-const foundingMembers = [
-	{
-		name: "Atharva Shelke",
-		role: "Founder & Head",
-		img: "atharva2.jpg",
-		twitter: "_atharva_shelke",
-		linkedin: "atharva-shelke-a9a9a9226",
-	},
-	{
-		name: "Avanish Vadke",
-		role: "Dev Head",
-		img: "avanish.jpeg",
-		twitter: "AvanisHCodes_",
-		linkedin: "avanishvadke",
-		github: "AvanishVadke",
-	},
-	{
-		name: "Abhishek Thormothe",
-		role: "Design & Publicity Head",
-		img: "abhiiii.png",
-		twitter: "yadneshbamne",
-		linkedin: "thormotheabhishek",
-		github: "abhi2k4",
-	},
-	{
-		name: "Parth Das",
-		role: "Technical Head",
-		img: "Parth.JPG",
-		linkedin: "parth-das-675784259",
-	},
-	{
-		name: "Samay Navale",
-		role: "Community Head",
-		img: "samay.png",
-		linkedin: "samay-navale",
-	},
-	{
-		name: "Ovee Dolkar",
-		role: "Event Head",
-		img: "ovee.jpeg",
-		linkedin: "ovee-dolkar-639261346",
-	},
-	{
-		name: "Nishil Rathod",
-		role: "Content Head",
-		img: "nishil.jpg",
-		linkedin: "nishilrathod",
-	},
-];
-
 const teamMembers = [
-	{
-		name: "Sarakshi More",
-		role: "Joint Community Head",
-		img: "sarakshi.jpg",
-		linkedin: "sarakshi-m-158212211",
-		github: "Sarakshimore",
-	},
-	{
-		name: "Yadnesh Bamne",
-		role: "Joint Dev Head",
-		img: "yadnesh.jpg",
-		twitter: "Yadnesh_Bamne",
-		linkedin: "yadneshbamne21",
-	},
-	{
-		name: "Aarya Bivalkar",
-		role: "Joint Publicity Head",
-		img: "aarya.jpg",
-		linkedin: "aarya-bivalkar-1a89b928a",
-	},
-	{
-		name: "Vedant Shinde",
-		role: "Joint Design Head",
-		img: "vedant.jpg",
-		// linkedin: "vedant-shinde-0b1a1a1b4",
-		github: "Vedants06",
-	},
-	{
-		name: "Durva Waghchaure",
-		role: "Joint Event Head",
-		img: "durva3.jpg",
-		// twitter: "kunal_mehta",
-		linkedin: "durva-waghchaure-4793942b9",
-		// github: "kunalmehta",
-	},
-	{
-		name: "Abdul Rehman Khan",
-		role: "Joint Technical Head",
-		img: "abdul.jpg",
-		linkedin: "abdul-rehman-khan-68130328b",
-	},
-	{
-		name: "Zahid Hamdule",
-		role: "Joint Content Head",
-		img: "zahid.jpg",
-		// twitter: "rohan_patel",
-		linkedin: "zahid-hamdule-5a198a285",
-		// github: "rohanpatel",
-	},
+  {
+    name: "Atharva Shelke",
+    role: "Founder & Head",
+    img: "atharva2.jpg",
+    twitter: "_atharva_shelke",
+    linkedin: "atharva-shelke-a9a9a9226",
+  },
+  {
+    name: "Avanish Vadke",
+    role: "Dev Head",
+    img: "avanish.jpeg",
+    twitter: "AvanisHCodes_",
+    linkedin: "avanishvadke",
+    github: "AvanishVadke",
+  },
+  {
+    name: "Parth Das",
+    role: "Technical Head",
+    img: "Parth.JPG",
+    linkedin: "parth-das-675784259",
+  },
+  {
+    name: "Samay Navale",
+    role: "Community Head",
+    img: "samay.png",
+    linkedin: "samay-navale",
+  },
+  {
+    name: "Ovee Dolkar",
+    role: "Event Head",
+    img: "ovee.jpeg",
+    linkedin: "ovee-dolkar-639261346",
+  },
+  {
+    name: "Abhishek Thormothe",
+    role: "Design & Publicity Head",
+    img: "abhiiii.png",
+    twitter: "yadneshbamne",
+    linkedin: "thormotheabhishek",
+    github: "abhi2k4",
+  },
+  {
+    name: "Nishil Rathod",
+    role: "Content Head",
+    img: "nishil.jpg",
+    linkedin: "nishilrathod",
+  },
+  {
+    name: "Sarakshi More",
+    role: "Joint Community Head",
+    img: "sarakshi.jpg",
+    linkedin: "sarakshi-m-158212211",
+    github: "Sarakshimore",
+  },
+  {
+    name: "Yadnesh Bamne",
+    role: "Joint Dev Head",
+    img: "yadnesh.jpg",
+    twitter: "Yadnesh_Bamne",
+    linkedin: "yadneshbamne21",
+  },
+  {
+    name: "Aarya Bivalkar",
+    role: "Joint Publicity Head",
+    img: "aarya.jpg",
+    linkedin: "aarya-bivalkar-1a89b928a",
+  },
+  {
+    name: "Vedant Shinde",
+    role: "Joint Design Head",
+    img: "vedant.jpg",
+    // linkedin: "vedant-shinde-0b1a1a1b4",
+    github: "Vedants06",
+  },
+  {
+    name: "Durva Waghchaure",
+    role: "Joint Event Head",
+    img: "durva3.jpg",
+    // twitter: "kunal_mehta",
+    linkedin: "durva-waghchaure-4793942b9",
+    // github: "kunalmehta",
+  },
+  {
+    name: "Abdul Rehman Khan",
+    role: "Joint Technical Head",
+    img: "abdul.jpg",
+    linkedin: "abdul-rehman-khan-68130328b",
+  },
+  {
+    name: "Zahid Hamdule",
+    role: "Joint Content Head",
+    img: "zahid.jpg",
+    // twitter: "rohan_patel",
+    linkedin: "zahid-hamdule-5a198a285",
+    // github: "rohanpatel",
+  }
 ];
 
 const containerVariants = {
-	hidden: { opacity: 0 },
-	visible: {
-		opacity: 1,
-		transition: {
-			staggerChildren: 0.1,
-		},
-	},
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
 };
 
 const cardVariants = {
-	hidden: { y: 20, opacity: 0 },
-	visible: {
-		y: 0,
-		opacity: 1,
-		transition: {
-			duration: 0.5,
-			ease: "easeOut",
-		},
-	},
+  hidden: { y: 20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      duration: 0.5,
+      ease: "easeOut",
+    },
+  },
 };
 
 const ImageWithSkeleton = ({ src, alt, className, onLoad }) => {
-	const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
-	return (
-		<div className="relative w-full h-full">
-			{isLoading && (
-				<div className="absolute inset-0 rounded-full animate-pulse">
-					<div className="w-full h-full rounded-full bg-gradient-to-br from-primary/10 via-blue-400/10 to-primary/10">
-						<div className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/10 to-transparent animate-shine" />
-					</div>
-				</div>
-			)}
-			<img
-				src={src}
-				alt={alt}
-				className={`${className} transition-opacity duration-300 ${
-					isLoading ? "opacity-0" : "opacity-100"
-				}`}
-				onLoad={() => {
-					setIsLoading(false);
-					onLoad?.();
-				}}
-			/>
-		</div>
-	);
+  return (
+    <div className="relative w-full h-full">
+      {isLoading && (
+        <div className="absolute inset-0 rounded-full animate-pulse">
+          <div className="w-full h-full rounded-full bg-gradient-to-br from-primary/10 via-blue-400/10 to-primary/10">
+            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/10 to-transparent animate-shine" />
+          </div>
+        </div>
+      )}
+      <img
+        src={src}
+        alt={alt}
+        className={`${className} transition-opacity duration-300 ${
+          isLoading ? 'opacity-0' : 'opacity-100'
+        }`}
+        onLoad={() => {
+          setIsLoading(false);
+          onLoad?.();
+        }}
+      />
+    </div>
+  );
 };
 
 export default function AboutUs() {
-	const { getToken } = useAuth();
-	const [imageUrls, setImageUrls] = useState({});
-	const [loadedImages, setLoadedImages] = useState({});
+  const { getToken } = useAuth();
+  const [imageUrls, setImageUrls] = useState({});
+  const [loadedImages, setLoadedImages] = useState({});
 
-	// Existing image fetching effect
-	useEffect(() => {
-		const fetchImages = async () => {
-			try {
-				const token = await getToken();
-				const supabase = await supabaseClient(token);
+ 
+  // Existing image fetching effect
+  useEffect(() => {
+    const fetchImages = async () => {
+      try {
+        const token = await getToken();
+        const supabase = await supabaseClient(token);
 
-				let urls = {};
-				for (const member of teamMembers .concat(foundingMembers)) {
-					const { data } = supabase.storage
-						.from("team_photos")
-						.getPublicUrl(member.img);
-					if (data && data.publicUrl) urls[member.img] = data.publicUrl;
-				}
-				setImageUrls(urls);
-			} catch (err) {
-				console.error("Image load error:", err);
-			}
-		};
+        let urls = {};
+        for (const member of teamMembers) {
+          const { data } = supabase.storage
+            .from("team_photos")
+            .getPublicUrl(member.img);
+          if (data && data.publicUrl) urls[member.img] = data.publicUrl;
+        }
+        setImageUrls(urls);
+      } catch (err) {
+        console.error("Image load error:", err);
+      }
+    };
 
-		fetchImages();
-	}, [getToken]);
+    fetchImages();
+  }, [getToken]);
+  
+  return (    
+  <div className="relative min-h-screen overflow-hidden " style={{minWidth: "100vw"}}>
+      <Header />
+          {/* Background elements */}
+          <div className="absolute inset-0 overflow-hidden -z-10">
+            <div className="absolute inset-0 bg-grid-white/5 bg-[size:40px_40px]" />
+            <div className="absolute top-0 left-0 size-[500px] rounded-full bg-primary/20 -z-10 blur-[100px]" />
+            <div className="absolute bottom-0 right-0 size-[500px] rounded-full bg-blue-500/20 -z-10 blur-[100px]" />
+          </div>
 
-	return (
-		<div
-			className="relative min-h-screen overflow-hidden "
-			style={{ minWidth: "100vw" }}
-		>
-			<Header />
-			{/* Background elements */}
-			<div className="absolute inset-0 overflow-hidden -z-10">
-				<div className="absolute inset-0 bg-grid-white/5 bg-[size:40px_40px]" />
-				<div className="absolute top-0 left-0 size-[500px] rounded-full bg-primary/20 -z-10 blur-[100px]" />
-				<div className="absolute bottom-0 right-0 size-[500px] rounded-full bg-blue-500/20 -z-10 blur-[100px]" />
-			</div>
+          {/* About Section */}
+          <motion.div
+            className="flex flex-col items-center justify-center py-16 px-6 md:px-12 mt-4"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <motion.div 
+              className="w-40 h-40 mb-8 relative group"
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: 0.2 }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-blue-500/20 rounded-full blur-xl group-hover:blur-2xl transition-all duration-300" />
+              <img 
+                src="/cc_logo.png" 
+                alt="Coders Club Logo" 
+                className="relative z-10 w-full h-full object-contain drop-shadow-lg"
+              />
+            </motion.div>
 
-			{/* About Section */}
-			<motion.div
-				className="flex flex-col items-center justify-center py-16 px-6 md:px-12 mt-4"
-				initial={{ opacity: 0, y: 20 }}
-				animate={{ opacity: 1, y: 0 }}
-				transition={{ duration: 0.6 }}
-			>
-				<motion.div
-					className="w-40 h-40 mb-8 relative group"
-					whileHover={{ scale: 1.05 }}
-					transition={{ duration: 0.2 }}
-				>
-					<div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-blue-500/20 rounded-full blur-xl group-hover:blur-2xl transition-all duration-300" />
-					<img
-						src="/cc_logo.png"
-						alt="Coders Club Logo"
-						className="relative z-10 w-full h-full object-contain drop-shadow-lg"
-					/>
-				</motion.div>
+            <motion.h1
+              className="text-4xl md:text-5xl font-extrabold text-center mb-6 text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+            >
+              About Coders Club
+            </motion.h1>
 
-				<motion.h1
-					className="text-4xl md:text-5xl font-extrabold text-center mb-6 text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600"
-					initial={{ opacity: 0 }}
-					animate={{ opacity: 1 }}
-					transition={{ duration: 0.5, delay: 0.3 }}
-				>
-					About Coders Club
-				</motion.h1>
+            <motion.div
+              className="max-w-3xl text-center space-y-6 mb-24"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+            >
+              <p className="text-lg text-muted-foreground leading-relaxed">
+                Welcome to <b>Coders Club</b>, a vibrant community at <b>A.P. Shah Institute Of Technology</b> fostering technical excellence and innovation. 
+                We are dedicated to helping students master Data Structures, Algorithms, and competitive programming.
+              </p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+                <div className="p-6 rounded-xl bg-primary/5 backdrop-blur-sm border border-primary/10 hover:border-primary/20 transition-all duration-300">
+                  <h3 className="text-xl font-semibold text-primary mb-2">Our Mission</h3>
+                  <p className="text-muted-foreground">To cultivate a collaborative learning environment where students can enhance their programming skills and grow together.</p>
+                </div>
+                
+                <div className="p-6 rounded-xl bg-primary/5 backdrop-blur-sm border border-primary/10 hover:border-primary/20 transition-all duration-300">
+                  <h3 className="text-xl font-semibold text-primary mb-2">What We Do</h3>
+                  <p className="text-muted-foreground">Regular coding contests, workshops, mentorship programs, and hands-on projects to build practical skills.</p>
+                </div>
+                
+                <div className="p-6 rounded-xl bg-primary/5 backdrop-blur-sm border border-primary/10 hover:border-primary/20 transition-all duration-300">
+                  <h3 className="text-xl font-semibold text-primary mb-2">Our Vision</h3>
+                  <p className="text-muted-foreground">To create a community of skilled programmers ready to tackle real-world challenges and excel in their careers.</p>
+                </div>
+              </div>
+            </motion.div>
 
-				<motion.div
-					className="max-w-3xl text-center space-y-6 mb-24"
-					initial={{ opacity: 0 }}
-					animate={{ opacity: 1 }}
-					transition={{ duration: 0.5, delay: 0.4 }}
-				>
-					<p className="text-lg text-muted-foreground leading-relaxed">
-						Welcome to <b>Coders Club</b>, a vibrant community at{" "}
-						<b>A.P. Shah Institute Of Technology</b> fostering technical
-						excellence and innovation. We are dedicated to helping students
-						master Data Structures, Algorithms, and competitive programming.
-					</p>
+            {/* Existing Team Section */}
+            <motion.h1
+              className="text-4xl md:text-5xl font-extrabold text-center mb-4 text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600"
+              initial={{ y: -20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.5 }}
+            >
+              Meet Our Team
+            </motion.h1>
+            <motion.p
+              className="text-muted-foreground text-center max-w-2xl mb-16"
+              initial={{ y: -20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              The passionate individuals behind Coders Club, working together to
+              create an amazing learning community.
+            </motion.p>
 
-					<div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
-						<div className="p-6 rounded-xl bg-primary/5 backdrop-blur-sm border border-primary/10 hover:border-primary/20 transition-all duration-300">
-							<h3 className="text-xl font-semibold text-primary mb-2">
-								Our Mission
-							</h3>
-							<p className="text-muted-foreground">
-								To cultivate a collaborative learning environment where students
-								can enhance their programming skills and grow together.
-							</p>
-						</div>
+            <motion.div
+              className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 w-full max-w-6xl"
+              variants={containerVariants}
+            >
+              {teamMembers.map(
+                ({ name, role, img, twitter, linkedin, github }) => (
+                  <motion.div
+                    key={name}
+                    variants={cardVariants}
+                    whileHover={{ y: -5, transition: { duration: 0.2 } }}
+                    className="group relative bg-black/20 backdrop-blur-xl p-6 rounded-xl border border-primary/10 hover:border-primary/30 transition-all duration-300"
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <div className="relative z-10">
+                      <div className="relative w-32 h-32 mx-auto rounded-full overflow-hidden">
+                        <ImageWithSkeleton
+                          src={imageUrls[img] || "/placeholder.jpg"}
+                          alt={name}
+                          className="w-full h-full object-cover rounded-full border-2 border-primary/20 group-hover:border-primary/40 transition-all duration-500"
+                          onLoad={() =>
+                            setLoadedImages((prev) => ({
+                              ...prev,
+                              [img]: true,
+                            }))
+                          }
+                        />
+                      </div>
 
-						<div className="p-6 rounded-xl bg-primary/5 backdrop-blur-sm border border-primary/10 hover:border-primary/20 transition-all duration-300">
-							<h3 className="text-xl font-semibold text-primary mb-2">
-								What We Do
-							</h3>
-							<p className="text-muted-foreground">
-								Regular coding contests, workshops, mentorship programs, and
-								hands-on projects to build practical skills.
-							</p>
-						</div>
+                      <h3 className="text-xl font-bold mt-4 text-center group-hover:text-primary transition-colors duration-300">
+                        {name}
+                      </h3>
+                      <p className="text-sm text-muted-foreground mt-1 text-center">
+                        {role}
+                      </p>
 
-						<div className="p-6 rounded-xl bg-primary/5 backdrop-blur-sm border border-primary/10 hover:border-primary/20 transition-all duration-300">
-							<h3 className="text-xl font-semibold text-primary mb-2">
-								Our Vision
-							</h3>
-							<p className="text-muted-foreground">
-								To create a community of skilled programmers ready to tackle
-								real-world challenges and excel in their careers.
-							</p>
-						</div>
-					</div>
-				</motion.div>
-
-				{/* Founding Team Section */}
-				<motion.h1
-					className="text-4xl md:text-5xl font-extrabold text-center mb-4 text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600"
-					initial={{ y: -20, opacity: 0 }}
-					animate={{ y: 0, opacity: 1 }}
-					transition={{ duration: 0.5 }}
-				>
-					Founding Team
-				</motion.h1>
-				<motion.p
-					className="text-muted-foreground text-center max-w-2xl mb-16"
-					initial={{ y: -20, opacity: 0 }}
-					animate={{ y: 0, opacity: 1 }}
-					transition={{ duration: 0.5, delay: 0.2 }}
-				>
-					Meet the visionaries who established Coders Club and laid the foundation
-					for our community.
-				</motion.p>
-
-				{/* Founding Team Grid - make it special with a highlight effect */}
-				<motion.div
-					className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 w-full max-w-6xl mb-24"
-					variants={containerVariants}
-					initial="hidden"
-					animate="visible"
-				>
-					{foundingMembers.map(
-						({ name, role, img, twitter, linkedin, github }) => (
-							<motion.div
-								key={name}
-								variants={cardVariants}
-								whileHover={{ y: -5, scale: 1.01, transition: { duration: 0.2 } }}
-								className="group relative bg-gradient-to-br from-primary/10 via-black/20 to-blue-500/10 backdrop-blur-xl p-6 rounded-xl border border-primary/20 hover:border-primary/40 transition-all duration-300 shadow-lg hover:shadow-primary/20"
-							>
-						
-								{/* Enhanced Hover Effects */}
-								<div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-blue-500/20 rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-500" />
-								<div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 to-blue-500/20 rounded-xl blur opacity-0 group-hover:opacity-100 transition duration-300" />
-
-								<div className="relative z-10">
-									{/* Profile Image Container */}
-									<div className="relative w-32 h-32 mx-auto">
-										{/* Glowing ring animation */}
-										<div className="absolute -inset-1 bg-gradient-to-r from-primary via-blue-500 to-primary rounded-full opacity-75 group-hover:opacity-100 blur-sm group-hover:blur transition-all duration-500 animate-spin-slow" />
-
-										{/* Image Container */}
-										<div className="relative w-32 h-32 mx-auto rounded-full overflow-hidden">
-										<ImageWithSkeleton
-											src={imageUrls[img] || "/placeholder.jpg"}
-											alt={name}
-											className="w-full h-full object-cover rounded-full border-2 border-primary/20 group-hover:border-primary/40 transition-all duration-500"
-											onLoad={() =>
-												setLoadedImages((prev) => ({
-													...prev,
-													[img]: true,
-												}))
-											}
-										/>
-									</div>
-									</div>
-
-									{/* Name and Role with enhanced styling */}
-									<div className="mt-6 space-y-2">
-										<h3 className="text-xl font-bold text-center bg-gradient-to-r from-white to-white bg-clip-text group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-blue-500 transition-all duration-300">
-											{name}
-										</h3>
-										<p className="text-sm text-blue-200/80 text-center font-medium">
-											{role}
-										</p>
-									</div>
-
-									{/* Decorative Divider */}
-									<div className="w-12 h-0.5 mx-auto my-4 bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-50 group-hover:w-24 group-hover:opacity-100 transition-all duration-300" />
-
-									{/* Social Links with enhanced hover effects */}
-									<div className="flex justify-center gap-4 mt-4">
-										{twitter && (
-											<motion.a
-												whileHover={{ scale: 1.2, rotate: 10 }}
-												whileTap={{ scale: 0.9 }}
-												href={`https://x.com/${twitter}`}
-												target="_blank"
-												rel="noopener noreferrer"
-												className="text-white/80 hover:text-primary transform hover:-translate-y-1 transition-all duration-300"
-											>
-												<FontAwesomeIcon
-													icon={faXTwitter}
-													className="w-5 h-5"
-												/>
-											</motion.a>
-										)}
-										{linkedin && (
-											<motion.a
-												whileHover={{ scale: 1.2, rotate: -10 }}
-												whileTap={{ scale: 0.9 }}
-												href={`https://www.linkedin.com/in/${linkedin}`}
-												target="_blank"
-												rel="noopener noreferrer"
-												className="text-white/80 hover:text-primary transform hover:-translate-y-1 transition-all duration-300"
-											>
-												<LucideLinkedin className="w-5 h-5" />
-											</motion.a>
-										)}
-										{github && (
-											<motion.a
-												whileHover={{ scale: 1.2, rotate: 10 }}
-												whileTap={{ scale: 0.9 }}
-												href={`https://github.com/${github}`}
-												target="_blank"
-												rel="noopener noreferrer"
-												className="text-white/80 hover:text-primary transform hover:-translate-y-1 transition-all duration-300"
-											>
-												<FontAwesomeIcon
-													icon={faGithub}
-													className="w-5 h-5"
-												/>
-											</motion.a>
-										)}
-									</div>
-								</div>
-							</motion.div>
-						)
-					)}
-				</motion.div>
-
-				{/* Current Team Section - keep this with a different style */}
-				<motion.h1
-					className="text-4xl md:text-5xl font-extrabold text-center mb-4 text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600"
-					initial={{ y: -20, opacity: 0 }}
-					animate={{ y: 0, opacity: 1 }}
-					transition={{ duration: 0.5 }}
-				>
-					Team Members
-				</motion.h1>
-				<motion.p
-					className="text-muted-foreground text-center max-w-2xl mb-16"
-					initial={{ y: -20, opacity: 0 }}
-					animate={{ y: 0, opacity: 1 }}
-					transition={{ duration: 0.5, delay: 0.2 }}
-				>
-					The talented individuals currently driving Coders Club forward.
-				</motion.p>
-
-				{/* Regular team grid - keep your existing styling */}
-				<motion.div
-					className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 w-full max-w-6xl"
-					variants={containerVariants}
-					initial="hidden"
-					animate="visible"
-				>
-					{teamMembers.map(
-						({ name, role, img, twitter, linkedin, github }) => (
-							<motion.div
-								key={name}
-								variants={cardVariants}
-								whileHover={{ y: -5, transition: { duration: 0.2 } }}
-								className="group relative bg-black/20 backdrop-blur-xl p-6 rounded-xl border border-primary/10 hover:border-primary/30 transition-all duration-300"
-							>
-								<div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-								<div className="relative z-10">
-									<div className="relative w-32 h-32 mx-auto rounded-full overflow-hidden">
-										<ImageWithSkeleton
-											src={imageUrls[img] || "/placeholder.jpg"}
-											alt={name}
-											className="w-full h-full object-cover rounded-full border-2 border-primary/20 group-hover:border-primary/40 transition-all duration-500"
-											onLoad={() =>
-												setLoadedImages((prev) => ({
-													...prev,
-													[img]: true,
-												}))
-											}
-										/>
-									</div>
-
-									<h3 className="text-xl font-bold mt-4 text-center group-hover:text-primary transition-colors duration-300">
-										{name}
-									</h3>
-									<p className="text-sm text-muted-foreground mt-1 text-center">
-										{role}
-									</p>
-
-									<div className="flex justify-center gap-4 mt-4">
-										{twitter && (
-											<motion.a
-												whileHover={{ scale: 1.2 }}
-												whileTap={{ scale: 0.9 }}
-												href={`https://x.com/${twitter}`}
-												target="_blank"
-												rel="noopener noreferrer"
-												className="hover:text-primary transition-colors duration-300"
-											>
-												<FontAwesomeIcon
-													icon={faXTwitter}
-													className="w-5 h-5"
-												/>
-											</motion.a>
-										)}
-										{linkedin && (
-											<motion.a
-												whileHover={{ scale: 1.2 }}
-												whileTap={{ scale: 0.9 }}
-												href={`https://www.linkedin.com/in/${linkedin}`}
-												target="_blank"
-												rel="noopener noreferrer"
-												className="hover:text-primary transition-colors duration-300"
-											>
-												<LucideLinkedin className="w-5 h-5" />
-											</motion.a>
-										)}
-										{github && (
-											<motion.a
-												whileHover={{ scale: 1.2 }}
-												whileTap={{ scale: 0.9 }}
-												href={`https://github.com/${github}`}
-												target="_blank"
-												rel="noopener noreferrer"
-												className="hover:text-primary transition-colors duration-300"
-											>
-												<FontAwesomeIcon
-													icon={faGithub}
-													className="w-5 h-5"
-												/>
-											</motion.a>
-										)}
-									</div>
-								</div>
-							</motion.div>
-						)
-					)}
-				</motion.div>
-			</motion.div>
-		</div>
-	);
+                      <div className="flex justify-center gap-4 mt-4">
+                        {twitter && (
+                          <motion.a
+                            whileHover={{ scale: 1.2 }}
+                            whileTap={{ scale: 0.9 }}
+                            href={`https://x.com/${twitter}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:text-primary transition-colors duration-300"
+                          >
+                            <FontAwesomeIcon
+                              icon={faXTwitter}
+                              className="w-5 h-5"
+                            />
+                          </motion.a>
+                        )}
+                        {linkedin && (
+                          <motion.a
+                            whileHover={{ scale: 1.2 }}
+                            whileTap={{ scale: 0.9 }}
+                            href={`https://www.linkedin.com/in/${linkedin}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:text-primary transition-colors duration-300"
+                          >
+                            <LucideLinkedin className="w-5 h-5" />
+                          </motion.a>
+                        )}
+                        {github && (
+                          <motion.a
+                            whileHover={{ scale: 1.2 }}
+                            whileTap={{ scale: 0.9 }}
+                            href={`https://github.com/${github}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:text-primary transition-colors duration-300"
+                          >
+                            <FontAwesomeIcon
+                              icon={faGithub}
+                              className="w-5 h-5"
+                            />
+                          </motion.a>
+                        )}
+                      </div>
+                    </div>
+                  </motion.div>
+                )
+              )}
+            </motion.div>
+          </motion.div>
+        </div>
+  );
 }

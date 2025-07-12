@@ -160,7 +160,7 @@ const educatorsByYear = {
     },
     {
       name: "Saad Ansari",
-      img: "anita.jpg",
+      img: "saad.jpg",
       whatsapp: "919819392080",
       expertise: ["Data Analysis", "Business Intelligence", "SQL"]
     },

@@ -136,7 +136,26 @@ const educatorsByYear = {
       whatsapp: "917506628036",
       expertise: ["Web Development", "Native Android Development", "Java"]
     },
-    {
+        {
+      name: "Vedant Shinde",
+      img: "vedant.jpg",
+      github: "Vedants06",
+      whatsapp: "918355927151",
+      expertise: ["Web Development", "DSA", "UI/UX"]
+    },
+                {
+    name: "Gayatri Mahajan",
+    img: "gayatri1.jpeg",
+    whatsapp: "919920345445",
+    expertise: ["DSA", "Problem Solving"]
+    },
+        {
+    name: "Praniti Ahire",
+    img: "praniti.jpeg",
+    whatsapp: "918097092120",
+    expertise: ["App Development", "DSA", "Python"]
+    },
+        {
       name: "Zahid Hamdule",
       img: "zahid.jpg",
       linkedin: "zahid-hamdule-5a198a285",
@@ -163,6 +182,48 @@ const educatorsByYear = {
       img: "saad.jpg",
       whatsapp: "919819392080",
       expertise: ["Data Analysis", "Business Intelligence", "SQL"]
+    },
+        {
+      name: "Abdul Rehman Khan",
+      img: "abdul1.jpeg",
+      linkedin: "abdul-rehman-khan-68130328b",
+      github: "Abdul-113",
+      whatsapp: "917208666971",
+      expertise: ["Problem Solving", "DSA"]
+    },
+    {
+      name: "Darsh Kalathiya",
+      img: "darsh.jpeg",
+      github: "DarshK25",
+      whatsapp: "918779860907",
+      expertise: ["Web Development", "DSA", "Python"]
+    },
+    {
+    name: "Aarya Bivalkar",
+    img: "aarya.jpeg",
+    linkedin: "aarya-bivalkar-1a89b928a",
+    expertise: ["App Development", "DSA", "Python"]
+    },
+        {
+    name: "Aditya Maskare",
+    img: "aditya.jpeg",
+    whatsapp: "918692968549",
+    expertise: ["DSA", "Problem Solving"]
+    },
+        {
+    name: "Parth Kothari",
+    img: "parth.jpeg",
+    linkedin: "paarth-kothari",
+    whatsapp: "919029021964",
+    expertise: ["Web Development", "DSA", "Design"]
+    },
+        {
+      name: "Yadnesh Bamne",
+      img: "yadnesh.jpg",
+      linkedin: "yadneshbamne21",
+      twitter: "Yadnesh_Bamne",
+      whatsapp: "919136747743",
+      expertise: ["React", "React-Native", "Flutter"]
     },
   ]
 };
@@ -291,7 +352,7 @@ export default function Educators() {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.3 }}
             >
-              Our Educators
+              Meet our Team
             </motion.h1>
 
             <motion.p
@@ -300,7 +361,7 @@ export default function Educators() {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.4 }}
             >
-              Meet and connect with our expert educators who are passionate
+              Meet and connect with our expert team who are passionate
               about teaching and helping students grow.
             </motion.p>
 
@@ -310,7 +371,7 @@ export default function Educators() {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.5 }}
             >
-              Showing educators for Academic Year {selectedYear}
+               Team members for Academic Year {selectedYear}
             </motion.p>
 
             <motion.div

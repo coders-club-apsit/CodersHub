@@ -167,7 +167,7 @@ const App = () => {
         //   ),
         // },
         {
-          path: "/educators",
+          path: "/team-members",
           element: (
             <ProtectedRoute>
               <Educators />

@@ -44,7 +44,7 @@ const routes = [
   { path: "/projects", icon: LucideAward, label: "Projects" },
   { path: "/blogs", icon: Notebook, label: "Blogs" },
   // { path: "/events", icon: Calendar, label: "Events" },
-  { path: "/educators", icon: Users, label: "Educators", color: "text-violet-500" },
+  { path: "/team-members", icon: Users, label: "Our Team", color: "text-violet-500" },
 ];
 
 export function Sidebar() {

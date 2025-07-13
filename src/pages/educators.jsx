@@ -5,10 +5,20 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { Sidebar } from "@/components/Sidebar";
 import { SideHeader } from "@/components/sidebarhead";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGithub, faWhatsapp, faXTwitter } from "@fortawesome/free-brands-svg-icons";
+import {
+  faGithub,
+  faWhatsapp,
+  faXTwitter,
+} from "@fortawesome/free-brands-svg-icons";
 import { LucideLinkedin } from "lucide-react";
 import { motion } from "framer-motion";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const PLACEHOLDER_IMAGE = "/placeholder.png";
 
@@ -19,8 +29,8 @@ const educatorsByYear = {
       img: "atharva2.jpg",
       linkedin: "atharva-shelke-a9a9a9226",
       whatsapp: "917045649828",
-      twitter: "_atharva_shelke", 
-      expertise: ["Leadership", "Team Management", "Data Structures"]
+      twitter: "_atharva_shelke",
+      expertise: ["Leadership", "Team Management", "Data Structures"],
     },
     {
       name: "Avanish Vadke",
@@ -28,49 +38,49 @@ const educatorsByYear = {
       linkedin: "avanishvadke",
       github: "AvanishVadke",
       whatsapp: "919920938235",
-      twitter: "AvanisHCodes_", 
-      expertise: ["MERN", "Android Dev", "Backend (SQL/PostgreSQL/Firebase)"]
+      twitter: "AvanisHCodes_",
+      expertise: ["MERN", "Android Dev", "Backend (SQL/PostgreSQL/Firebase)"],
     },
     {
       name: "Parth Das",
       img: "Parth.JPG",
       linkedin: "parth-das-675784259",
       whatsapp: "919819722550",
-      expertise: ["Algorithms", "Problem Solving", "Java"]
+      expertise: ["Algorithms", "Problem Solving", "Java"],
     },
     {
       name: "Samay Navale",
       img: "samay.png",
       linkedin: "samay-navale",
       whatsapp: "919172229750",
-      expertise: ["Community Management", "App Development", "Networking"]
+      expertise: ["Community Management", "App Development", "Networking"],
     },
     {
       name: "Ovee Dolkar",
       img: "ovee.jpeg",
       linkedin: "ovee-dolkar-639261346",
       whatsapp: "918928641168",
-      expertise: ["Event Management", "Public Speaking", "Team Building"]
+      expertise: ["Event Management", "Public Speaking", "Team Building"],
     },
     {
       name: "Nishil",
       img: "nishil.jpg",
       linkedin: "nishil-profile",
       whatsapp: "917654321098",
-      expertise: ["Problem Solving", "DSA Expert", "Java"]
+      expertise: ["Problem Solving", "DSA Expert", "Java"],
     },
     {
       name: "Nayan Gaikwad",
       img: "nayan1.jpg",
       linkedin: "nayan-gaikwad-96b63726b",
       whatsapp: "918828469293",
-      expertise: ["Mentorship", "Python", "Data Analysis"]
+      expertise: ["Mentorship", "Python", "Data Analysis"],
     },
     {
       name: "Nikhil Bhosale",
       img: "nikhil1.jpg",
       whatsapp: "917248997996",
-      expertise: ["DSA", "Web Development", "Python"]
+      expertise: ["DSA", "Web Development", "Python"],
     },
     {
       name: "Sarakshi More",
@@ -78,7 +88,7 @@ const educatorsByYear = {
       linkedin: "sarakshi-m-158212211",
       github: "Sarakshimore",
       whatsapp: "917506628036",
-      expertise: ["Web Development", "Native Android Development", "Java"]
+      expertise: ["Web Development", "Native Android Development", "Java"],
     },
     {
       name: "Yadnesh Bamne",
@@ -86,7 +96,7 @@ const educatorsByYear = {
       linkedin: "yadneshbamne21",
       twitter: "Yadnesh_Bamne",
       whatsapp: "919136747743",
-      expertise: ["React", "React-Native", "Flutter"]
+      expertise: ["React", "React-Native", "Flutter"],
     },
     {
       name: "Durva Waghchaure",
@@ -94,21 +104,21 @@ const educatorsByYear = {
       linkedin: "durva-waghchaure-4793942b9",
       twitter: "durva1102",
       whatsapp: "919029223696",
-      expertise: ["Java", "Mentorship", "Problem Solving"]
+      expertise: ["Java", "Mentorship", "Problem Solving"],
     },
     {
       name: "Vedant Shinde",
       img: "vedant.jpg",
       github: "Vedants06",
       whatsapp: "918355927151",
-      expertise: ["Web Development", "DSA", "UI/UX"]
+      expertise: ["Web Development", "DSA", "UI/UX"],
     },
     {
       name: "Zahid Hamdule",
       img: "zahid.jpg",
       linkedin: "zahid-hamdule-5a198a285",
       whatsapp: "918928989023",
-      expertise: ["Content Strategy", "Technical Writing", "Documentation"]
+      expertise: ["Content Strategy", "Technical Writing", "Documentation"],
     },
     {
       name: "Abdul Rehman Khan",
@@ -116,8 +126,8 @@ const educatorsByYear = {
       linkedin: "abdul-rehman-khan-68130328b",
       github: "Abdul-113",
       whatsapp: "917208666971",
-      expertise: ["Problem Solving", "DSA"]
-    }
+      expertise: ["Problem Solving", "DSA"],
+    },
   ],
   "2025-2026": [
     {
@@ -126,7 +136,7 @@ const educatorsByYear = {
       linkedin: "durva-waghchaure-4793942b9",
       twitter: "durva1102",
       whatsapp: "919029223696",
-      expertise: ["Java", "Mentorship", "Problem Solving"]
+      expertise: ["Java", "Mentorship", "Problem Solving"],
     },
     {
       name: "Sarakshi More",
@@ -134,40 +144,40 @@ const educatorsByYear = {
       linkedin: "sarakshi-m-158212211",
       github: "Sarakshimore",
       whatsapp: "917506628036",
-      expertise: ["Web Development", "Native Android Development", "Java"]
+      expertise: ["Web Development", "Native Android Development", "Java"],
     },
-        {
+    {
       name: "Vedant Shinde",
       img: "vedant.jpg",
       github: "Vedants06",
       whatsapp: "918355927151",
-      expertise: ["Web Development", "DSA", "UI/UX"]
+      expertise: ["Web Development", "DSA", "UI/UX"],
     },
-                {
-    name: "Gayatri Mahajan",
-    img: "gayatri1.jpeg",
-    whatsapp: "919920345445",
-    expertise: ["DSA", "Problem Solving"]
+    {
+      name: "Gayatri Mahajan",
+      img: "gayatri1.jpeg",
+      whatsapp: "919920345445",
+      expertise: ["DSA", "Problem Solving"],
     },
-        {
-    name: "Praniti Ahire",
-    img: "praniti.jpeg",
-    whatsapp: "918097092120",
-    expertise: ["App Development", "DSA", "Python"]
+    {
+      name: "Praniti Ahire",
+      img: "praniti.jpeg",
+      whatsapp: "918097092120",
+      expertise: ["Content Creation", "Cinematography", "Problem Solving"],
     },
-        {
+    {
       name: "Zahid Hamdule",
       img: "zahid.jpg",
       linkedin: "zahid-hamdule-5a198a285",
       whatsapp: "918928989023",
-      expertise: ["Content Strategy", "Technical Writing", "Documentation"]
+      expertise: ["Content Strategy", "Technical Writing", "Documentation"],
     },
     {
       name: "Om Date",
       img: "om3.jpeg",
       linkedin: "om-date-552755282",
       whatsapp: "919004003973",
-      expertise: ["Mobile Development", "Flutter", "iOS Development"]
+      expertise: ["Mobile Development", "Flutter", "iOS Development"],
     },
     {
       name: "Prakyat Shetty",
@@ -175,57 +185,57 @@ const educatorsByYear = {
       linkedin: "prakyat-shetty-50875b365",
       github: "Prakyatshetty-1",
       whatsapp: "919152675401",
-      expertise: ["DevOps", "Cloud Computing", "Docker"]
+      expertise: ["DevOps", "Cloud Computing", "Docker"],
     },
     {
       name: "Saad Ansari",
       img: "saad.jpg",
       whatsapp: "919819392080",
-      expertise: ["Data Analysis", "Business Intelligence", "SQL"]
+      expertise: ["Data Analysis", "Business Intelligence", "SQL"],
     },
-        {
+    {
       name: "Abdul Rehman Khan",
       img: "abdul1.jpeg",
       linkedin: "abdul-rehman-khan-68130328b",
       github: "Abdul-113",
       whatsapp: "917208666971",
-      expertise: ["Problem Solving", "DSA"]
+      expertise: ["Problem Solving", "DSA"],
     },
     {
       name: "Darsh Kalathiya",
       img: "darsh.jpeg",
       github: "DarshK25",
       whatsapp: "918779860907",
-      expertise: ["Web Development", "DSA", "Python"]
+      expertise: ["Web Development", "DSA", "Python"],
     },
     {
-    name: "Aarya Bivalkar",
-    img: "aarya.jpeg",
-    linkedin: "aarya-bivalkar-1a89b928a",
-    expertise: ["App Development", "DSA", "Python"]
+      name: "Aarya Bivalkar",
+      img: "aarya.jpeg",
+      linkedin: "aarya-bivalkar-1a89b928a",
+      expertise: ["App Development", "DSA", "Python"],
     },
-        {
-    name: "Aditya Maskare",
-    img: "aditya.jpeg",
-    whatsapp: "918692968549",
-    expertise: ["DSA", "Problem Solving"]
+    {
+      name: "Aditya Maskare",
+      img: "aditya.jpeg",
+      whatsapp: "918692968549",
+      expertise: ["DSA", "Problem Solving"],
     },
-        {
-    name: "Parth Kothari",
-    img: "parth.jpeg",
-    linkedin: "paarth-kothari",
-    whatsapp: "919029021964",
-    expertise: ["Web Development", "DSA", "Design"]
+    {
+      name: "Parth Kothari",
+      img: "parth.jpeg",
+      linkedin: "paarth-kothari",
+      whatsapp: "919029021964",
+      expertise: ["Web Development", "DSA", "Design"],
     },
-        {
+    {
       name: "Yadnesh Bamne",
       img: "yadnesh.jpg",
       linkedin: "yadneshbamne21",
       twitter: "Yadnesh_Bamne",
       whatsapp: "919136747743",
-      expertise: ["React", "React-Native", "Flutter"]
+      expertise: ["React", "React-Native", "Flutter"],
     },
-  ]
+  ],
 };
 
 const containerVariants = {
@@ -361,8 +371,8 @@ export default function Educators() {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.4 }}
             >
-              Meet and connect with our expert team who are passionate
-              about teaching and helping students grow.
+              Meet and connect with our expert team who are passionate about
+              teaching and helping students grow.
             </motion.p>
 
             <motion.p
@@ -371,7 +381,7 @@ export default function Educators() {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.5 }}
             >
-               Team members for Academic Year {selectedYear}
+              Team members for Academic Year {selectedYear}
             </motion.p>
 
             <motion.div

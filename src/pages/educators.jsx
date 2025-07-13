@@ -232,7 +232,7 @@ const educatorsByYear = {
       expertise: ["DSA", "Python", "Problem Solving", "Google Workspace",],
     },
     {
-      name: "Parth Kothari",
+      name: "Paarth Kothari",
       img: "parth.jpeg",
       linkedin: "paarth-kothari",
       whatsapp: "919029021964",

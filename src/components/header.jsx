@@ -5,7 +5,6 @@ import { SignedIn, SignedOut, UserButton, SignIn } from '@clerk/clerk-react';
 import { PenBox, NotebookPen, Book, Link2 } from 'lucide-react';
 import { ThemeToggle } from "./ThemeToggle";
 import { motion } from 'framer-motion';
-import NotificationDropdown from './NotificationDropdown';
 
 const Header = () => {
     const [search, setSearch] = useSearchParams();
@@ -48,9 +47,6 @@ const Header = () => {
                         </motion.div>
 
                         <div className="flex items-center gap-6">
-                            <SignedIn>
-                                <NotificationDropdown />
-                            </SignedIn>
 
                             <SignedOut>
                                 <motion.div

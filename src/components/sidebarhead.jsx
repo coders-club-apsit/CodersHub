@@ -5,7 +5,6 @@ import { Input } from "@/components/ui/input";
 import { SignedIn, UserButton } from '@clerk/clerk-react';
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { PenBox, NotebookPen, Save } from 'lucide-react';
-import NotificationDropdown from './NotificationDropdown';
 
 export function SideHeader({ searchQuery, setSearchQuery }) {
   return (
@@ -16,9 +15,6 @@ export function SideHeader({ searchQuery, setSearchQuery }) {
           <h1 className="text-xl font-semibold ml-4 text-primary">Students Corner</h1>
         </div>
         <div className="flex items-center space-x-4">
-          <SignedIn>
-            <NotificationDropdown/>
-          </SignedIn>
           <SignedIn>
           <UserButton
                     appearance={{

@@ -33,7 +33,7 @@ import AddTopicDrawer from "@/components/add-topic-drawer";
 
 // API and Hooks
 import { getTopics } from "@/api/api-topics";
-import { addNewNote } from "@/api/api-Notes";
+import { addNewProject } from "@/api/api-projects";
 import useFetch from "@/hooks/use-fetch";
 
 
@@ -44,7 +44,7 @@ const schema = z.object({
   content: z.string().min(1, { message: "Content is required" }),
 });
 
-const AddNotes = () => {
+const AddProjects = () => {
   const { isLoaded, user } = useUser();
   const navigate = useNavigate();
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
@@ -78,25 +78,25 @@ const AddNotes = () => {
 
   // Create note
   const {
-    fn: fnCreateNote,
-    loading: loadingCreateNote,
-    error: errorCreateNote,
-    data: dataCreateNote,
-  } = useFetch(addNewNote);
+    fn: fnCreateProject,
+    loading: loadingCreateProject,
+    error: errorCreateProject,
+    data: dataCreateProject,
+  } = useFetch(addNewProject);
 
   useEffect(() => {
     if (isLoaded) fnTopics();
   }, [isLoaded]);
 
   useEffect(() => {
-    if (dataCreateNote && !loadingCreateNote) {
+    if (dataCreateProject && !loadingCreateProject) {
       reset();
-      navigate("/notes");
+      navigate("/projects");
     }
-  }, [dataCreateNote, loadingCreateNote]);
+  }, [dataCreateProject, loadingCreateProject]);
 
   const onSubmit = (data) => {
-    fnCreateNote({
+    fnCreateProject({
       ...data,
       recruiter_id: user.id,
     });
@@ -112,7 +112,7 @@ const AddNotes = () => {
     setShowConfirmDialog(false);
   };
 
-  const NotePreview = ({ data }) => (
+  const ProjectPreview = ({ data }) => (
     <div className="bg-black/20 backdrop-blur-sm p-6 rounded-lg border border-primary/10">
       <h3 className="text-xl font-bold mb-2">{data.title}</h3>
       <p className="text-muted-foreground mb-4">{data.description}</p>
@@ -139,14 +139,14 @@ const AddNotes = () => {
       <Header />
       <main className="container mx-auto px-4 py-8">
         <h1 className="gradient-title font-extrabold text-5xl sm:text-7xl text-center pb-8 mt-20">
-          Post a Note
+          Post a Project
         </h1>
 
         <form onSubmit={handleSubmit(handleConfirmSubmit)} className="mx-auto space-y-6">
           {/* Title Input */}
           <div>
             <Input
-              placeholder="Note title"
+              placeholder="Project title"
               {...register("title")}
               className={errors.title ? "border-red-500" : ""}
             />
@@ -158,7 +158,7 @@ const AddNotes = () => {
           {/* Description Textarea */}
           <div>
             <Textarea
-              placeholder="Note Description"
+              placeholder="Project description"
               {...register("description")}
               className={errors.description ? "border-red-500" : ""}
             />
@@ -229,14 +229,14 @@ const AddNotes = () => {
           </div>
 
           {/* Error Messages */}
-          {errorCreateNote && (
+          {errorCreateProject && (
             <div className="bg-red-50 p-4 rounded-md">
-              <p className="text-red-500">{errorCreateNote.message}</p>
+              <p className="text-red-500">{errorCreateProject.message}</p>
             </div>
           )}
 
           {/* Loading State */}
-          {loadingCreateNote && (
+          {loadingCreateProject && (
             <div className="py-2">
               <BarLoader className=" bg-gradient-to-r from-blue-400 to-cyan-400" width="100%"  />
             </div>
@@ -269,16 +269,16 @@ const AddNotes = () => {
                 type="submit"
                 size="lg"
                 className="w-full relative group bg-gradient-to-r from-primary to-blue-600 hover:opacity-90 transition-all duration-300"
-                disabled={isSubmitting || loadingCreateNote}
+                disabled={isSubmitting || loadingCreateProject}
               >
                 <span className="relative z-10 flex items-center justify-center gap-2">
-                  {isSubmitting || loadingCreateNote ? (
+                  {isSubmitting || loadingCreateProject ? (
                     <>
                       <BarLoader className=" bg-gradient-to-r from-blue-400 to-cyan-400" width="100%"  />
                       Posting...
                     </>
                   ) : (
-                    "Post Note"
+                    "Post this Project"
                   )}
                 </span>
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-md" />
@@ -294,7 +294,7 @@ const AddNotes = () => {
             className="mt-8"
           >
             <h2 className="text-2xl font-bold mb-4">Preview</h2>
-            <NotePreview data={watch()} />
+            <ProjectPreview data={watch()} />
           </motion.div>
         )}
 
@@ -330,4 +330,4 @@ const AddNotes = () => {
   );
 };
 
-export default AddNotes;
+export default AddProjects;

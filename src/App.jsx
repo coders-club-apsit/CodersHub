@@ -1,8 +1,8 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import NotFound from "./pages/not-found";
 import "./App.css";
 import AppLayout from "./layout/app-layout";
 import LandingPage from "./pages/landingpage";
-import AboutUs from "./pages/aboutus";
 import About from "./pages/about-us";
 import { ThemeProvider } from "@/components/theme-provider";
 import Notes from "./pages/notes";
@@ -25,10 +25,18 @@ import PrivacyPolicyModal from "./components/PrivacyPolicyModal";
 // import Events from "./pages/events";
 import Educators from "./pages/educators";
 import DomainList from "./pages/domain-list";
-import ProjectsList from "./pages/project-list";
+import ProjectsList from "./pages/project";
 import ProjectDetail from "./pages/projects";
-import Blog from "./components/Blog";
-import MainBlog from "./components/MainBlog";
+import ProjectPage from "./pages/project";
+import ProjectsListing from "./pages/projects";
+import AddProjects from "./pages/add-projects";
+import SavedProjects from "./pages/savedProjects";
+import EditProject from "./pages/editproject";
+import AddBlogs from "./pages/add-blogs";
+import BlogsListing from "./pages/blogs";
+import BlogPage from "./pages/blog";
+import SavedBlogs from "./pages/saved-blogs";
+import EditBlog from "./pages/editblog";
 
 const App = () => {
   const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
@@ -53,7 +61,11 @@ const App = () => {
               element: <LandingPage />,
             },
             {
-              path: "/aboutus",
+              path: "*",
+              element: <NotFound />,
+            },
+            {
+              path: "/about-us",
               element: <About />,
             },
           ],
@@ -67,14 +79,6 @@ const App = () => {
           element: (
             <ProtectedRoute adminOnly>
               <EditNotes />
-            </ProtectedRoute>
-          ),
-        },
-        {
-          path: "/about-us",
-          element: (
-            <ProtectedRoute>
-              <AboutUs />
             </ProtectedRoute>
           ),
         },
@@ -163,26 +167,91 @@ const App = () => {
         //   ),
         // },
         {
-          path: "/educators",
+          path: "/team-members",
           element: (
             <ProtectedRoute>
-              <Educators /> 
+              <Educators />
             </ProtectedRoute>
           ),
         },
         {
-          path: "/blog",
+          path: "/projects",
           element: (
             <ProtectedRoute>
-              <ProjectsList />
+              <ProjectsListing />
+            </ProtectedRoute>
+          ),
+        },
+        // {
+        //   path: "/projects/domain/:id",
+        //   element: (
+        //     <ProtectedRoute>
+        //       <ProjectsList />
+        //     </ProtectedRoute>
+        //   ),
+        // },
+        {
+          path: "/project/:id",
+          element: (
+            <ProtectedRoute>
+              <ProjectPage />
             </ProtectedRoute>
           ),
         },
         {
-          path: "/mainblog/:id",
+          path: "/add-projects",
+          element: (
+            <ProtectedRoute adminOnly>
+              <AddProjects />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "/saved-projects",
+          element: <SavedProjects />,
+        },
+        {
+          path: "/project/edit/:projectId",
+          element: (
+            <ProtectedRoute adminOnly>
+              <EditProject />
+            </ProtectedRoute>
+          ),
+        },
+
+        {
+          path: "/blogs",
           element: (
             <ProtectedRoute>
-              <ProjectDetail />
+              <BlogsListing />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "/add-blogs",
+          element: (
+            <ProtectedRoute adminOnly>
+              <AddBlogs />
+            </ProtectedRoute>
+          ),
+        },
+                {
+          path: "/blog/:id",
+          element: (
+            <ProtectedRoute>
+              <BlogPage />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "/saved-blogs",
+          element: <SavedBlogs />,
+        },
+        {
+          path: "/blog/edit/:blogId",
+          element: (
+            <ProtectedRoute adminOnly>
+              <EditBlog />
             </ProtectedRoute>
           ),
         },

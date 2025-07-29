@@ -1,21 +1,19 @@
-// note.jsx
 import { useState, useEffect, useMemo } from 'react';
 import { useUser, useSession } from '@clerk/clerk-react';
 import { useParams, Link } from 'react-router-dom';
-import { getSingleNote } from '@/api/api-Notes';
+import { getSingleBlog } from '@/api/api-blogs';
 import { BarLoader } from 'react-spinners';
-import MDEditor from '@uiw/react-md-editor';
 import Header from '@/components/header';
 import { ArrowLeft, Expand, PanelLeftClose, PenBox, ChevronLeft, ChevronRight, Clock } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { isAndroid } from 'react-device-detect';
 import { useQuery } from '@tanstack/react-query';
 import ScrollToTop from '@/components/ScrollToTop';
-import { ADMIN_EMAILS } from "@/config/admin"; // Make sure this path is correct
+import { ADMIN_EMAILS } from "@/config/admin";
+import MDEditor from '@uiw/react-md-editor';
 
 const extractIndex = (content) => {
   if (!content) return [];
-  // Match lines like: 1. [Title](#anchor)
   const indexRegex = /^\d+\.\s+\[([^\]]+)\]\((#[^)]+)\)/gm;
   const matches = [];
   let match;
@@ -25,19 +23,15 @@ const extractIndex = (content) => {
   return matches;
 };
 
-const NotePage = () => {
+
+
+const BlogPage = () => {
   const { isLoaded } = useUser();
   const { session } = useSession();
   const { id } = useParams();
   const { user } = useUser();
   const [isAdmin, setIsAdmin] = useState(false);
   const [indexCollapsed, setIndexCollapsed] = useState(false);
-
-  const estimateReadingTime = (content) => {
-  if (!content) return 0;
-  const words = content.replace(/[^\w\s]/g, '').split(/\s+/).length;
-  return Math.ceil(words / 200); // Average reading speed: 200 words per minute
-};
 
   useEffect(() => {
     if (user && user.primaryEmailAddress?.emailAddress) {
@@ -47,17 +41,19 @@ const NotePage = () => {
       setIsAdmin(false);
     }
   }, [user]);
-
-  const { data: notes, isLoading: loadingNotes } = useQuery({
-    queryKey: ['note', id],
+const estimateReadingTime = (content) => {
+  if (!content) return 0;
+  const words = content.replace(/[^\w\s]/g, '').split(/\s+/).length;
+  return Math.ceil(words / 200); // Average reading speed: 200 words per minute
+};
+  const { data: blogs, isLoading: loadingBlogs } = useQuery({
+    queryKey: ['blog', id],
     queryFn: async () => {
       const token = await session.getToken({ template: 'supabase' });
-      return getSingleNote(token, { note_id: id });
+      return getSingleBlog(token, { blog_id: id });
     },
     enabled: isLoaded,
   });
-
-  
 
   const [mode, setMode] = useState(() => localStorage.getItem('readingMode') || 'compact');
 
@@ -69,12 +65,15 @@ const NotePage = () => {
     setMode((prev) => (prev === 'compact' ? 'expanded' : 'compact'));
   };
 
-  // Memoize index extraction for performance
-  const noteIndex = useMemo(() => extractIndex(notes?.content), [notes?.content]);
-  const readingTime = useMemo(() => estimateReadingTime(notes?.content), [notes?.content]);
+  // Original date format (assumes blogs.created_at is like "2025-06-09T03:01:00Z")
+  const createdDate = blogs?.created_at ? blogs.created_at.split("T")[0] : "N/A";
 
-  if (!isLoaded || loadingNotes) {
-    return <BarLoader className=" bg-gradient-to-r from-blue-400 to-cyan-400" width="100%"/>;
+  // Memoize index extraction for performance
+  const blogIndex = useMemo(() => extractIndex(blogs?.content), [blogs?.content]);
+  const readingTime = useMemo(() => estimateReadingTime(blogs?.content), [blogs?.content]);
+
+  if (!isLoaded || loadingBlogs) {
+    return <BarLoader className="bg-gradient-to-r from-blue-400 to-cyan-400" width="100%" />;
   }
 
   return (
@@ -82,7 +81,7 @@ const NotePage = () => {
       <Header />
       <div className="min-h-screen pt-20 pb-12 px-4 bg-gradient-to-b from-background to-background/50 flex">
         {/* Sidebar Index */}
-        {noteIndex.length > 0 && (
+        {blogIndex.length > 0 && (
           <aside
             className={`
               hidden lg:flex flex-col sticky top-24 self-start transition-all duration-300 z-20
@@ -95,7 +94,6 @@ const NotePage = () => {
                 ${indexCollapsed ? "p-0" : "p-4"}
               `}
             >
-              {/* Toggle button always visible */}
               <button
                 className={`
                   absolute top-6 -right-5 z-30
@@ -126,7 +124,7 @@ const NotePage = () => {
                 <div className="mt-2">
                   <h2 className="text-lg font-semibold mb-3 text-primary">Index</h2>
                   <ul className="space-y-2">
-                    {noteIndex.map((item, i) => (
+                    {blogIndex.map((item, i) => (
                       <li key={item.href}>
                         <a
                           href={item.href}
@@ -153,12 +151,12 @@ const NotePage = () => {
               transition={{ duration: 0.3 }}
               className="flex items-center gap-4"
             >
-              <Link to="/notes" className="group flex items-center gap-2 text-muted-foreground hover:text-primary transition-all">
+              <Link to="/blogs" className="group flex items-center gap-2 text-muted-foreground hover:text-primary transition-all">
                 <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
-                <span>Back to Notes</span>
+                <span>Back to Blogs</span>
               </Link>
             </motion.div>
-            <div className="hidden md:flex items-center gap-4">
+<div className="hidden md:flex items-center gap-4">
               {readingTime > 0 && (
                 <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300">
                   <Clock className="w-4 h-4" />
@@ -188,35 +186,42 @@ const NotePage = () => {
             </div>
           </div>
 
-          {/* Note Content */}
+          {/* Blog Content */}
           <motion.div
             initial={!isAndroid && { opacity: 0, y: 20 }}
             animate={!isAndroid && { opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
             className="space-y-8"
           >
-            <div className="space-y-4">
-              <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-500" title={notes?.title}>
-                {notes?.title}
+            <div className="space-y-6">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-500" title={blogs?.title}>
+                {blogs?.title}
               </h1>
-              {notes?.topics?.topic_logo_url && (
-                <img src={notes?.topics?.topic_logo_url} className="h-12 transition-transform hover:scale-105" alt={notes?.title} />
-              )}
+              <div className="flex flex-col gap-2">
+                <p className="text-lg sm:text-xl font-semibold text-gray-300">
+                  By {blogs?.author_name || "Unknown Author"}
+                </p>
+                <p className="text-sm sm:text-base text-gray-400">
+                  Created on • {createdDate}
+                </p>
+              </div>
             </div>
 
-            {notes?.description && (
-              <div className="glass-card p-6 rounded-xl">
-                <h2 className="text-xl font-semibold mb-3 text-primary/80">About this Note</h2>
-                <p className="text-lg text-muted-foreground">{notes?.description}</p>
+            <div className="bg-card p-8 rounded-xl shadow-lg border border-slate-800">
+              <div className="space-y-6">
+                <h2 className="text-2xl sm:text-3xl font-semibold text-primary/80">About this Blog</h2>
+                <div className="text-base sm:text-lg leading-relaxed text-gray-200">
+                  <MDEditor.Markdown
+                    source={blogs?.content || "No content available for this blog."}
+                    className="prose max-w-none text-gray-200"
+                    style={{
+                      background: 'transparent',
+                      color: 'rgb(229, 231, 235)', // gray-200
+                      padding: 0,
+                    }}
+                  />
+                </div>
               </div>
-            )}
-
-            {/* Responsive Markdown Content */}
-            <div className="overflow-x-auto">
-              <MDEditor.Markdown
-                source={notes?.content}
-                className="prose prose-invert max-w-none sm:text-lg"
-              />
             </div>
           </motion.div>
         </div>
@@ -224,9 +229,9 @@ const NotePage = () => {
       <div className="fixed bottom-4 right-8 z-50 flex flex-col gap-4 items-center">
       {isAdmin && (
         <Link
-          to={`/note/edit/${id}`}
-          className="flex items-center gap-2 px-3 py-3 rounded-full bg-primary text-white shadow-lg hover:bg-primary/90 transition-all text-base font-semibold"
-          title="Edit Note"
+          to={`/blog/edit/${id}`}
+          className="fixed bottom-24 right-8 z-50 flex items-center gap-2 px-3 py-3 rounded-full bg-primary text-white shadow-lg hover:bg-primary/90 transition-all text-base font-semibold"
+          title="Edit Blog"
           style={{ boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.37)" }}
         >
           <PenBox className="w-5 h-5" />
@@ -238,4 +243,4 @@ const NotePage = () => {
   );
 };
 
-export default NotePage;
+export default BlogPage;

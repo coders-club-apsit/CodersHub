@@ -1,62 +1,88 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, memo } from 'react';
 import { FaGithub, FaLinkedin, FaWhatsapp, FaInstagram } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { isAndroid } from 'react-device-detect';
 import PrivacyPolicyModal from './PrivacyPolicyModal';
 
-const Footer = () => {
-  const socialLinks = [
-    {
-      name: 'WhatsApp',
-      url: 'https://chat.whatsapp.com/GXJ7PDV8ZKhH0KSiVTVK7g',
-      icon: <FaWhatsapp className="w-6 h-6" />,
-      hoverColor: 'hover:text-green-400',
-    },
-    {
-      name: 'Instagram',
-      url: 'https://www.instagram.com/codersclub_apsit',
-      icon: <FaInstagram className="w-6 h-6" />,
-      hoverColor: 'hover:text-pink-400',
-    },
-    {
-      name: 'LinkedIn',
-      url: 'https://www.linkedin.com/company/codersclub-apsit',
-      icon: <FaLinkedin className="w-6 h-6" />,
-      hoverColor: 'hover:text-blue-400',
-    }
-  ];
+// Move these outside the component to prevent recreation on each render
+const socialLinks = [
+  {
+    name: 'WhatsApp',
+    url: 'https://chat.whatsapp.com/GXJ7PDV8ZKhH0KSiVTVK7g',
+    icon: <FaWhatsapp className="w-6 h-6" />,
+    hoverColor: 'hover:text-green-400',
+  },
+  {
+    name: 'Instagram',
+    url: 'https://www.instagram.com/codersclub_apsit',
+    icon: <FaInstagram className="w-6 h-6" />,
+    hoverColor: 'hover:text-pink-400',
+  },
+  {
+    name: 'LinkedIn',
+    url: 'https://www.linkedin.com/company/codersclub-apsit',
+    icon: <FaLinkedin className="w-6 h-6" />,
+    hoverColor: 'hover:text-blue-400',
+  }
+];
 
   const quickLinks = [
     { name: 'Notes', path: '/notes' },
     { name: 'Resources', path: '/resources' },
     { name: 'Community', path: 'https://chat.whatsapp.com/GXJ7PDV8ZKhH0KSiVTVK7g', external: true },
-    { name: 'About Us', path: '/aboutus' },
+    { name: 'About Us', path: '/about-us' },
+    { name: 'Projects', path: '/projects' },
+    { name: 'Blogs', path: '/blogs' },
     // { name: 'FAQ', path: '#faq' }
   ];
 
+const Footer = () => {
   const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
 
-  const handlePrivacyPolicyClick = (e) => {
+  const handlePrivacyPolicyClick = useCallback((e) => {
     e.preventDefault();
     setShowPrivacyPolicy(true);
     window.location.hash = 'privacy-policy';
-  };
+  }, []);
 
   // Helper function to conditionally wrap with motion
-  const MotionWrapper = ({ children, ...props }) => {
+  const MotionWrapper = useCallback(({ children, ...props }) => {
     if (isAndroid) {
       return <div className={props.className}>{children}</div>;
     }
     return <motion.div {...props}>{children}</motion.div>;
-  };
+  }, []);
 
-  const MotionLink = ({ children, ...props }) => {
+  const MotionLink = useCallback(({ children, ...props }) => {
     if (isAndroid) {
       return <a className={props.className} href={props.href}>{children}</a>;
     }
     return <motion.a {...props}>{children}</motion.a>;
-  };
+  }, []);
+
+  // Memoize the social links section
+  const socialLinksSection = React.useMemo(() => (
+    <div className="flex space-x-4">
+      {socialLinks.map((link) => (
+        <MotionLink
+          key={link.name}
+          href={link.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={`p-2 rounded-lg transition-colors duration-150 bg-blue-500/10 backdrop-blur-sm border border-blue-500/10 ${link.hoverColor}`}
+          whileHover={!isAndroid && { 
+            scale: 1.1,
+            backgroundColor: 'rgba(59, 130, 246, 0.2)'
+          }}
+          whileTap={!isAndroid && { scale: 0.95 }}
+        >
+          {link.icon}
+        </MotionLink>
+      ))}
+    </div>
+  ), [MotionLink]);
+
 
   return (
     <footer className="relative mt-20 overflow-hidden">
@@ -110,25 +136,9 @@ const Footer = () => {
             >
               Connect with us
             </MotionWrapper>
-            <div className="flex space-x-4">
-              {socialLinks.map((link, index) => (
-                <MotionLink
-                  key={link.name}
-                  href={link.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`p-2 rounded-lg transition-all duration-300 bg-blue-500/10 backdrop-blur-sm border border-blue-500/10 ${link.hoverColor}`}
-                  whileHover={!isAndroid && { 
-                    scale: 1.1,
-                    backgroundColor: 'rgba(59, 130, 246, 0.2)'
-                  }}
-                  whileTap={!isAndroid && { scale: 0.95 }}
-                >
-                  {link.icon}
-                </MotionLink>
-              ))}
-            </div>
+            {socialLinksSection}
           </div>
+          
           <div className="space-y-6">
             <MotionWrapper 
               className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-400"
@@ -138,7 +148,7 @@ const Footer = () => {
             >
               Quick Links
             </MotionWrapper>
-            <MotionWrapper 
+             <MotionWrapper 
               className="grid grid-cols-2 gap-4"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -182,7 +192,7 @@ const Footer = () => {
               <Link
                 to="#privacy-policy"
                 onClick={handlePrivacyPolicyClick}
-                className="text-muted-foreground/80 hover:text-primary transition-all duration-300"
+                className="text-muted-foreground/80 hover:text-primary transition-colors duration-150"
               >
                 Privacy Policy
               </Link>
@@ -199,4 +209,5 @@ const Footer = () => {
   );
 };
 
-export default Footer;
+// Wrap the component in memo to prevent unnecessary re-renders
+export default memo(Footer);

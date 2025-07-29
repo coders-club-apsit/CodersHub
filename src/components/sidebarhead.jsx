@@ -1,10 +1,10 @@
 // src/components/sidebarhead.jsx
 import React from 'react';
-import { Link2, Search } from 'lucide-react';
+import { Badge, BadgeIcon, Link2, LucideAward, Search } from 'lucide-react';
 import { Input } from "@/components/ui/input";
 import { SignedIn, UserButton } from '@clerk/clerk-react';
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { PenBox, NotebookPen, Save } from 'lucide-react';
+import { PenBox, NotebookPen, Save, Notebook } from 'lucide-react';
 
 export function SideHeader({ searchQuery, setSearchQuery }) {
   return (
@@ -26,15 +26,26 @@ export function SideHeader({ searchQuery, setSearchQuery }) {
                   >
                     <UserButton.MenuItems>
                       <UserButton.Link
-                        label="Saved Notes"
-                        labelIcon={<Save size={15} />}
-                        href="/saved-notes"
-                      />
-                      <UserButton.Link
-                        label="Saved Resources"
-                        labelIcon={<Link2 size={15} />}
-                        href="/saved-resources"
-                      />
+                                            label="Saved Notes"
+                                            labelIcon={<PenBox size={15} />}
+                                            href="/saved-notes"
+                                        />
+                                        <UserButton.Link
+                                            label="Saved Resources"
+                                            labelIcon={<Link2 size={15} />}
+                                            href="/saved-resources"
+                                        />
+                                        <UserButton.Link
+                                            label="Saved Projects"
+                                            labelIcon={<LucideAward size={15} />}
+                                            href="/saved-projects"
+                                        />
+                                        <UserButton.Link
+                                            label="Saved Blogs"
+                                            labelIcon={<Notebook size={15} />}
+                                            href="/saved-blogs"
+                                        />
+                      
                     </UserButton.MenuItems>
                   </UserButton>
           </SignedIn>

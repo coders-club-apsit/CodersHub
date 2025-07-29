@@ -10,14 +10,12 @@ import TeamMemberSkeleton from "@/components/TeamMemberSkeleton";
 const teamMembers = [
   {
     name: "Atharva Shelke",
-    role: "Founder & Head",
     img: "atharva2.jpg",
     twitter: "_atharva_shelke",
     linkedin: "atharva-shelke-a9a9a9226",
   },
   {
     name: "Avanish Vadke",
-    role: "Dev Head",
     img: "avanish.jpeg",
     twitter: "AvanisHCodes_",
     linkedin: "avanishvadke",
@@ -25,25 +23,21 @@ const teamMembers = [
   },
   {
     name: "Parth Das",
-    role: "Technical Head",
     img: "Parth.JPG",
     linkedin: "parth-das-675784259",
   },
   {
     name: "Samay Navale",
-    role: "Community Head",
     img: "samay.png",
     linkedin: "samay-navale",
   },
   {
     name: "Ovee Dolkar",
-    role: "Event Head",
     img: "ovee.jpeg",
     linkedin: "ovee-dolkar-639261346",
   },
   {
     name: "Abhishek Thormothe",
-    role: "Design & Publicity Head",
     img: "abhiiii.png",
     twitter: "yadneshbamne",
     linkedin: "thormotheabhishek",
@@ -51,40 +45,47 @@ const teamMembers = [
   },
   {
     name: "Nishil Rathod",
-    role: "Content Head",
     img: "nishil.jpg",
     linkedin: "nishilrathod",
   },
+    {
+    name: "Nayan Gaikwad",
+    img: "nayan1.jpg",
+    linkedin: "nayan-gaikwad-96b63726b",
+    whatsapp: "918828469293",
+    expertise: ["Mentorship", "Python", "Data Analysis"]
+  },
+  {
+    name: "Nikhil Bhosale",
+    img: "nikhil1.jpg",
+    whatsapp: "917248997996",
+    expertise: ["DSA", "Web Development", "Python"]
+  },
   {
     name: "Sarakshi More",
-    role: "Joint Community Head",
     img: "sarakshi.jpg",
     linkedin: "sarakshi-m-158212211",
     github: "Sarakshimore",
   },
   {
     name: "Yadnesh Bamne",
-    role: "Joint Dev Head",
     img: "yadnesh.jpg",
     twitter: "Yadnesh_Bamne",
     linkedin: "yadneshbamne21",
   },
   {
     name: "Aarya Bivalkar",
-    role: "Joint Publicity Head",
     img: "aarya.jpg",
     linkedin: "aarya-bivalkar-1a89b928a",
   },
   {
     name: "Vedant Shinde",
-    role: "Joint Design Head",
     img: "vedant.jpg",
     // linkedin: "vedant-shinde-0b1a1a1b4",
     github: "Vedants06",
   },
   {
     name: "Durva Waghchaure",
-    role: "Joint Event Head",
     img: "durva3.jpg",
     // twitter: "kunal_mehta",
     linkedin: "durva-waghchaure-4793942b9",
@@ -92,13 +93,11 @@ const teamMembers = [
   },
   {
     name: "Abdul Rehman Khan",
-    role: "Joint Technical Head",
     img: "abdul.jpg",
     linkedin: "abdul-rehman-khan-68130328b",
   },
   {
     name: "Zahid Hamdule",
-    role: "Joint Content Head",
     img: "zahid.jpg",
     // twitter: "rohan_patel",
     linkedin: "zahid-hamdule-5a198a285",
@@ -259,7 +258,7 @@ export default function AboutUs() {
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.5 }}
             >
-              Meet Our Team
+              Meet Our Founding Team
             </motion.h1>
             <motion.p
               className="text-muted-foreground text-center max-w-2xl mb-16"

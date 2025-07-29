@@ -35,16 +35,16 @@ import AddTopicDrawer from "@/components/add-topic-drawer";
 import { getTopics } from "@/api/api-topics";
 import { addNewNote } from "@/api/api-Notes";
 import useFetch from "@/hooks/use-fetch";
+import { AddNewBlog } from "@/api/api-blogs";
 
 
 const schema = z.object({
   title: z.string().min(1, { message: "Title is required" }),
-  description: z.string().min(1, { message: "Description is required" }),
-  topic_id: z.string().min(1, { message: "Select or add a new topic" }),
+  author_name: z.string().min(1,{message: "Author name is required"}),
   content: z.string().min(1, { message: "Content is required" }),
 });
 
-const AddNotes = () => {
+const AddBlogs = () => {
   const { isLoaded, user } = useUser();
   const navigate = useNavigate();
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
@@ -61,9 +61,10 @@ const AddNotes = () => {
   } = useForm({
     defaultValues: {
       title: "",
-      description: "",
+      author_name: "",
       topic_id: "",
       content: "",
+      created_at: "",
     },
     resolver: zodResolver(schema),
   });
@@ -78,25 +79,25 @@ const AddNotes = () => {
 
   // Create note
   const {
-    fn: fnCreateNote,
-    loading: loadingCreateNote,
-    error: errorCreateNote,
-    data: dataCreateNote,
-  } = useFetch(addNewNote);
+    fn: fnCreateBlog,
+    loading: loadingCreateBlog,
+    error: errorCreateBlog,
+    data: dataCreateBlog,
+  } = useFetch(AddNewBlog);
 
   useEffect(() => {
     if (isLoaded) fnTopics();
   }, [isLoaded]);
 
   useEffect(() => {
-    if (dataCreateNote && !loadingCreateNote) {
+    if (dataCreateBlog && !loadingCreateBlog) {
       reset();
-      navigate("/notes");
+      navigate("/blogs");
     }
-  }, [dataCreateNote, loadingCreateNote]);
+  }, [dataCreateBlog, loadingCreateBlog]);
 
   const onSubmit = (data) => {
-    fnCreateNote({
+    fnCreateBlog({
       ...data,
       recruiter_id: user.id,
     });
@@ -115,7 +116,9 @@ const AddNotes = () => {
   const NotePreview = ({ data }) => (
     <div className="bg-black/20 backdrop-blur-sm p-6 rounded-lg border border-primary/10">
       <h3 className="text-xl font-bold mb-2">{data.title}</h3>
-      <p className="text-muted-foreground mb-4">{data.description}</p>
+      <p className="text-muted-foreground mb-4">{data.author_name}</p>
+      <p className="text-muted-foreground mb-4">{data.created_at}</p>
+      {/* <p className="text-muted-foreground mb-4">{data.description}</p> */}
       <div className="prose prose-invert max-w-none">
         <MDEditor.Markdown source={data.content} />
       </div>
@@ -139,14 +142,14 @@ const AddNotes = () => {
       <Header />
       <main className="container mx-auto px-4 py-8">
         <h1 className="gradient-title font-extrabold text-5xl sm:text-7xl text-center pb-8 mt-20">
-          Post a Note
+          Post a Blog
         </h1>
 
         <form onSubmit={handleSubmit(handleConfirmSubmit)} className="mx-auto space-y-6">
           {/* Title Input */}
           <div>
             <Input
-              placeholder="Note title"
+              placeholder="Blog title"
               {...register("title")}
               className={errors.title ? "border-red-500" : ""}
             />
@@ -157,18 +160,18 @@ const AddNotes = () => {
 
           {/* Description Textarea */}
           <div>
-            <Textarea
-              placeholder="Note Description"
-              {...register("description")}
-              className={errors.description ? "border-red-500" : ""}
+            <Input
+              placeholder="Author Name"
+              {...register("author_name")}
+              className={errors.author_name ? "border-red-500" : ""}
             />
-            {errors.description && (
-              <p className="text-red-500 text-sm mt-1">{errors.description.message}</p>
+            {errors.author_name && (
+              <p className="text-red-500 text-sm mt-1">{errors.author_name.message}</p>
             )}
           </div>
 
           {/* Topic Selection */}
-          <div className="flex items-center gap-4">
+          {/* <div className="flex items-center gap-4">
             <div className="flex-1">
               <Controller
                 name="topic_id"
@@ -208,7 +211,7 @@ const AddNotes = () => {
               )}
             </div>
             <AddTopicDrawer fetchTopics={fnTopics} />
-          </div>
+          </div> */}
 
           {/* Content Editor */}
           <div>
@@ -229,14 +232,14 @@ const AddNotes = () => {
           </div>
 
           {/* Error Messages */}
-          {errorCreateNote && (
+          {errorCreateBlog && (
             <div className="bg-red-50 p-4 rounded-md">
-              <p className="text-red-500">{errorCreateNote.message}</p>
+              <p className="text-red-500">{errorCreateBlog.message}</p>
             </div>
           )}
 
           {/* Loading State */}
-          {loadingCreateNote && (
+          {loadingCreateBlog && (
             <div className="py-2">
               <BarLoader className=" bg-gradient-to-r from-blue-400 to-cyan-400" width="100%"  />
             </div>
@@ -269,16 +272,16 @@ const AddNotes = () => {
                 type="submit"
                 size="lg"
                 className="w-full relative group bg-gradient-to-r from-primary to-blue-600 hover:opacity-90 transition-all duration-300"
-                disabled={isSubmitting || loadingCreateNote}
+                disabled={isSubmitting || loadingCreateBlog}
               >
                 <span className="relative z-10 flex items-center justify-center gap-2">
-                  {isSubmitting || loadingCreateNote ? (
+                  {isSubmitting || loadingCreateBlog ? (
                     <>
                       <BarLoader className=" bg-gradient-to-r from-blue-400 to-cyan-400" width="100%"  />
                       Posting...
                     </>
                   ) : (
-                    "Post Note"
+                    "Post Blog"
                   )}
                 </span>
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-md" />
@@ -330,4 +333,4 @@ const AddNotes = () => {
   );
 };
 
-export default AddNotes;
+export default AddBlogs;

@@ -6,12 +6,13 @@ import { getSingleNote } from '@/api/api-Notes';
 import { BarLoader } from 'react-spinners';
 import MDEditor from '@uiw/react-md-editor';
 import Header from '@/components/header';
-import { ArrowLeft, Expand, PanelLeftClose, PenBox, ChevronLeft, ChevronRight, Clock } from 'lucide-react';
+import { ArrowLeft, Expand, PanelLeftClose, PenBox, ChevronLeft, ChevronRight,Clock } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { isAndroid } from 'react-device-detect';
 import { useQuery } from '@tanstack/react-query';
 import ScrollToTop from '@/components/ScrollToTop';
 import { ADMIN_EMAILS } from "@/config/admin"; // Make sure this path is correct
+import { getSingleProject } from '@/api/api-projects';
 
 const extractIndex = (content) => {
   if (!content) return [];
@@ -24,20 +25,19 @@ const extractIndex = (content) => {
   }
   return matches;
 };
+const estimateReadingTime = (content) => {
+  if (!content) return 0;
+  const words = content.replace(/[^\w\s]/g, '').split(/\s+/).length;
+  return Math.ceil(words / 200); // Average reading speed: 200 words per minute
+};
 
-const NotePage = () => {
+const ProjectPage = () => {
   const { isLoaded } = useUser();
   const { session } = useSession();
   const { id } = useParams();
   const { user } = useUser();
   const [isAdmin, setIsAdmin] = useState(false);
   const [indexCollapsed, setIndexCollapsed] = useState(false);
-
-  const estimateReadingTime = (content) => {
-  if (!content) return 0;
-  const words = content.replace(/[^\w\s]/g, '').split(/\s+/).length;
-  return Math.ceil(words / 200); // Average reading speed: 200 words per minute
-};
 
   useEffect(() => {
     if (user && user.primaryEmailAddress?.emailAddress) {
@@ -48,16 +48,14 @@ const NotePage = () => {
     }
   }, [user]);
 
-  const { data: notes, isLoading: loadingNotes } = useQuery({
-    queryKey: ['note', id],
+  const { data: projects, isLoading: LoadingProjects } = useQuery({
+    queryKey: ['project', id],
     queryFn: async () => {
       const token = await session.getToken({ template: 'supabase' });
-      return getSingleNote(token, { note_id: id });
+      return getSingleProject(token, { project_id: id });
     },
     enabled: isLoaded,
   });
-
-  
 
   const [mode, setMode] = useState(() => localStorage.getItem('readingMode') || 'compact');
 
@@ -70,10 +68,10 @@ const NotePage = () => {
   };
 
   // Memoize index extraction for performance
-  const noteIndex = useMemo(() => extractIndex(notes?.content), [notes?.content]);
-  const readingTime = useMemo(() => estimateReadingTime(notes?.content), [notes?.content]);
+  const projectIndex = useMemo(() => extractIndex(projects?.content), [projects?.content]);
+  const readingTime = useMemo(() => estimateReadingTime(projects?.content), [projects?.content]);
 
-  if (!isLoaded || loadingNotes) {
+  if (!isLoaded || LoadingProjects) {
     return <BarLoader className=" bg-gradient-to-r from-blue-400 to-cyan-400" width="100%"/>;
   }
 
@@ -82,7 +80,7 @@ const NotePage = () => {
       <Header />
       <div className="min-h-screen pt-20 pb-12 px-4 bg-gradient-to-b from-background to-background/50 flex">
         {/* Sidebar Index */}
-        {noteIndex.length > 0 && (
+        {projectIndex.length > 0 && (
           <aside
             className={`
               hidden lg:flex flex-col sticky top-24 self-start transition-all duration-300 z-20
@@ -126,7 +124,7 @@ const NotePage = () => {
                 <div className="mt-2">
                   <h2 className="text-lg font-semibold mb-3 text-primary">Index</h2>
                   <ul className="space-y-2">
-                    {noteIndex.map((item, i) => (
+                    {projectIndex.map((item, i) => (
                       <li key={item.href}>
                         <a
                           href={item.href}
@@ -153,9 +151,9 @@ const NotePage = () => {
               transition={{ duration: 0.3 }}
               className="flex items-center gap-4"
             >
-              <Link to="/notes" className="group flex items-center gap-2 text-muted-foreground hover:text-primary transition-all">
+              <Link to="/projects" className="group flex items-center gap-2 text-muted-foreground hover:text-primary transition-all">
                 <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
-                <span>Back to Notes</span>
+                <span>Back to Projects</span>
               </Link>
             </motion.div>
             <div className="hidden md:flex items-center gap-4">
@@ -196,25 +194,25 @@ const NotePage = () => {
             className="space-y-8"
           >
             <div className="space-y-4">
-              <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-500" title={notes?.title}>
-                {notes?.title}
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-500" title={projects?.title}>
+                {projects?.title}
               </h1>
-              {notes?.topics?.topic_logo_url && (
-                <img src={notes?.topics?.topic_logo_url} className="h-12 transition-transform hover:scale-105" alt={notes?.title} />
+              {projects?.topics?.topic_logo_url && (
+                <img src={projects?.topics?.topic_logo_url} className="h-12 transition-transform hover:scale-105" alt={projects?.title} />
               )}
             </div>
 
-            {notes?.description && (
+            {projects?.description && (
               <div className="glass-card p-6 rounded-xl">
-                <h2 className="text-xl font-semibold mb-3 text-primary/80">About this Note</h2>
-                <p className="text-lg text-muted-foreground">{notes?.description}</p>
+                <h2 className="text-xl font-semibold mb-3 text-primary/80">About this Project</h2>
+                <p className="text-lg text-muted-foreground">{projects?.description}</p>
               </div>
             )}
 
             {/* Responsive Markdown Content */}
             <div className="overflow-x-auto">
               <MDEditor.Markdown
-                source={notes?.content}
+                source={projects?.content}
                 className="prose prose-invert max-w-none sm:text-lg"
               />
             </div>
@@ -224,8 +222,8 @@ const NotePage = () => {
       <div className="fixed bottom-4 right-8 z-50 flex flex-col gap-4 items-center">
       {isAdmin && (
         <Link
-          to={`/note/edit/${id}`}
-          className="flex items-center gap-2 px-3 py-3 rounded-full bg-primary text-white shadow-lg hover:bg-primary/90 transition-all text-base font-semibold"
+          to={`/project/edit/${id}`}
+          className="fixed bottom-24 right-8 z-50 flex items-center gap-2 px-3 py-3 rounded-full bg-primary text-white shadow-lg hover:bg-primary/90 transition-all text-base font-semibold"
           title="Edit Note"
           style={{ boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.37)" }}
         >
@@ -238,4 +236,4 @@ const NotePage = () => {
   );
 };
 
-export default NotePage;
+export default ProjectPage;

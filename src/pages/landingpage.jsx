@@ -7,7 +7,7 @@ import FaqSection from "@/components/FaqSection";
 import { motion, useReducedMotion } from "framer-motion";
 import { isAndroid } from "react-device-detect";
 import Preloader from "@/components/Preloader";
-import ResourcesSection from '@/components/ResourceSection';
+import ResourcesSection from '@/components/FeaturesSection';
 
 function LandingPage() {
   const [isLoading, setIsLoading] = useState(() => {

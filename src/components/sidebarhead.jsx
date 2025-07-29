@@ -15,7 +15,6 @@ export function SideHeader({ searchQuery, setSearchQuery }) {
           <h1 className="text-xl font-semibold ml-4 text-primary">Students Corner</h1>
         </div>
         <div className="flex items-center space-x-4">
-          
           <SignedIn>
           <UserButton
                     appearance={{

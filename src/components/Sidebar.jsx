@@ -18,6 +18,7 @@ import {
   Users,
   Notebook,
   Link2,
+  Calendar,
 } from "lucide-react";
 import { SignedIn, SignedOut, SignIn, UserButton } from "@clerk/clerk-react";
 import { PenBox, NotebookPen, Save } from "lucide-react";

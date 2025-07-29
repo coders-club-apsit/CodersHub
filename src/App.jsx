@@ -37,6 +37,7 @@ import BlogsListing from "./pages/blogs";
 import BlogPage from "./pages/blog";
 import SavedBlogs from "./pages/saved-blogs";
 import EditBlog from "./pages/editblog";
+import Events from "./pages/events";
 
 const App = () => {
   const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
@@ -158,14 +159,6 @@ const App = () => {
           },
           element: null,
         },
-        // {
-        //   path: "/events",
-        //   element: (
-        //     <ProtectedRoute>
-        //       <Events />
-        //     </ProtectedRoute>
-        //   ),
-        // },
         {
           path: "/team-members",
           element: (
@@ -252,6 +245,14 @@ const App = () => {
           element: (
             <ProtectedRoute adminOnly>
               <EditBlog />
+              </ProtectedRoute>
+          ),
+        },
+        {
+          path: "/events",
+          element: (
+            <ProtectedRoute>
+              <Events />
             </ProtectedRoute>
           ),
         },

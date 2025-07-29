@@ -6,6 +6,7 @@ import { PenBox, NotebookPen, Book, Link2, Menu } from 'lucide-react';
 import { ThemeToggle } from "./ThemeToggle";
 import { motion, AnimatePresence } from 'framer-motion';
 import NotificationDropdown from './NotificationDropdown';
+import { motion } from 'framer-motion';
 
 const Header = () => {
     const [search, setSearch] = useSearchParams();
@@ -81,8 +82,6 @@ const Header = () => {
                         </motion.div>
 
                         <div className="flex items-center gap-6">
-                            {/* Additional nav items could go here */}
-                            
                             <SignedOut>
                                 <motion.div
                                     whileHover={{ scale: 1.05 }}

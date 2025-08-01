@@ -44,18 +44,18 @@ export async function addNewEvent(token, eventData) {
 }
 
 export async function deleteEvent(id) {
-    const supabase = await supabaseClient();
-    
-    const { data, error } = await supabase
-      .from('events')
-      .delete()
-      .eq('id', id)
-      .single();
-  
-    if (error) {
-      console.error("Error deleting event:", error);
-      throw error;
-    }
-  
-    return data;
+  const supabase = await supabaseClient(); // ✅ Token passed to client
+
+  const { data, error } = await supabase
+    .from('events')
+    .delete()
+    .eq('id', id)
+    .single();
+
+  if (error) {
+    console.error("Error deleting event:", error);
+    throw error;
   }
+
+  return data;
+}

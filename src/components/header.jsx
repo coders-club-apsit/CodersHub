@@ -5,7 +5,6 @@ import { SignedIn, SignedOut, UserButton, SignIn } from '@clerk/clerk-react';
 import { PenBox, NotebookPen, Book, Link2, Menu } from 'lucide-react';
 import { ThemeToggle } from "./ThemeToggle";
 import { motion, AnimatePresence } from 'framer-motion';
-// import NotificationDropdown from './NotificationDropdown';
 
 const Header = () => {
     const [search, setSearch] = useSearchParams();

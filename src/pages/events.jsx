@@ -19,12 +19,13 @@ import { useUser } from '@clerk/clerk-react';
 import { getEvents, deleteEvent } from '@/api/api-events';
 import useFetch from '@/hooks/use-fetch';
 import { ADMIN_EMAILS } from "@/config/admin";
+import { useAuth } from "@clerk/clerk-react";
 import { useSupabaseClient } from '@/utils/supabase';
 
 const EventCard = ({ event, onClick }) => {
   // Get the event color for styling
   const eventColor = event.color || '#3b82f6';
-  
+
   return (
     <div
       onClick={onClick}
@@ -40,16 +41,16 @@ const EventCard = ({ event, onClick }) => {
       }}
     >
       {/* Subtle gradient overlay with event color */}
-      <div 
+      <div
         className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
         style={{
           background: `linear-gradient(135deg, ${eventColor}10 0%, transparent 50%, ${eventColor}05 100%)`
         }}
       />
-      
+
       <div className="relative z-10">
         <div className="mb-4">
-          <h2 
+          <h2
             className="text-lg font-bold leading-tight transition-all duration-300"
             style={{
               background: `linear-gradient(135deg, ${eventColor} 0%, ${eventColor}CC 100%)`,
@@ -61,30 +62,30 @@ const EventCard = ({ event, onClick }) => {
             {event.title}
           </h2>
         </div>
-        
+
         <div className="space-y-3 text-gray-400">
           <div className="flex items-center group/item hover:text-white transition-colors">
-            <Calendar 
-              className="w-4 h-4 mr-3 transition-colors" 
+            <Calendar
+              className="w-4 h-4 mr-3 transition-colors"
               style={{ color: `${eventColor}80` }}
             />
             <span className="text-sm font-medium">{DateTime.fromISO(event.start).toLocaleString(DateTime.DATE_MED)}</span>
           </div>
-          
+
           <div className="flex items-center group/item hover:text-white transition-colors">
-            <Clock 
-              className="w-4 h-4 mr-3 transition-colors" 
+            <Clock
+              className="w-4 h-4 mr-3 transition-colors"
               style={{ color: `${eventColor}80` }}
             />
             <span className="text-sm">
-              {DateTime.fromISO(event.start).toLocaleString(DateTime.TIME_SIMPLE)} - 
+              {DateTime.fromISO(event.start).toLocaleString(DateTime.TIME_SIMPLE)} -
               {DateTime.fromISO(event.end_time).toLocaleString(DateTime.TIME_SIMPLE)}
             </span>
           </div>
-          
+
           <div className="flex items-center group/item hover:text-white transition-colors">
-            <MapPin 
-              className="w-4 h-4 mr-3 transition-colors" 
+            <MapPin
+              className="w-4 h-4 mr-3 transition-colors"
               style={{ color: `${eventColor}80` }}
             />
             <span className="text-sm">{event.location}</span>
@@ -94,9 +95,9 @@ const EventCard = ({ event, onClick }) => {
         {event.tags && event.tags.length > 0 && (
           <div className="mt-4 flex flex-wrap gap-1.5">
             {event.tags.map(tag => (
-              <Badge 
+              <Badge
                 key={tag}
-                variant="outline" 
+                variant="outline"
                 className="text-gray-300 border transition-all text-xs px-2 py-0.5"
                 style={{
                   backgroundColor: `${eventColor}20`,
@@ -117,10 +118,10 @@ const EventCard = ({ event, onClick }) => {
 // Update the EventDialog component
 const EventDialog = ({ event, isOpen, onClose, isAdmin, onDelete }) => {
   const eventColor = event.color || '#3b82f6';
-  
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent 
+      <DialogContent
         className="max-w-[95vw] sm:max-w-[600px] p-0 overflow-hidden sm:mx-auto bg-black/95 border-gray-800/60 shadow-[0_25px_100px_-12px_rgba(0,0,0,0.8)]"
         style={{
           borderColor: `${eventColor}30`,
@@ -129,7 +130,7 @@ const EventDialog = ({ event, isOpen, onClose, isAdmin, onDelete }) => {
       >
         {/* Enhanced header with event color */}
         <div className="relative">
-          <div 
+          <div
             className="absolute inset-0 opacity-40"
             style={{
               background: `linear-gradient(135deg, ${eventColor}20 0%, transparent 100%)`
@@ -137,7 +138,7 @@ const EventDialog = ({ event, isOpen, onClose, isAdmin, onDelete }) => {
           />
           <div className="relative p-6">
             <DialogHeader>
-              <DialogTitle 
+              <DialogTitle
                 className="text-2xl sm:text-3xl font-bold leading-tight"
                 style={{
                   background: `linear-gradient(135deg, ${eventColor} 0%, ${eventColor}90 100%)`,
@@ -150,8 +151,8 @@ const EventDialog = ({ event, isOpen, onClose, isAdmin, onDelete }) => {
               </DialogTitle>
               <DialogDescription className="text-gray-400 mt-2">
                 {event.type && (
-                  <Badge 
-                    variant="outline" 
+                  <Badge
+                    variant="outline"
                     className="capitalize text-sm"
                     style={{
                       backgroundColor: `${eventColor}15`,
@@ -170,13 +171,13 @@ const EventDialog = ({ event, isOpen, onClose, isAdmin, onDelete }) => {
         {/* Styled content */}
         <div className="p-6 pt-2 space-y-6 bg-black/95 backdrop-blur-xl">
           {/* Description */}
-          <motion.div 
+          <motion.div
             className="space-y-2"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
           >
-            <h4 
+            <h4
               className="text-sm font-medium"
               style={{ color: `${eventColor}90` }}
             >
@@ -188,27 +189,27 @@ const EventDialog = ({ event, isOpen, onClose, isAdmin, onDelete }) => {
           </motion.div>
 
           {/* Date & Time with color accent */}
-          <motion.div 
+          <motion.div
             className="space-y-2"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <h4 
+            <h4
               className="text-sm font-medium"
               style={{ color: `${eventColor}90` }}
             >
               Date & Time
             </h4>
-            <div 
+            <div
               className="space-y-3 rounded-lg p-4 transition-colors"
-              style={{ 
+              style={{
                 backgroundColor: `${eventColor}10`,
                 borderLeft: `3px solid ${eventColor}`
               }}
             >
               <div className="flex items-center gap-3">
-                <Calendar 
+                <Calendar
                   className="w-4 h-4 flex-shrink-0"
                   style={{ color: eventColor }}
                 />
@@ -217,12 +218,12 @@ const EventDialog = ({ event, isOpen, onClose, isAdmin, onDelete }) => {
                 </span>
               </div>
               <div className="flex items-center gap-3">
-                <Clock 
+                <Clock
                   className="w-4 h-4 flex-shrink-0"
                   style={{ color: eventColor }}
                 />
                 <span className="text-gray-300">
-                  {DateTime.fromISO(event.start).toLocaleString(DateTime.TIME_SIMPLE)} - 
+                  {DateTime.fromISO(event.start).toLocaleString(DateTime.TIME_SIMPLE)} -
                   {DateTime.fromISO(event.end_time).toLocaleString(DateTime.TIME_SIMPLE)}
                 </span>
               </div>
@@ -230,20 +231,20 @@ const EventDialog = ({ event, isOpen, onClose, isAdmin, onDelete }) => {
           </motion.div>
 
           {/* Location with color accent */}
-          <motion.div 
+          <motion.div
             className="space-y-2"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
           >
-            <h4 
+            <h4
               className="text-sm font-medium"
               style={{ color: `${eventColor}90` }}
             >
               Location
             </h4>
             <div className="flex items-center gap-3">
-              <MapPin 
+              <MapPin
                 className="w-4 h-4"
                 style={{ color: eventColor }}
               />
@@ -253,13 +254,13 @@ const EventDialog = ({ event, isOpen, onClose, isAdmin, onDelete }) => {
 
           {/* Tags with event color */}
           {event.tags && event.tags.length > 0 && (
-            <motion.div 
+            <motion.div
               className="space-y-2"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
             >
-              <h4 
+              <h4
                 className="text-sm font-medium"
                 style={{ color: `${eventColor}90` }}
               >
@@ -273,8 +274,8 @@ const EventDialog = ({ event, isOpen, onClose, isAdmin, onDelete }) => {
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: 0.5 + index * 0.1 }}
                   >
-                    <Badge 
-                      variant="outline" 
+                    <Badge
+                      variant="outline"
                       className="text-xs transition-all hover:scale-105"
                       style={{
                         backgroundColor: `${eventColor}15`,
@@ -293,7 +294,7 @@ const EventDialog = ({ event, isOpen, onClose, isAdmin, onDelete }) => {
 
         {/* Admin controls with color accent */}
         {isAdmin && (
-          <motion.div 
+          <motion.div
             className="p-6 border-t border-gray-800/50"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -332,7 +333,7 @@ const Events = () => {
   const { user, isLoaded } = useUser();
   const supabase = useSupabaseClient();
   const [isAdmin, setIsAdmin] = useState(false);
-  
+
   // Add admin check
   useEffect(() => {
     if (user && user.primaryEmailAddress?.emailAddress) {
@@ -387,25 +388,31 @@ const Events = () => {
     fetchEvents();
   }, [fetchEvents]);
 
+  
+  const { getToken } = useAuth();
+
   const handleDeleteEvent = async (id) => {
     try {
       if (!id) {
-        console.error('No event ID provided');
-        toast.error('Unable to delete event: Invalid ID');
+        toast.error('Invalid ID');
         return;
       }
 
-      toast.loading('Deleting event...');
-      await deleteEvent(id);
-      setSelectedEvent(null);
-      await refreshEvents(); // Use the new refresh function
-      toast.success('Event deleted successfully');
+      toast.loading("Deleting event...");
 
+      const token = await getToken();
+      await deleteEvent(id);               
+
+      setSelectedEvent(null);
+      await refreshEvents();
+      toast.success('Event deleted successfully');
     } catch (error) {
       console.error('Delete error:', error);
       toast.error('Failed to delete event: ' + error.message);
     }
   };
+
+
 
   useEffect(() => {
     setIsMounted(true);
@@ -422,9 +429,9 @@ const Events = () => {
         <Sidebar />        <div className="flex-1 min-h-screen bg-black">
           <div className="mx-auto px-4 sm:px-6 py-8">
             <SideHeader />
-            
+
             <div className="w-[100%] flex items-center justify-center mx-auto">
-              <motion.div 
+              <motion.div
                 className="space-y-4 text-center"
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -441,38 +448,38 @@ const Events = () => {
             {loadingEvents ? (
               <div className="flex justify-center items-center h-[50vh]">
                 <motion.div
-                 initial={{ opacity: 0, x: 40 }}
-                 animate={{ opacity: 1, x: 0 }}
-                 transition={{ delay: 0.3 }}
+                  initial={{ opacity: 0, x: 40 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.3 }}
                   className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full"
                 />
               </div>
-            ) : (              <div className="flex flex-col xl:flex-row gap-6">
-                <motion.div 
-                  className="w-full xl:w-[70%] rounded-2xl overflow-hidden shadow-2xl border border-gray-700/50 bg-gray-900/95 backdrop-blur-sm"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 }}
-                >
-                  <div className="px-6 py-5 border-b border-gray-700/40 bg-gray-900/90 backdrop-blur-xl">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-2 h-8 bg-gradient-to-b from-blue-500 to-blue-600 rounded-full"></div>
-                        <h3 className="text-xl font-semibold text-white">
-                          Event Calendar
-                        </h3>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <Badge variant="outline" className="bg-blue-500/10 text-blue-400 border-blue-500/30 hover:bg-blue-500/20">
-                          {events?.length || 0} Total Events
-                        </Badge>
-                        <Badge variant="outline" className="bg-green-500/10 text-green-400 border-green-500/30 hover:bg-green-500/20">
-                          {upcomingEvents.length} Upcoming
-                        </Badge>
-                      </div>
+            ) : (<div className="flex flex-col xl:flex-row gap-6">
+              <motion.div
+                className="w-full xl:w-[70%] rounded-2xl overflow-hidden shadow-2xl border border-gray-700/50 bg-gray-900/95 backdrop-blur-sm"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+              >
+                <div className="px-6 py-5 border-b border-gray-700/40 bg-gray-900/90 backdrop-blur-xl">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-2 h-8 bg-gradient-to-b from-blue-500 to-blue-600 rounded-full"></div>
+                      <h3 className="text-xl font-semibold text-white">
+                        Event Calendar
+                      </h3>
                     </div>
-                  </div><div className="p-0">
-                    <div className="overflow-hidden bg-gray-900/95 backdrop-blur-sm border-0 rounded-none">                      <style>{`
+                    <div className="flex items-center gap-3">
+                      <Badge variant="outline" className="bg-blue-500/10 text-blue-400 border-blue-500/30 hover:bg-blue-500/20">
+                        {events?.length || 0} Total Events
+                      </Badge>
+                      <Badge variant="outline" className="bg-green-500/10 text-green-400 border-green-500/30 hover:bg-green-500/20">
+                        {upcomingEvents.length} Upcoming
+                      </Badge>
+                    </div>
+                  </div>
+                </div><div className="p-0">
+                  <div className="overflow-hidden bg-gray-900/95 backdrop-blur-sm border-0 rounded-none">                      <style>{`
                         .fc {
                           --fc-border-color: rgba(55, 65, 81, 0.3);
                           --fc-button-bg-color: rgba(31, 41, 55, 0.9);
@@ -798,113 +805,113 @@ const Events = () => {
                           }
                         }
                       `}</style><FullCalendar
-                        plugins={[dayGridPlugin, interactionPlugin]}
-                        initialView={viewType}
-                        dateClick={handleDateClick}
-                        eventClick={handleEventClick}
-                        moreLinkClick="popover"
-                        eventTimeFormat={{
-                          hour: '2-digit',
-                          minute: '2-digit',
-                          meridiem: 'short'
-                        }}
-                        eventDisplay="block"
-                        displayEventTime={true}
-                        className="calendar-custom"
-                        events={events?.map(event => ({
-                          id: event.id,
-                          title: event.title,
-                          start: event.start,
-                          end: event.end_time,
-                          backgroundColor: `${event.color}15`,
-                          borderColor: event.color,
-                          textColor: event.color,
-                          classNames: ['calendar-event']
-                        }))}
-                        height="auto"
-                        aspectRatio={windowWidth < 640 ? 0.8 : 1.35}
-                        expandRows={true}
-                        headerToolbar={{
-                          left: windowWidth < 640 ? 'prev,next' : 'prev,next today',
-                          center: 'title',
-                          right: windowWidth < 640 ? 'dayGridMonth' : 'dayGridMonth,dayGridWeek'
-                        }}
-                        views={{
-                          dayGridMonth: {
-                            dayMaxEvents: windowWidth < 640 ? 2 : 3,
-                            dayMaxEventRows: windowWidth < 640 ? 2 : 3,
-                          },
-                          dayGridWeek: {
-                            dayMaxEvents: windowWidth < 640 ? 3 : 5,
-                          }
-                        }}
-                        moreLinkContent={(args) => (
-                          <Badge 
-                            variant="outline" 
-                            className="bg-blue-500/10 text-blue-400 border-blue-500/30 hover:bg-blue-500/20 text-[10px] sm:text-xs py-0 px-1"
-                          >
-                            +{args.num} more
-                          </Badge>
-                        )}
-                      />
-                    </div>
-                  </div>
-                </motion.div>                {/* Upcoming Events Panel with proper height matching */}
-                <motion.div 
-                  className="w-full xl:w-[30%] h-[600px] xl:h-[calc(100vh-12rem)] rounded-2xl border border-gray-800/60 bg-black/90 backdrop-blur-sm shadow-[0_25px_100px_-12px_rgba(0,0,0,0.6)]"
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.3 }}
-                >
-                  <div className="flex flex-col h-full">
-                    <div className="sticky top-0 z-20 px-6 py-5 bg-black/95 backdrop-blur-xl border-b border-gray-800/60 rounded-t-2xl">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <div className="w-2 h-6 bg-gradient-to-b from-white via-gray-300 to-gray-500 rounded-full"></div>
-                          <h3 className="text-xl font-bold text-white">
-                            Upcoming Events
-                          </h3>
-                        </div>
-                        <Badge variant="outline" className="bg-gray-800/50 text-gray-300 border-gray-700/50 hover:bg-gray-700/50 hover:text-white hover:border-gray-600/70 transition-all">
-                          {upcomingEvents.length} Events
-                        </Badge>
-                      </div>
-                    </div>
-                    <div className="flex-1 overflow-y-auto px-4 py-6 space-y-4 scrollbar-thin scrollbar-thumb-gray-700/60 hover:scrollbar-thumb-gray-600/80 scrollbar-track-transparent">
-                      {upcomingEvents.length > 0 ? (
-                        upcomingEvents.map((event, index) => (
-                          <motion.div
-                            key={event.id}
-                            initial={{ opacity: 0, x: 20 }}
-                            animate={{ 
-                              opacity: 1, 
-                              x: 0,
-                              transition: { delay: 0.1 * index }
-                            }}
-                            whileHover={{ scale: 1.02 }}
-                            className="transition-all"
-                          >
-                            <EventCard
-                              event={event}
-                              onClick={() => setSelectedEvent(event)}
-                            />
-                          </motion.div>
-                        ))
-                      ) : (
-                        <motion.div
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          className="flex flex-col items-center justify-center h-full text-center text-gray-500"
+                      plugins={[dayGridPlugin, interactionPlugin]}
+                      initialView={viewType}
+                      dateClick={handleDateClick}
+                      eventClick={handleEventClick}
+                      moreLinkClick="popover"
+                      eventTimeFormat={{
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        meridiem: 'short'
+                      }}
+                      eventDisplay="block"
+                      displayEventTime={true}
+                      className="calendar-custom"
+                      events={events?.map(event => ({
+                        id: event.id,
+                        title: event.title,
+                        start: event.start,
+                        end: event.end_time,
+                        backgroundColor: `${event.color}15`,
+                        borderColor: event.color,
+                        textColor: event.color,
+                        classNames: ['calendar-event']
+                      }))}
+                      height="auto"
+                      aspectRatio={windowWidth < 640 ? 0.8 : 1.35}
+                      expandRows={true}
+                      headerToolbar={{
+                        left: windowWidth < 640 ? 'prev,next' : 'prev,next today',
+                        center: 'title',
+                        right: windowWidth < 640 ? 'dayGridMonth' : 'dayGridMonth,dayGridWeek'
+                      }}
+                      views={{
+                        dayGridMonth: {
+                          dayMaxEvents: windowWidth < 640 ? 2 : 3,
+                          dayMaxEventRows: windowWidth < 640 ? 2 : 3,
+                        },
+                        dayGridWeek: {
+                          dayMaxEvents: windowWidth < 640 ? 3 : 5,
+                        }
+                      }}
+                      moreLinkContent={(args) => (
+                        <Badge
+                          variant="outline"
+                          className="bg-blue-500/10 text-blue-400 border-blue-500/30 hover:bg-blue-500/20 text-[10px] sm:text-xs py-0 px-1"
                         >
-                          <Calendar className="w-12 h-12 mb-4 text-gray-600/60" />
-                          <p className="text-lg font-medium text-gray-400">No upcoming events</p>
-                          <p className="text-sm text-gray-600">Check back later or create a new event</p>
-                        </motion.div>
+                          +{args.num} more
+                        </Badge>
                       )}
+                    />
+                  </div>
+                </div>
+              </motion.div>                {/* Upcoming Events Panel with proper height matching */}
+              <motion.div
+                className="w-full xl:w-[30%] h-[600px] xl:h-[calc(100vh-12rem)] rounded-2xl border border-gray-800/60 bg-black/90 backdrop-blur-sm shadow-[0_25px_100px_-12px_rgba(0,0,0,0.6)]"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.3 }}
+              >
+                <div className="flex flex-col h-full">
+                  <div className="sticky top-0 z-20 px-6 py-5 bg-black/95 backdrop-blur-xl border-b border-gray-800/60 rounded-t-2xl">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-2 h-6 bg-gradient-to-b from-white via-gray-300 to-gray-500 rounded-full"></div>
+                        <h3 className="text-xl font-bold text-white">
+                          Upcoming Events
+                        </h3>
+                      </div>
+                      <Badge variant="outline" className="bg-gray-800/50 text-gray-300 border-gray-700/50 hover:bg-gray-700/50 hover:text-white hover:border-gray-600/70 transition-all">
+                        {upcomingEvents.length} Events
+                      </Badge>
                     </div>
                   </div>
-                </motion.div>
-              </div>
+                  <div className="flex-1 overflow-y-auto px-4 py-6 space-y-4 scrollbar-thin scrollbar-thumb-gray-700/60 hover:scrollbar-thumb-gray-600/80 scrollbar-track-transparent">
+                    {upcomingEvents.length > 0 ? (
+                      upcomingEvents.map((event, index) => (
+                        <motion.div
+                          key={event.id}
+                          initial={{ opacity: 0, x: 20 }}
+                          animate={{
+                            opacity: 1,
+                            x: 0,
+                            transition: { delay: 0.1 * index }
+                          }}
+                          whileHover={{ scale: 1.02 }}
+                          className="transition-all"
+                        >
+                          <EventCard
+                            event={event}
+                            onClick={() => setSelectedEvent(event)}
+                          />
+                        </motion.div>
+                      ))
+                    ) : (
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="flex flex-col items-center justify-center h-full text-center text-gray-500"
+                      >
+                        <Calendar className="w-12 h-12 mb-4 text-gray-600/60" />
+                        <p className="text-lg font-medium text-gray-400">No upcoming events</p>
+                        <p className="text-sm text-gray-600">Check back later or create a new event</p>
+                      </motion.div>
+                    )}
+                  </div>
+                </div>
+              </motion.div>
+            </div>
             )}            {/* Modern floating Add button for admins */}
             {isAdmin && (
               <motion.div
@@ -937,7 +944,7 @@ const Events = () => {
 
             {/* Only show AddEventDialog for admins */}
             {isAdmin && showAddDialog && (
-              <AddEventDialog 
+              <AddEventDialog
                 isOpen={showAddDialog}
                 onClose={() => setShowAddDialog(false)}
                 onSubmit={handleAddEvent}

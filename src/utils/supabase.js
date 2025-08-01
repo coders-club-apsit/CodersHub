@@ -136,6 +136,7 @@ export const supabaseAnon = supabaseClientInstance;
 export const useSupabaseClient = () => {
   const { session } = useClerk();
   const [supabase, setSupabase] = useState(supabaseClientInstance);
+  
 
   useEffect(() => {
     const updateSupabaseAuth = async () => {

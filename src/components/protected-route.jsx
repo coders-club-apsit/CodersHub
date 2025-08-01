@@ -1,17 +1,16 @@
-import { useUser } from "@clerk/clerk-react";
+import { useUser } from "@/contexts/AuthContext";
 import { Navigate } from "react-router-dom";
 import { ADMIN_EMAILS } from "@/config/admin";
 
 const ProtectedRoute = ({ children, adminOnly = false }) => {
-  const { user, isLoaded } = useUser();
+  const { user, isLoaded, isSignedIn } = useUser();
 
   if (!isLoaded) return null;
 
-  const isSignedIn = !!user;
-  const isAdmin = user && ADMIN_EMAILS.includes(user.primaryEmailAddress?.emailAddress);
+  const isAdmin = user && ADMIN_EMAILS.includes(user.email);
 
   if (isLoaded && !isSignedIn && isSignedIn !== undefined){
-      return <Navigate to="/?sign-in=true"/>
+      return <Navigate to="/"/>
   }
 
   if (adminOnly && !isAdmin) {

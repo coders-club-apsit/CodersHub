@@ -1,4 +1,4 @@
-import { useUser, useSession } from "@clerk/clerk-react";
+import { useUser, useSession } from "@/contexts/AuthContext";
 import { useParams, Link } from "react-router-dom";
 import { getSingleResource } from "@/api/api-resources";
 import { BarLoader } from "react-spinners";
@@ -49,8 +49,8 @@ const ResourcesPage = () => {
 };
 
   useEffect(() => {
-    if (user && user.primaryEmailAddress?.emailAddress) {
-      const email = user.primaryEmailAddress.emailAddress.toLowerCase();
+    if (user && user.email) {
+      const email = user.email.toLowerCase();
       setIsAdmin(ADMIN_EMAILS.map((e) => e.toLowerCase()).includes(email));
     } else {
       setIsAdmin(false);

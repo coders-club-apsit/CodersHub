@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useUser, useSession } from '@clerk/clerk-react';
+import { useUser, useSession } from '@/contexts/AuthContext';
 import { useParams, Link } from 'react-router-dom';
 import { getSingleBlog } from '@/api/api-blogs';
 import { BarLoader } from 'react-spinners';
@@ -34,8 +34,8 @@ const BlogPage = () => {
   const [indexCollapsed, setIndexCollapsed] = useState(false);
 
   useEffect(() => {
-    if (user && user.primaryEmailAddress?.emailAddress) {
-      const email = user.primaryEmailAddress.emailAddress.toLowerCase();
+    if (user && user.email) {
+      const email = user.email.toLowerCase();
       setIsAdmin(ADMIN_EMAILS.map((e) => e.toLowerCase()).includes(email));
     } else {
       setIsAdmin(false);

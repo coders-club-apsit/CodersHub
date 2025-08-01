@@ -1,4 +1,4 @@
-import { useUser } from "@clerk/clerk-react";
+import { useUser } from "@/contexts/AuthContext";
 import { useState, useEffect } from "react";
 import {
   Card,
@@ -52,8 +52,8 @@ const ProjectCard = ({
   }, [savedProjects]);
 
   useEffect(() => {
-    if (user?.primaryEmailAddress?.emailAddress) {
-      const email = user.primaryEmailAddress.emailAddress.toLowerCase();
+    if (user?.email) {
+      const email = user.email.toLowerCase();
       setIsAdmin(ADMIN_EMAILS.includes(email));
     }
   }, [user]);

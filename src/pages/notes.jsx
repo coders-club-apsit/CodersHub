@@ -5,7 +5,7 @@ import { Sidebar } from "@/components/Sidebar";
 import { SideHeader } from "@/components/sidebarhead";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { useUser, useSession } from "@clerk/clerk-react";
+import { useUser, useSession } from "@/contexts/AuthContext";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useQuery } from "@tanstack/react-query";

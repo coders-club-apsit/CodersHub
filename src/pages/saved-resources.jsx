@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { getSavedResources } from '@/api/api-resources';
-import { useUser } from '@clerk/clerk-react';
+import { useUser } from '@/contexts/AuthContext';
 import { BarLoader } from 'react-spinners';
 import useFetch from '@/hooks/use-fetch';
 import { useEffect } from 'react';

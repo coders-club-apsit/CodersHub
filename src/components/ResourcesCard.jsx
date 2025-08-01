@@ -1,4 +1,4 @@
-import { useUser } from "@clerk/clerk-react";
+import { useUser } from "@/contexts/AuthContext";
 import { useState, useEffect } from "react";
 import {
   Card,
@@ -49,8 +49,8 @@ const ResourcesCard = ({ resource, isMyResource = false, savedInit = false, onRe
   }, [savedResources]);
 
   useEffect(() => {
-    if (user && user.primaryEmailAddress?.emailAddress) {
-      const email = user.primaryEmailAddress.emailAddress.toLowerCase();
+    if (user && user.email) {
+      const email = user.email.toLowerCase();
       setIsAdmin(ADMIN_EMAILS.map((e) => e.toLowerCase()).includes(email));
     } else {
       setIsAdmin(false);

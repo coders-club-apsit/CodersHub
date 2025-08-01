@@ -2,7 +2,7 @@
 import React from 'react';
 import { Badge, BadgeIcon, Link2, LucideAward, Search } from 'lucide-react';
 import { Input } from "@/components/ui/input";
-import { SignedIn, UserButton } from '@clerk/clerk-react';
+import { SignedIn, UserButton } from '@/components/auth/AuthComponents';
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { PenBox, NotebookPen, Save, Notebook } from 'lucide-react';
 

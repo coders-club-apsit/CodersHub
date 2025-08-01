@@ -3,14 +3,13 @@
  * Session timer utility to automatically sign out users after a set period
  */
 import { useEffect } from 'react';
-import { useAuth, useUser } from '@clerk/clerk-react';
+import { useAuth } from '@/contexts/AuthContext';
 
 // Session timeout in milliseconds (2 hours and 15 minutes = 135 minutes)
 const SESSION_TIMEOUT = 135 * 60 * 1000;
 
 export const useSessionTimeout = () => {
-  const { signOut } = useAuth();
-  const { isSignedIn } = useUser();
+  const { signOut, isSignedIn } = useAuth();
 
   useEffect(() => {
     if (!isSignedIn) return;

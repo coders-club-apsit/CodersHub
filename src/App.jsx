@@ -37,6 +37,8 @@ import BlogsListing from "./pages/blogs";
 import BlogPage from "./pages/blog";
 import SavedBlogs from "./pages/saved-blogs";
 import EditBlog from "./pages/editblog";
+import AuthDemo from "./pages/auth-demo";
+import ProfilePage from "./pages/profile";
 
 const App = () => {
   const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
@@ -67,6 +69,18 @@ const App = () => {
             {
               path: "/about-us",
               element: <About />,
+            },
+            {
+              path: "/auth-demo",
+              element: <AuthDemo />,
+            },
+            {
+              path: "/profile",
+              element: (
+                <ProtectedRoute>
+                  <ProfilePage />
+                </ProtectedRoute>
+              ),
             },
           ],
         },

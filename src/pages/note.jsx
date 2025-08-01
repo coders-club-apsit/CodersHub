@@ -1,6 +1,6 @@
 // note.jsx
 import { useState, useEffect, useMemo } from 'react';
-import { useUser, useSession } from '@clerk/clerk-react';
+import { useUser, useSession } from '@/contexts/AuthContext';
 import { useParams, Link } from 'react-router-dom';
 import { getSingleNote } from '@/api/api-Notes';
 import { BarLoader } from 'react-spinners';
@@ -40,8 +40,8 @@ const NotePage = () => {
 };
 
   useEffect(() => {
-    if (user && user.primaryEmailAddress?.emailAddress) {
-      const email = user.primaryEmailAddress.emailAddress.toLowerCase();
+    if (user && user.email) {
+      const email = user.email.toLowerCase();
       setIsAdmin(ADMIN_EMAILS.map((e) => e.toLowerCase()).includes(email));
     } else {
       setIsAdmin(false);

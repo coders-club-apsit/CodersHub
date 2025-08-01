@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { ADMIN_EMAILS } from "@/config/admin";
-import { useUser } from "@clerk/clerk-react";
+import { useUser } from "@/contexts/AuthContext";
 import {
   ClapperboardIcon as ChalkboardTeacher,
   Book,
@@ -19,10 +19,10 @@ import {
   Notebook,
   Link2,
 } from "lucide-react";
-import { SignedIn, SignedOut, SignIn, UserButton } from "@clerk/clerk-react";
+import { SignedIn, SignedOut, SignOutButton } from "@/components/auth/AuthComponents";
 import { PenBox, NotebookPen, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useSearchParams, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import {
   Sidebar as ShadSidebar,
   SidebarContent,
@@ -34,7 +34,6 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { Link } from "react-router-dom";
-import { SignOutButton } from "@clerk/clerk-react";
 import { FaAward } from "react-icons/fa";
 
 const routes = [
@@ -49,33 +48,18 @@ const routes = [
 
 export function Sidebar() {
   const { state } = useSidebar();
-  const [search, setSearch] = useSearchParams();
-  const [showSignIn, setShowSignIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
-  const { user } = useUser(); // Get user data from Clerk
+  const { user } = useUser(); // Get user data from Supabase Auth
   const location = useLocation(); // Get current route
 
   useEffect(() => {
-    if (user && user.primaryEmailAddress?.emailAddress) {
-      const email = user.primaryEmailAddress.emailAddress.toLowerCase();
+    if (user && user.email) {
+      const email = user.email.toLowerCase();
       setIsAdmin(ADMIN_EMAILS.map((e) => e.toLowerCase()).includes(email));
     } else {
       setIsAdmin(false);
     }
   }, [user]);
-
-  useEffect(() => {
-    if (search.get("sign-in")) {
-      setShowSignIn(true);
-    }
-  }, [search]);
-
-  const handleOverlayClick = (e) => {
-    if (e.target === e.currentTarget) {
-      setShowSignIn(false);
-      setSearch({});
-    }
-  };
 
   const isActive = (path) => location.pathname === path;
 

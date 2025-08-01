@@ -4,9 +4,10 @@ import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { isAndroid } from "react-device-detect";
-import { useUser } from "@clerk/clerk-react";
+import { useUser } from "@/contexts/AuthContext";
 import { ShineBorder } from "./magicui/shine-border";
 import { getDailyNugget as getWeeklyNugget } from "../data/codeNuggets";
+import { AuthButton } from "@/components/auth/AuthComponents";
 
 // Add this analytics tracking helper function
 const trackEvent = (eventName, eventParams = {}) => {
@@ -264,7 +265,30 @@ const HeroSection = () => {
 
   // Function to capitalize first letter only
   const capitalizeFirstLetter = (str) => {
+    if (!str) return '';
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  };
+
+  // Extract first name from email or use email
+  const getDisplayName = (user) => {
+    if (!user) return '';
+    
+    // Try to get first name from user metadata
+    if (user.user_metadata?.first_name) {
+      return user.user_metadata.first_name;
+    }
+    
+    // Try to extract first name from full_name
+    if (user.user_metadata?.full_name) {
+      return user.user_metadata.full_name.split(' ')[0];
+    }
+    
+    // Fallback to email username
+    if (user.email) {
+      return user.email.split('@')[0];
+    }
+    
+    return 'User';
   };
 
   // Only define animation variants if not on Android
@@ -307,7 +331,7 @@ const HeroSection = () => {
             !isAndroid && !hasSeenHero ? "animate-fade-in [animation-delay:300ms]" : ""
           }`}>
             {isSignedIn ? (
-              <>Welcome back <span className="text-gradient">{capitalizeFirstLetter(user.firstName)}.</span></>
+              <>Welcome back <span className="text-gradient">{capitalizeFirstLetter(getDisplayName(user))}.</span></>
             ) : (
               <>Welcome to the <span className="text-gradient">Coder's Club</span></>
             )}

@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/select";
 import { getTopics } from "@/api/api-topics";
 import useFetch from "@/hooks/use-fetch";
-import { useUser } from "@clerk/clerk-react";
+import { useUser } from "@/contexts/AuthContext";
 import { BarLoader } from "react-spinners";
 import MDEditor from "@uiw/react-md-editor";
 import { Button } from "@/components/ui/button";

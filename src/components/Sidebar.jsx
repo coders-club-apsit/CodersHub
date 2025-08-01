@@ -44,7 +44,7 @@ const routes = [
   { path: "/resources", icon: LinkIcon, label: "Resources" },
   { path: "/projects", icon: LucideAward, label: "Projects" },
   { path: "/blogs", icon: Notebook, label: "Blogs" },
-  // { path: "/events", icon: Calendar, label: "Events" },
+  { path: "/events", icon: Calendar, label: "Events" },
   { path: "/team-members", icon: Users, label: "Our Team", color: "text-violet-500" },
 ];
 

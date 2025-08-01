@@ -22,7 +22,7 @@ import ResourcesPage from "./pages/resource";
 import { useState, useEffect, useCallback, useMemo } from "react";
 import EditResources from "./pages/editresources";
 import PrivacyPolicyModal from "./components/PrivacyPolicyModal";
-// import Events from "./pages/events";
+import Events from "./pages/events";
 import Educators from "./pages/educators";
 import DomainList from "./pages/domain-list";
 import ProjectsList from "./pages/project";
@@ -172,14 +172,14 @@ const App = () => {
           },
           element: null,
         },
-        // {
-        //   path: "/events",
-        //   element: (
-        //     <ProtectedRoute>
-        //       <Events />
-        //     </ProtectedRoute>
-        //   ),
-        // },
+        {
+           path: "/events",
+           element: (
+             <ProtectedRoute>
+               <Events />
+             </ProtectedRoute>
+           ),
+         },
         {
           path: "/team-members",
           element: (

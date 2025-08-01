@@ -7,6 +7,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { 
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from '@/components/ui/dialog';
+import { 
   EyeIcon, 
   EyeOffIcon, 
   X, 
@@ -444,73 +451,36 @@ const SignUpForm = ({ onSuccess }) => {
   );
 };
 
-// Enhanced Auth Modal Component with better state management
+// Enhanced Auth Modal Component using UI Dialog
 export const AuthModal = ({ isOpen, onClose, defaultTab = "signin" }) => {
-  // Close any other existing modals when this one opens
-  useEffect(() => {
-    if (isOpen) {
-      const existingModals = document.querySelectorAll('[data-auth-modal]:not([data-modal-id="current"])');
-      existingModals.forEach(modal => {
-        const closeButton = modal.querySelector('[data-close-modal]');
-        if (closeButton) closeButton.click();
-      });
-    }
-  }, [isOpen]);
-  
-  if (!isOpen) return null;
-
   return (
-    <div 
-      className="fixed inset-0 z-50 flex items-center justify-center" 
-      data-auth-modal
-      data-modal-id="current"
-    >
-      {/* Backdrop */}
-      <div 
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-        onClick={onClose}
-      />
-      
-      {/* Modal */}
-      <div className="relative z-10 w-full max-w-md mx-4">
-        <Card className="relative">
-          {/* Close Button */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="absolute right-2 top-2 z-10"
-            onClick={onClose}
-            data-close-modal
-          >
-            <X className="h-4 w-4" />
-          </Button>
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle className="text-center">Welcome to CodersHub</DialogTitle>
+          <DialogDescription className="text-center">
+            Join the APSIT coding community
+          </DialogDescription>
+        </DialogHeader>
 
-          <CardHeader className="pb-4">
-            <CardTitle className="text-center">Welcome to CodersHub</CardTitle>
-            <CardDescription className="text-center">
-              Join the APSIT coding community
-            </CardDescription>
-          </CardHeader>
-
-          <CardContent>
-            <Tabs defaultValue={defaultTab}>
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="signin">Sign In</TabsTrigger>
-                <TabsTrigger value="signup">Sign Up</TabsTrigger>
-              </TabsList>
-              
-              <TabsContent value="signin">
-                <SignInForm onSuccess={onClose} />
-              </TabsContent>
-              
-              <TabsContent value="signup">
-                <SignUpForm onSuccess={onClose} />
-              </TabsContent>
-            </Tabs>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
+        <div className="mt-4">
+          <Tabs defaultValue={defaultTab}>
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="signin">Sign In</TabsTrigger>
+              <TabsTrigger value="signup">Sign Up</TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="signin">
+              <SignInForm onSuccess={onClose} />
+            </TabsContent>
+            
+            <TabsContent value="signup">
+              <SignUpForm onSuccess={onClose} />
+            </TabsContent>
+          </Tabs>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 };
 

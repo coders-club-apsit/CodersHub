@@ -39,6 +39,7 @@ import SavedBlogs from "./pages/saved-blogs";
 import EditBlog from "./pages/editblog";
 import AuthDemo from "./pages/auth-demo";
 import ProfilePage from "./pages/profile";
+import AdminDashboard from "./pages/admin-dashboard";
 
 const App = () => {
   const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
@@ -74,6 +75,9 @@ const App = () => {
               path: "/auth-demo",
               element: <AuthDemo />,
             },
+            
+          ],
+        },
             {
               path: "/profile",
               element: (
@@ -82,8 +86,14 @@ const App = () => {
                 </ProtectedRoute>
               ),
             },
-          ],
-        },
+            {
+              path: "/admin-dashboard",
+              element: (
+                <ProtectedRoute adminOnly>
+                  <AdminDashboard />
+                </ProtectedRoute>
+              ),
+            },
         {
           path: "/access-denied",
           element: <AccessDenied />,

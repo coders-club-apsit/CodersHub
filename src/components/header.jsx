@@ -2,13 +2,15 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Button } from './ui/button';
 import { SignedIn, SignedOut, UserButton, AuthButton } from '@/components/auth/AuthComponents';
-import { PenBox, NotebookPen, Book, Link2, Menu } from 'lucide-react';
+import { PenBox, NotebookPen, Book, Link2, Menu, Settings } from 'lucide-react';
 import { ThemeToggle } from "./ThemeToggle";
 import { motion, AnimatePresence } from 'framer-motion';
 import NotificationDropdown from './NotificationDropdown';
+import { useUser } from '@/contexts/AuthContext';
 
 const Header = () => {
     const [scrolled, setScrolled] = useState(false);
+    const { isAdmin } = useUser();
     
     // Track if initial animation has played
     const animationPlayedRef = useRef(false);
@@ -96,6 +98,35 @@ const Header = () => {
                             </SignedOut>
 
                             <SignedIn>
+                                {/* Admin Dashboard Button - Only visible to admins */}
+                                {isAdmin && (
+                                    <motion.div
+                                        initial={shouldAnimate ? { opacity: 0, x: 20 } : { opacity: 1, x: 0 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        transition={{ 
+                                            duration: shouldAnimate ? 0.3 : 0,
+                                            delay: shouldAnimate ? 0.1 : 0 
+                                        }}
+                                    >
+                                        <Link to="/admin-dashboard">
+                                            <Button
+                                                variant="outline"
+                                                size="sm"
+                                                className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 
+                                                    border-purple-500/20 hover:border-purple-500/40 
+                                                    hover:from-purple-500/20 hover:to-pink-500/20 
+                                                    transition-all duration-300
+                                                    relative overflow-hidden group"
+                                            >
+                                                <Settings className="w-4 h-4 mr-2" />
+                                                <span className="relative z-10">Admin</span>
+                                                <div className="absolute inset-0 translate-y-[100%] bg-gradient-to-r from-purple-500/20 to-pink-500/20 
+                                                    group-hover:translate-y-[0%] transition-transform duration-300"></div>
+                                            </Button>
+                                        </Link>
+                                    </motion.div>
+                                )}
+                                
                                 <UserButton />
                             </SignedIn>
                         </div>

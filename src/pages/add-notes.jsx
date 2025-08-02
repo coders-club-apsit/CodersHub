@@ -30,11 +30,13 @@ import {
 } from "@/components/ui/select";
 import Header from "@/components/header";
 import AddTopicDrawer from "@/components/add-topic-drawer";
+import { NotificationToggle } from "@/components/NotificationToggle";
 
 // API and Hooks
 import { getTopics } from "@/api/api-topics";
 import { addNewNote } from "@/api/api-Notes";
 import useFetch from "@/hooks/use-fetch";
+import { createNotification } from "@/lib/notification-service";
 
 
 const schema = z.object({
@@ -50,6 +52,8 @@ const AddNotes = () => {
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [formData, setFormData] = useState(null);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
+  const [broadcastNotification, setBroadcastNotification] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState("");
 
   const {
     register,
@@ -95,11 +99,27 @@ const AddNotes = () => {
     }
   }, [dataCreateNote, loadingCreateNote]);
 
-  const onSubmit = (data) => {
-    fnCreateNote({
-      ...data,
-      recruiter_id: user.id,
-    });
+  const onSubmit = async (data) => {
+    try {
+      // Create the note
+      await fnCreateNote({
+        ...data,
+        recruiter_id: user.id,
+      });
+
+      // If notification is enabled, broadcast it
+      if (broadcastNotification && notificationMessage.trim()) {
+        await createNotification({
+          type: 'content_new',
+          title: 'New Note Added',
+          message: notificationMessage.trim() || `New note added: ${data.title}`,
+          priority: 'normal',
+          target_audience: 'all'
+        });
+      }
+    } catch (error) {
+      console.error('Error creating note or notification:', error);
+    }
   };
 
   const handleConfirmSubmit = (data) => {
@@ -137,7 +157,7 @@ const AddNotes = () => {
   return (
     <div className="min-h-screen">
       <Header />
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-24 py-8">
         <h1 className="gradient-title font-extrabold text-5xl sm:text-7xl text-center pb-8 mt-20">
           Post a Note
         </h1>
@@ -241,6 +261,16 @@ const AddNotes = () => {
               <BarLoader className=" bg-gradient-to-r from-blue-400 to-cyan-400" width="100%"  />
             </div>
           )}
+
+          {/* Notification Toggle */}
+          <NotificationToggle
+            enabled={broadcastNotification}
+            onEnabledChange={setBroadcastNotification}
+            notificationMessage={notificationMessage}
+            onMessageChange={setNotificationMessage}
+            defaultMessage={`New note added: ${watch("title")}`}
+            className="border-t border-primary/10 pt-6"
+          />
 
           {/* Submit and Preview Buttons */}
           <div className="flex gap-4">

@@ -126,7 +126,7 @@ const Header = () => {
                                         </Link>
                                     </motion.div>
                                 )}
-                                
+                                <NotificationDropdown />
                                 <UserButton />
                             </SignedIn>
                         </div>

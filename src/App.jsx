@@ -40,6 +40,7 @@ import EditBlog from "./pages/editblog";
 import AuthDemo from "./pages/auth-demo";
 import ProfilePage from "./pages/profile";
 import AdminDashboard from "./pages/admin-dashboard";
+import BroadcastNotificationPage from "./pages/broadcast-notification";
 
 const App = () => {
   const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
@@ -248,6 +249,14 @@ const App = () => {
           element: (
             <ProtectedRoute>
               <BlogsListing />
+            </ProtectedRoute>
+          ),
+        },
+         {
+          path: "/broadcast-notification",
+          element: (
+            <ProtectedRoute>
+          <BroadcastNotificationPage />
             </ProtectedRoute>
           ),
         },

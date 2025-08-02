@@ -30,12 +30,14 @@ import {
 } from "@/components/ui/select";
 import Header from "@/components/header";
 import AddTopicDrawer from "@/components/add-topic-drawer";
+import { NotificationToggle } from "@/components/NotificationToggle";
 
 // API and Hooks
 import { getTopics } from "@/api/api-topics";
 import { addNewNote } from "@/api/api-Notes";
 import useFetch from "@/hooks/use-fetch";
 import { AddNewBlog } from "@/api/api-blogs";
+import { createNotification } from "@/lib/notification-service";
 
 
 const schema = z.object({
@@ -50,6 +52,8 @@ const AddBlogs = () => {
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [formData, setFormData] = useState(null);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
+  const [broadcastNotification, setBroadcastNotification] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState("");
 
   const {
     register,
@@ -96,11 +100,27 @@ const AddBlogs = () => {
     }
   }, [dataCreateBlog, loadingCreateBlog]);
 
-  const onSubmit = (data) => {
-    fnCreateBlog({
-      ...data,
-      recruiter_id: user.id,
-    });
+  const onSubmit = async (data) => {
+    try {
+      // Create the blog
+      await fnCreateBlog({
+        ...data,
+        recruiter_id: user.id,
+      });
+
+      // If notification is enabled, broadcast it
+      if (broadcastNotification && notificationMessage.trim()) {
+        await createNotification({
+          type: 'content_new',
+          title: 'New Blog Posted',
+          message: notificationMessage.trim() || `New blog posted: ${data.title}`,
+          priority: 'normal',
+          target_audience: 'all'
+        });
+      }
+    } catch (error) {
+      console.error('Error creating blog or notification:', error);
+    }
   };
 
   const handleConfirmSubmit = (data) => {
@@ -140,7 +160,7 @@ const AddBlogs = () => {
   return (
     <div className="min-h-screen">
       <Header />
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-24 py-8">
         <h1 className="gradient-title font-extrabold text-5xl sm:text-7xl text-center pb-8 mt-20">
           Post a Blog
         </h1>
@@ -244,6 +264,16 @@ const AddBlogs = () => {
               <BarLoader className=" bg-gradient-to-r from-blue-400 to-cyan-400" width="100%"  />
             </div>
           )}
+
+          {/* Notification Toggle */}
+          <NotificationToggle
+            enabled={broadcastNotification}
+            onEnabledChange={setBroadcastNotification}
+            notificationMessage={notificationMessage}
+            onMessageChange={setNotificationMessage}
+            defaultMessage={`New blog posted: ${watch("title")}`}
+            className="border-t border-primary/10 pt-6"
+          />
 
           {/* Submit and Preview Buttons */}
           <div className="flex gap-4">

@@ -241,84 +241,21 @@
   transform: translateZ(0);
 }
 
-/* Hide Clerk-specific elements */
-.cl-footer, .cl-internal-1hp5nqm, .cl-internal-lk7758 {
-  display: none;
-}
 
 
-.cl-internal-1foj88f {
-  background-color: #09090b;
-}
-
-.cl-internal-ckqcxi {
-  height: 80px;
-}
-
-.cl-internal-1mpid38 {
-  position: relative;
-  border-radius: 50%;
-
-  &::after {
-    content: '';
-    position: absolute;
-    inset: -2px;
-    border-radius: 50%;
-    background: radial-gradient(
-      circle at center,
-      rgba(255, 255, 255, 0.5),
-      transparent 70%
-    );
-    filter: blur(10px);
-    z-index: -1;
+/* Animations and effects */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
-.cl-internal-13u79ez,.cl-internal-1efiaa8 {
-  background: #141414;
-}
 
-.cl-internal-kgbfts {
-  background: #171717;
-}
-
-.cl-profileSectionTitleText {
-  display: none;
-}
-
-.cl-internal-ckqcxi {
-  height: 80px;
-}
-
-.cl-internal-1mpid38 {
-  position: relative;
-  border-radius: 50%;
-
-  &::after {
-    content: '';
-    position: absolute;
-    inset: -2px;
-    border-radius: 50%;
-    background: radial-gradient(
-      circle at center,
-      rgba(255, 255, 255, 0.5),
-      transparent 70%
-    );
-    filter: blur(10px);
-    z-index: -1;
-  }
-}
-.cl-internal-13u79ez,.cl-internal-1efiaa8{
-  background: #09090b;
-}
-
-.cl-internal-kgbfts{
-  background: #0d0d0f;
-}
-
-.cl-profileSectionTitleText{
-  display: none;
-}
-
+/* Markdown styling */
 .wmde-markdown {
   text-align: left;
   padding: 20px;

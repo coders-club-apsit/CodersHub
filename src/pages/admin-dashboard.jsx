@@ -20,16 +20,21 @@ const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
+  const [filterDivision, setFilterDivision] = useState('all');
+  const [filterYear, setFilterYear] = useState('all');
   const [selectedUser, setSelectedUser] = useState(null);
   const [showCreateUser, setShowCreateUser] = useState(false);
   const [showBulkUpload, setShowBulkUpload] = useState(false);
   const [bulkUploadFile, setBulkUploadFile] = useState(null);
   const [bulkUploadResults, setBulkUploadResults] = useState(null);
   const [bulkUploading, setBulkUploading] = useState(false);
+  const [creatingUser, setCreatingUser] = useState(false);
   const [createUserData, setCreateUserData] = useState({
     email: '',
     password: '',
-    name: ''
+    name: '',
+    division: '',
+    year: ''
   });
   const [stats, setStats] = useState({
     totalUsers: 0,
@@ -72,6 +77,10 @@ const AdminDashboard = () => {
         provider: user.app_metadata?.provider || 'email',
         userMetadata: user.user_metadata || {},
         rawUserMetadata: user.raw_user_metadata || {},
+        name: user.user_metadata?.name || '',
+        division: user.user_metadata?.division || '',
+        year: user.user_metadata?.year || '',
+        moodleId: user.user_metadata?.moodle_id || '',
         isAdmin: adminEmails.includes(user.email?.toLowerCase()),
         isBanned: user.user_metadata?.banned || false,
         banReason: user.user_metadata?.ban_reason || null
@@ -108,15 +117,19 @@ const AdminDashboard = () => {
 
   // Filter users based on search and status
   const filteredUsers = users.filter(user => {
-    const searchMatch = user.email.toLowerCase().includes(searchTerm.toLowerCase());
+    const searchMatch = user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                       user.name.toLowerCase().includes(searchTerm.toLowerCase());
     
-    if (filterStatus === 'all') return searchMatch;
-    if (filterStatus === 'active') return searchMatch && user.lastSignIn && !user.isBanned;
-    if (filterStatus === 'pending') return searchMatch && !user.emailConfirmed;
-    if (filterStatus === 'admin') return searchMatch && user.isAdmin;
-    if (filterStatus === 'banned') return searchMatch && user.isBanned;
+    const statusMatch = filterStatus === 'all' ||
+      (filterStatus === 'active' && user.lastSignIn && !user.isBanned) ||
+      (filterStatus === 'pending' && !user.emailConfirmed) ||
+      (filterStatus === 'admin' && user.isAdmin) ||
+      (filterStatus === 'banned' && user.isBanned);
     
-    return searchMatch;
+    const divisionMatch = filterDivision === 'all' || user.division === filterDivision;
+    const yearMatch = filterYear === 'all' || user.year === filterYear;
+    
+    return searchMatch && statusMatch && divisionMatch && yearMatch;
   });
 
   // Delete user function
@@ -232,14 +245,27 @@ const AdminDashboard = () => {
       return;
     }
 
+    setCreatingUser(true);
+    
     try {
-      toast.loading('Creating user...');
+      console.log('Creating user with data:', {
+        email: createUserData.email,
+        name: createUserData.name,
+        division: createUserData.division,
+        year: createUserData.year
+      });
       
-      const { error } = await createUser(
+      const { data, error } = await createUser(
         createUserData.email,
         createUserData.password,
-        { name: createUserData.name }
+        { 
+          name: createUserData.name,
+          division: createUserData.division,
+          year: createUserData.year
+        }
       );
+      
+      console.log('Create user response:', { data, error });
       
       if (error) {
         console.error('Error creating user:', error);
@@ -249,11 +275,13 @@ const AdminDashboard = () => {
 
       toast.success('User created successfully');
       setShowCreateUser(false);
-      setCreateUserData({ email: '', password: '', name: '' });
+      setCreateUserData({ email: '', password: '', name: '', division: '', year: '' });
       fetchUsers(); // Refresh the list
     } catch (error) {
       console.error('Error in createUser:', error);
-      toast.error('Failed to create user');
+      toast.error('Failed to create user: ' + (error.message || 'Unexpected error'));
+    } finally {
+      setCreatingUser(false);
     }
   };
 
@@ -295,17 +323,19 @@ const AdminDashboard = () => {
           if (lowerHeader.includes('email')) return 'email';
           if (lowerHeader.includes('moodle') && lowerHeader.includes('id')) return 'moodleId';
           if (lowerHeader.includes('name')) return 'name';
+          if (lowerHeader.includes('division')) return 'division';
+          if (lowerHeader.includes('year')) return 'year';
           return header;
         },
-        complete: async (results) => {
+        complete: async (parseResults) => {
           try {
-            if (results.errors.length > 0) {
-              console.error('CSV parsing errors:', results.errors);
+            if (parseResults.errors.length > 0) {
+              console.error('CSV parsing errors:', parseResults.errors);
               toast.error('Error parsing CSV file');
               return;
             }
 
-            const userData = results.data.filter(row => row.email && row.email.trim());
+            const userData = parseResults.data.filter(row => row.email && row.email.trim());
             
             if (userData.length === 0) {
               toast.error('No valid email addresses found in the file');
@@ -315,10 +345,10 @@ const AdminDashboard = () => {
             toast.loading(`Processing ${userData.length} users...`);
             
             // Process bulk creation
-            const results = await bulkCreateUsers(userData);
-            setBulkUploadResults(results);
+            const bulkResults = await bulkCreateUsers(userData);
+            setBulkUploadResults(bulkResults);
             
-            toast.success(`Bulk upload completed: ${results.successful.length} created, ${results.failed.length} failed`);
+            toast.success(`Bulk upload completed: ${bulkResults.successful.length} created, ${bulkResults.failed.length} failed`);
             
             // Refresh user list
             fetchUsers();
@@ -346,9 +376,9 @@ const AdminDashboard = () => {
   // Download sample CSV template
   const downloadSampleCSV = () => {
     const sampleData = [
-      { email: 'student1@apsit.edu.in', moodleId: 'STD001', name: 'John Doe' },
-      { email: 'student2@apsit.edu.in', moodleId: 'STD002', name: 'Jane Smith' },
-      { email: 'student3@apsit.edu.in', moodleId: 'STD003', name: 'Mike Johnson' }
+      { email: 'student1@apsit.edu.in', moodleId: 'STD001', name: 'John Doe', division: 'A', year: 'SE' },
+      { email: 'student2@apsit.edu.in', moodleId: 'STD002', name: 'Jane Smith', division: 'B', year: 'TE' },
+      { email: 'student3@apsit.edu.in', moodleId: 'STD003', name: 'Mike Johnson', division: 'C', year: 'SE' }
     ];
 
     const csv = Papa.unparse(sampleData);
@@ -365,11 +395,16 @@ const AdminDashboard = () => {
   const exportUsers = () => {
     const csvData = filteredUsers.map(user => ({
       Email: user.email,
+      Name: user.name || '',
+      Division: user.division || '',
+      Year: user.year || '',
+      'Moodle ID': user.moodleId || '',
       'Email Confirmed': user.emailConfirmed ? 'Yes' : 'No',
       'Created At': new Date(user.createdAt).toLocaleDateString(),
       'Last Sign In': user.lastSignIn ? new Date(user.lastSignIn).toLocaleDateString() : 'Never',
       Provider: user.provider,
-      'Is Admin': user.isAdmin ? 'Yes' : 'No'
+      'Is Admin': user.isAdmin ? 'Yes' : 'No',
+      'Is Banned': user.isBanned ? 'Yes' : 'No'
     }));
 
     const csv = [
@@ -506,7 +541,7 @@ const AdminDashboard = () => {
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
             <Input
-              placeholder="Search users by email..."
+              placeholder="Search users by email or name..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10 bg-gray-900 border-gray-700 text-white placeholder-gray-400"
@@ -523,6 +558,27 @@ const AdminDashboard = () => {
               <SelectItem value="pending">Pending Verification</SelectItem>
               <SelectItem value="admin">Admins</SelectItem>
               <SelectItem value="banned">Banned Users</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select value={filterDivision} onValueChange={setFilterDivision}>
+            <SelectTrigger className="w-full sm:w-32 bg-gray-900 border-gray-700 text-white">
+              <SelectValue placeholder="Division" />
+            </SelectTrigger>
+            <SelectContent className="bg-gray-900 border-gray-700">
+              <SelectItem value="all">All Divisions</SelectItem>
+              <SelectItem value="A">Division A</SelectItem>
+              <SelectItem value="B">Division B</SelectItem>
+              <SelectItem value="C">Division C</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select value={filterYear} onValueChange={setFilterYear}>
+            <SelectTrigger className="w-full sm:w-32 bg-gray-900 border-gray-700 text-white">
+              <SelectValue placeholder="Year" />
+            </SelectTrigger>
+            <SelectContent className="bg-gray-900 border-gray-700">
+              <SelectItem value="all">All Years</SelectItem>
+              <SelectItem value="SE">SE</SelectItem>
+              <SelectItem value="TE">TE</SelectItem>
             </SelectContent>
           </Select>
         </motion.div>
@@ -580,6 +636,12 @@ const AdminDashboard = () => {
                                 Banned
                               </Badge>
                             )}
+                          </div>
+                          <div className="flex items-center gap-4 text-sm text-gray-400">
+                            {user.name && <span>Name: {user.name}</span>}
+                            {user.division && <span>Division: {user.division}</span>}
+                            {user.year && <span>Year: {user.year}</span>}
+                            {user.moodleId && <span>Moodle ID: {user.moodleId}</span>}
                           </div>
                           <div className="flex items-center gap-4 text-sm text-gray-400">
                             <span>Created: {new Date(user.createdAt).toLocaleDateString()}</span>
@@ -702,7 +764,14 @@ const AdminDashboard = () => {
 
         {/* Create User Dialog */}
         <Dialog open={showCreateUser} onOpenChange={setShowCreateUser}>
-          <DialogContent className="bg-gray-900 border-gray-700 text-white">
+          <DialogContent 
+            className="bg-gray-900 border-gray-700 text-white max-w-lg"
+            onOpenAutoFocus={(event) => {
+              // Prevent auto focus to avoid conflicts
+              event.preventDefault();
+            }}
+            aria-hidden={false}
+          >
             <DialogHeader>
               <DialogTitle>Create New User</DialogTitle>
               <DialogDescription className="text-gray-400">
@@ -721,6 +790,7 @@ const AdminDashboard = () => {
                   onChange={(e) => setCreateUserData(prev => ({ ...prev, email: e.target.value }))}
                   className="bg-gray-800 border-gray-700 text-white"
                   required
+                  autoFocus
                 />
               </div>
               <div>
@@ -748,20 +818,102 @@ const AdminDashboard = () => {
                   className="bg-gray-800 border-gray-700 text-white"
                 />
               </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="text-sm font-medium text-gray-300">
+                      Division (Optional)
+                    </label>
+                    {createUserData.division && (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setCreateUserData(prev => ({ ...prev, division: '' }))}
+                        className="text-xs text-gray-400 hover:text-white h-auto p-1"
+                      >
+                        Clear
+                      </Button>
+                    )}
+                  </div>
+                  <Select
+                    value={createUserData.division || undefined}
+                    onValueChange={(value) => setCreateUserData(prev => ({ ...prev, division: value || '' }))}
+                    modal={false}
+                  >
+                    <SelectTrigger className="bg-gray-800 border-gray-700 text-white">
+                      <SelectValue placeholder="Select division" />
+                    </SelectTrigger>
+                    <SelectContent 
+                      className="bg-gray-900 border-gray-700"
+                      position="popper"
+                      sideOffset={4}
+                    >
+                      <SelectItem value="A">Division A</SelectItem>
+                      <SelectItem value="B">Division B</SelectItem>
+                      <SelectItem value="C">Division C</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="text-sm font-medium text-gray-300">
+                      Year (Optional)
+                    </label>
+                    {createUserData.year && (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setCreateUserData(prev => ({ ...prev, year: '' }))}
+                        className="text-xs text-gray-400 hover:text-white h-auto p-1"
+                      >
+                        Clear
+                      </Button>
+                    )}
+                  </div>
+                  <Select
+                    value={createUserData.year || undefined}
+                    onValueChange={(value) => setCreateUserData(prev => ({ ...prev, year: value || '' }))}
+                    modal={false}
+                  >
+                    <SelectTrigger className="bg-gray-800 border-gray-700 text-white">
+                      <SelectValue placeholder="Select year" />
+                    </SelectTrigger>
+                    <SelectContent 
+                      className="bg-gray-900 border-gray-700"
+                      position="popper"
+                      sideOffset={4}
+                    >
+                      <SelectItem value="SE">SE (Second Year)</SelectItem>
+                      <SelectItem value="TE">TE (Third Year)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
               <div className="flex justify-end gap-3 pt-4">
                 <Button
                   type="button"
                   variant="outline"
                   onClick={() => setShowCreateUser(false)}
                   className="bg-gray-800 border-gray-700 hover:bg-gray-700"
+                  disabled={creatingUser}
                 >
                   Cancel
                 </Button>
                 <Button
                   type="submit"
                   className="bg-blue-600 hover:bg-blue-700"
+                  disabled={creatingUser}
                 >
-                  Create User
+                  {creatingUser ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      Creating...
+                    </>
+                  ) : (
+                    'Create User'
+                  )}
                 </Button>
               </div>
             </form>
@@ -786,6 +938,8 @@ const AdminDashboard = () => {
                   <li>• <strong>email</strong>: APSIT email address (required)</li>
                   <li>• <strong>moodleId</strong>: Student Moodle ID (required for password generation)</li>
                   <li>• <strong>name</strong>: Full name (optional)</li>
+                  <li>• <strong>division</strong>: A, B, or C (optional)</li>
+                  <li>• <strong>year</strong>: SE or TE (optional)</li>
                   <li>• Password will be auto-generated as: <code className="bg-gray-800 px-1 rounded">moodleId@Apsit</code></li>
                 </ul>
                 <div className="mt-3">

@@ -387,12 +387,52 @@ const ProfilePage = () => {
                                 <p className="text-xl font-medium">{user?.user_metadata?.last_name || 'Not set'}</p>
                               </div>
                             </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                              <div className="space-y-2">
+                                <label className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+                                  Division
+                                </label>
+                                <p className="text-xl font-medium">
+                                  {user?.user_metadata?.division ? (
+                                    <Badge variant="outline" className="text-base px-3 py-1">
+                                      Division {user.user_metadata.division}
+                                    </Badge>
+                                  ) : (
+                                    <span className="text-gray-500">Not assigned</span>
+                                  )}
+                                </p>
+                              </div>
+                              <div className="space-y-2">
+                                <label className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+                                  Year
+                                </label>
+                                <p className="text-xl font-medium">
+                                  {user?.user_metadata?.year ? (
+                                    <Badge variant="outline" className="text-base px-3 py-1">
+                                      {user.user_metadata.year}
+                                    </Badge>
+                                  ) : (
+                                    <span className="text-gray-500">Not assigned</span>
+                                  )}
+                                </p>
+                              </div>
+                            </div>
                             <div className="space-y-2">
                               <label className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
                                 Email Address
                               </label>
                               <p className="text-xl font-medium">{user?.email}</p>
                             </div>
+                            {user?.user_metadata?.moodle_id && (
+                              <div className="space-y-2">
+                                <label className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+                                  Moodle ID
+                                </label>
+                                <p className="text-xl font-medium font-mono text-blue-600">
+                                  {user.user_metadata.moodle_id}
+                                </p>
+                              </div>
+                            )}
                             <div className="space-y-2">
                               <label className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
                                 Account Type

@@ -216,12 +216,24 @@ export const sendPasswordResetEmail = async (email) => {
 // Create user (uses service role)
 export const createUser = async (email, password, userData = {}) => {
   try {
+    console.log('CreateUser API called with:', { email, userData });
+    console.log('Supabase URL:', import.meta.env.VITE_SUPABASE_URL);
+    console.log('Service role key exists:', !!import.meta.env.VITE_SUPABASE_SERVICE_ROLE_KEY);
+    
     const { data, error } = await supabaseAdmin.auth.admin.createUser({
       email,
       password,
-      user_metadata: userData,
+      user_metadata: {
+        name: userData.name || '',
+        division: userData.division || '',
+        year: userData.year || '',
+        moodle_id: userData.moodle_id || userData.moodleId || '',
+        ...userData
+      },
       email_confirm: true // Auto-confirm email for admin-created users
     });
+    
+    console.log('Supabase createUser response:', { data, error });
     
     if (error) {
       console.error('Error creating user:', error);
@@ -273,7 +285,9 @@ export const bulkCreateUsers = async (usersData) => {
         password,
         {
           name: userData.name || '',
-          moodle_id: userData.moodleId || '',
+          moodle_id: userData.moodleId || userData.moodle_id || '',
+          division: userData.division || '',
+          year: userData.year || '',
           bulk_created: true,
           created_by: 'admin_bulk_upload'
         }

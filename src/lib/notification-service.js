@@ -99,3 +99,44 @@ export const markAllAsRead = async () => {
     return { success: false, error: error.message };
   }
 };
+
+// Fetch recent notifications (admin only)
+export const fetchRecentNotifications = async (limit = 10) => {
+  try {
+    const { data, error } = await supabase
+      .from('notifications')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(limit);
+
+    if (error) {
+      console.error('Error fetching notifications:', error);
+      throw new Error(`Failed to fetch notifications: ${error.message}`);
+    }
+
+    return data || [];
+  } catch (error) {
+    console.error('Error in fetchRecentNotifications:', error);
+    throw error;
+  }
+};
+
+// Delete notification (admin only)
+export const deleteNotification = async (notificationId) => {
+  try {
+    const { error } = await supabase
+      .from('notifications')
+      .delete()
+      .eq('id', notificationId);
+
+    if (error) {
+      console.error('Error deleting notification:', error);
+      throw new Error(`Failed to delete notification: ${error.message}`);
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error in deleteNotification:', error);
+    throw error;
+  }
+};

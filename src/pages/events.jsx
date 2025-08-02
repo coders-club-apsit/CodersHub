@@ -413,7 +413,7 @@ const Events = () => {
 
   return (
     <SidebarProvider>
-      <div className="flex h-screen">
+      <div className="flex h-screen mt-16">
         <Sidebar />        <div className="flex-1 min-h-screen bg-black">
           <div className="mx-auto px-4 sm:px-6 py-8">
             <SideHeader />
